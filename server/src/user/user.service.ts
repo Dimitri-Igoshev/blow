@@ -4,9 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcrypt';
 import { MFile } from 'src/file/mfile.class';
 import { FileService } from 'src/file/file.service';
+import bcrypt from 'bcryptjs';
 
 const PASSWORD = 'bejse1-betkEv-vifcoh';
 
@@ -17,19 +17,19 @@ export class UserService {
     private readonly fileService: FileService,
   ) {}
 
-  saltOrRounds = 12;
-
   async create(data: CreateUserDto, file?: MFile) {
     const isExist = await this.getUserByEmail(data.email);
 
     if (isExist)
       throw new HttpException('User is already exists', HttpStatus.CONFLICT);
 
+    const salt = await bcrypt.genSalt(10)
+
     const newUser = new this.userModel({
       ...data,
       password: data.password
-        ? await bcrypt.hash(data.password, this.saltOrRounds)
-        : await bcrypt.hash(PASSWORD, this.saltOrRounds),
+        ? bcrypt.hashSync(data.password, salt)
+        : bcrypt.hashSync(PASSWORD, salt),
     });
 
     const savedUser = await newUser.save();
@@ -54,7 +54,11 @@ export class UserService {
 
     if (sex) filter.sex = sex;
     if (city) filter.city = city;
-    if (minage || maxage) filter.age = { $gte: parseInt(minage || 0), $lte: parseInt(maxage || 150) };
+    if (minage || maxage)
+      filter.age = {
+        $gte: parseInt(minage || 0),
+        $lte: parseInt(maxage || 150),
+      };
 
     return await this.userModel
       .find(filter)
@@ -81,9 +85,6 @@ export class UserService {
     const result = await this.userModel
       .findOneAndUpdate({ _id: id }, { ...data }, { new: true })
       .exec();
-
-    
-      
 
     if (!result) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);

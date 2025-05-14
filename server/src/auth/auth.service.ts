@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { resetPasswordMail } from 'src/mail/template/reset-password.template';
+// import { resetPasswordMail } from 'src/mail/template/reset-password.template';
 import { MailService } from 'src/mail/mail.service';
 import { UserService } from 'src/user/user.service';
 import { UserStatus } from 'src/user/entities/user.entity';
@@ -13,9 +13,7 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
     private readonly mailService: MailService,
-  ) { }
-
-  saltOrRounds = 12;
+  ) {}
 
   getMe(token: string) {
     this.jwtService.decode(token);
@@ -40,7 +38,7 @@ export class AuthService {
     if (user.status === UserStatus.INACTIVE)
       throw new HttpException('Your account is inactive', HttpStatus.FORBIDDEN);
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compareSync(password, user.password);
 
     if (!isMatch)
       throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
@@ -58,12 +56,10 @@ export class AuthService {
     if (isExist)
       throw new HttpException('User is already exists', HttpStatus.CONFLICT);
 
-    const res = await this.userService.create(
-      {
-        ...data,
-        status: UserStatus.ACTIVE,
-      }
-    );
+    const res = await this.userService.create({
+      ...data,
+      status: UserStatus.ACTIVE,
+    });
 
     if (!res)
       throw new HttpException('Server error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -99,14 +95,13 @@ export class AuthService {
 
     // сделать проверку не просрочен ли токен
 
-    const newPassword = await bcrypt.hash(password, this.saltOrRounds);
+    const salt = await bcrypt.genSalt(10);
 
-    return await !!this.userService.update(
-      user._id.toString(),
-      {
-        password: newPassword,
-      },
-    );
+    const newPassword = await bcrypt.hash(password, salt);
+
+    return await !!this.userService.update(user._id.toString(), {
+      password: newPassword,
+    });
   }
 
   private async createToken(payload, expiresIn: string): Promise<string> {
