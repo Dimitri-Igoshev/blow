@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: nextjs_app
+    restart: always
+    expose:
+      - 3000
+
+  backend:
+    build: ./backend
+    container_name: nestjs_app
+    restart: always
+    expose:
+      - 4000
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: nginx_gateway
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certbot/www:/var/www/certbot
+      - ./nginx/ssl:/etc/letsencrypt
+    depends_on:
+      - frontend
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./nginx/ssl:/etc/letsencrypt
+    command: certonly --webroot --webroot-path=/var/www/certbot --email you@example.com --agree-tos --no-eff-email -d yourdomain.com
