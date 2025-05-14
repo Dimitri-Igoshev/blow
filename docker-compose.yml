@@ -25,16 +25,16 @@ services:
       - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      # - ./certbot/www:/var/www/certbot
+      - ./certbot/www:/var/www/certbot
       - ./nginx/ssl:/etc/letsencrypt
     depends_on:
       - client
       - server
 
-  # certbot:
-  #   image: certbot/certbot
-  #   container_name: certbot
-  #   volumes:
-  #     - ./certbot/www:/var/www/certbot
-  #     - ./nginx/ssl:/etc/letsencrypt
-  #   command: certonly --webroot --webroot-path=/var/www/certbot --email igoscheff@gmail.com --agree-tos --no-eff-email -d blow.ru
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./nginx/ssl:/etc/letsencrypt
+    command: certonly --webroot --webroot-path=/var/www/certbot --email igoscheff@gmail.com --agree-tos --no-eff-email -d blow.ru
