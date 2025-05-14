@@ -37,4 +37,4 @@ services:
     volumes:
       - ./certbot/www:/var/www/certbot
       - ./nginx/ssl:/etc/letsencrypt
-    command: certonly --webroot --webroot-path=/var/www/certbot --email dimi.igoshev@gmail.com --agree-tos --no-eff-email -d blow.ru
+    command: certonly --webroot --webroot-path=/var/www/certbot --email igoscheff@gmail.com --agree-tos --no-eff-email -d blow.ru
