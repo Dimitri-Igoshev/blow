@@ -14,10 +14,10 @@ export default function AccountGuests() {
 	const { data: me } = useGetMeQuery(null);
 	const { data: users } = useGetUsersQuery({ limit: 1000000 });
 
-	const [lastDay, setLastDay] = useState([]);
-	const [lastWeek, setLastWeek] = useState([]);
-	const [lastMonth, setLastMonth] = useState([]);
-	const [lastYear, setLastYear] = useState([]);
+	const [lastDay, setLastDay] = useState<any[]>([]);
+	const [lastWeek, setLastWeek] = useState<any[]>([]);
+	const [lastMonth, setLastMonth] = useState<any[]>([]);
+	const [lastYear, setLastYear] = useState<any[]>([]);
 
 	const getGuests = () => {
 		if (!me?.visits?.length || !users?.length) return [];
@@ -38,7 +38,7 @@ export default function AccountGuests() {
 		const now = new Date();
 		const guests = getGuests();
 
-		if (!guests.length) return;
+		if (!guests?.length) return;
 
 		setLastDay(
 			guests.filter(
@@ -46,20 +46,28 @@ export default function AccountGuests() {
 			) || []
 		);
 		setLastWeek(
-      guests.filter(
-				(item: any) => differenceInHours(now, new Date(item.date)) > 24  && differenceInDays(now, new Date(item.date)) <= 7
+			guests.filter(
+				(item: any) =>
+					differenceInHours(now, new Date(item.date)) > 24 &&
+					differenceInDays(now, new Date(item.date)) <= 7
 			) || []
 		);
-    setLastMonth(
-      guests.filter(
-        (item: any) => differenceInHours(now, new Date(item.date)) > 24 && differenceInDays(now, new Date(item.date)) > 7 && differenceInDays(now, new Date(item.date)) <= 30
-      ) || []
-    )
-    setLastYear(
-      guests.filter(
-        (item: any) => differenceInHours(now, new Date(item.date)) > 24 && differenceInDays(now, new Date(item.date)) > 30 && differenceInDays(now, new Date(item.date)) <= 365
-      )
-    )
+		setLastMonth(
+			guests.filter(
+				(item: any) =>
+					differenceInHours(now, new Date(item.date)) > 24 &&
+					differenceInDays(now, new Date(item.date)) > 7 &&
+					differenceInDays(now, new Date(item.date)) <= 30
+			) || []
+		);
+		setLastYear(
+			guests.filter(
+				(item: any) =>
+					differenceInHours(now, new Date(item.date)) > 24 &&
+					differenceInDays(now, new Date(item.date)) > 30 &&
+					differenceInDays(now, new Date(item.date)) <= 365
+			)
+		);
 	}, [users]);
 
 	return (
