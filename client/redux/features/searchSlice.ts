@@ -14,7 +14,7 @@ export interface ISearch {
 
 const INITIAL_STATE: ISearch = {
   search: {
-    online: '',
+    online: 'true',
     sex: '',
     minage: '',
     maxage: '',

@@ -2,7 +2,7 @@
 
 import { Button } from "@heroui/button";
 import { cn } from "@heroui/theme";
-import { FC, useEffect, useState } from "react";
+import { FC, use, useEffect, useState } from "react";
 import { Select, SelectItem, useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { IoSearch } from "react-icons/io5";
@@ -19,7 +19,7 @@ import { ages } from "@/data/ages";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { ROUTES } from "@/app/routes";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearch } from "@/redux/features/searchSlice"
+import { setSearch } from "@/redux/features/searchSlice";
 
 interface SearchWidgetProps {
 	horizontal?: boolean;
@@ -34,8 +34,8 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 }) => {
 	const router = useRouter();
 	const search = useSelector((state: any) => state.searchReducer);
-  const dispatch = useDispatch()
-  
+	const dispatch = useDispatch();
+
 	const { data: me } = useGetMeQuery(null);
 
 	const [men, setMen] = useState(search?.sex === "male");
@@ -45,7 +45,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 	const [ageToOptions, setAgeToOptions] = useState([...ages]);
 	const [ageTo, setAgeTo] = useState(search?.maxage ? search.maxage : "");
 	const [city, setCity] = useState(search?.city || "");
-	const [isOnline, setIsOnline] = useState(!!search?.online);
+	const [isOnline, setIsOnline] = useState(true);
 
 	useEffect(() => {
 		if (!search?.city) return;
@@ -108,23 +108,24 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 		onError();
 	};
 
-	const onSearch = () => {
+	const onSearch = (onlineSwitch = false) => {
 		dispatch(
 			setSearch({
-				online: isOnline ? 'true' : "",
+				online: onlineSwitch ? isOnline ? "" : "true" : isOnline ? "true" : "",
 				sex: men && woman ? "" : men ? "male" : woman ? "female" : "",
 				minage: ageFrom ? ageFrom.toString() : "",
 				maxage: ageTo ? ageTo.toString() : "",
 				city: city ? city : "",
-        limit: '16'
+				limit: "16",
 			})
 		);
+
 		if (!me) {
-		// window.open(`${ROUTES.HOME}?sex=${men && woman ? "" : men ? "male" : woman ? "female" : ""}&minage=${ageFrom ? ageFrom.toString() : ""}&maxage=${ageTo ? ageTo.toString() : ""}&city=${city || ""}`, "_self");
-		router.push(ROUTES.HOME);
-		refresh();
+			// window.open(`${ROUTES.HOME}?sex=${men && woman ? "" : men ? "male" : woman ? "female" : ""}&minage=${ageFrom ? ageFrom.toString() : ""}&maxage=${ageTo ? ageTo.toString() : ""}&city=${city || ""}`, "_self");
+			router.push(ROUTES.HOME);
+			refresh();
 		} else {
-		router.push(ROUTES.ACCOUNT.SEARCH);
+			router.push(ROUTES.ACCOUNT.SEARCH);
 		}
 	};
 
@@ -234,7 +235,10 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 					}}
 					color="success"
 					isSelected={isOnline}
-					onValueChange={setIsOnline}
+					onValueChange={(value) => {
+						setIsOnline(value);
+						onSearch(true);
+					}}
 				>
 					Онлайн
 				</Switch>
@@ -247,7 +251,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 						}
 					)}
 					radius="full"
-					onPress={onSearch}
+					onPress={() => onSearch(false)}
 				>
 					НАЙТИ
 				</Button>

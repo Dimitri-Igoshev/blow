@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { FC, use, useEffect, useState } from "react";
 import { Image } from "@heroui/image";
 import { MdOutlineHeight } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
@@ -10,31 +10,73 @@ import { PiWaveform } from "react-icons/pi";
 
 import { getCityString } from "@/helper/getCityString";
 import { config } from "@/common/env";
-import { useGetMeQuery, useGetUserQuery, useNewVisitMutation } from "@/redux/services/userApi";
+import {
+	useCreateNoteMutation,
+	useDeleteNoteMutation,
+	useGetMeQuery,
+	useGetUserQuery,
+	useNewVisitMutation,
+	useUpdateNoteMutation,
+} from "@/redux/services/userApi";
 import { getActivityString } from "@/helper/getActivityString";
+import { useDisclosure } from "@heroui/react";
+import { NoteModal } from "@/components/NoteModal";
+import { Note } from "./Note";
 
 interface ProfileViewProps {
 	params: any;
 }
 
-const ProfileView: FC<ProfileViewProps> = ({ params }) => {
+const ProfileView: FC<ProfileViewProps> = ({ params }: { params: Promise<{ id: string }> }) => {
+	const { id } = use(params); 
 	const router = useRouter();
 
 	const { data: me } = useGetMeQuery(null);
-	const { data: user } = useGetUserQuery(params?.id);
+	const { data: user } = useGetUserQuery(id, { skip: !id });
 
 	const [newVisit] = useNewVisitMutation();
 
 	useEffect(() => {
-		if (!me?._id || !params?.id) return;
+		if (!me?._id || !id) return;
 
-		newVisit({ id: params.id, body: { timestamp: new Date(), guest: me._id } })
+		newVisit({ id, body: { timestamp: new Date(), guest: me._id } })
 			.unwrap()
-			.then(() => console.log("New visit"))
 			.catch((err) => console.log(err));
-	}, [me, params]);
+
+		setNote(me?.notes.find((el: any) => el?._id === id)?.text || '');
+	}, [me, id]);
 
 	const [currentImage, setCurrentImage] = useState(user?.photos[0]?.url);
+
+	const [note, setNote] = useState(
+		me?.notes.find((el: any) => el?._id === id)?.text || ""
+	);
+
+	const {
+		isOpen: isNote,
+		onOpen: onNote,
+		onOpenChange: onNoteChange,
+	} = useDisclosure();
+
+	const [createNote] = useCreateNoteMutation();
+	const [editNote] = useUpdateNoteMutation();
+	const [deleteNote] = useDeleteNoteMutation();
+
+	const addNote = async (text: string) => {
+		console.log("add", text, id, me?._id);
+		if (note) {
+			editNote({ id: me?._id, body: { text, userId: id } }).unwrap();
+		} else {
+			createNote({ id: me?._id, body: { text, userId: id } }).unwrap();
+		}
+	};
+
+	const removeNote = async () => {
+		if (note) {
+			deleteNote({ id: me?._id, body: { userId: id } }).unwrap();
+			setNote("");
+		}
+	};
 
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[86px] gap-[30px]">
@@ -177,14 +219,22 @@ const ProfileView: FC<ProfileViewProps> = ({ params }) => {
 								</div>
 							</div>
 
-							<div className="grid grid-flow-cols-1 sm:grid-cols-2 gap-6 mt-6">
+							
+
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+							{note ? (
+								<div className="grid col-span-1 sm:col-span-2 gap-6 mt-6 w-full">
+									<Note text={note} />
+								</div>
+							) : null}
 								<Button
 									className="z-0 relative"
 									color="secondary"
 									radius="full"
 									variant="solid"
+									onPress={onNote}
 								>
-									Создать заметку
+									{note ? "Редактировать заметку" : "Создать заметку"}
 								</Button>
 								<Button
 									className="z-0 relative"
@@ -199,6 +249,13 @@ const ProfileView: FC<ProfileViewProps> = ({ params }) => {
 					</div>
 				</>
 			) : null}
+
+			<NoteModal
+				isOpen={isNote}
+				onOpenChange={onNoteChange}
+				onSave={(text: string) => addNote(text)}
+				note={note}
+			/>
 		</div>
 	);
 };

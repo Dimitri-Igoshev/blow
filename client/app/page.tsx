@@ -11,6 +11,7 @@ import { SearchWidget } from "@/components/search-widget";
 import { cities } from "@/data/cities";
 import { useGetUsersQuery } from "@/redux/services/userApi";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react"
 
 export default function Home() {
 	const cities1 = cities.slice(0, 6);
@@ -25,7 +26,9 @@ export default function Home() {
 
 	const state = useSelector((state: any) => state);
 	const search = state?.search?.search ? state.search.search : null;
-	const { data: users } = useGetUsersQuery(search, { skip: !search.online && !search.sex && !search.city && !search.minage && !search.maxage });
+	const { data: users } = useGetUsersQuery(search, {});
+
+	const [searched, setSearched] = useState(false)
 
 	return (
 		<>
@@ -44,7 +47,7 @@ export default function Home() {
 
 				<div className="w-full absolute top-[100px] sm:top-[130px]">
 					<div className="flex justify-center md:justify-start items-center gap-[5%] md:px-[40px] relative z-10">
-						<SearchWidget />
+						<SearchWidget refresh={() => setSearched(true)} />
 
 						<div className="hidden md:flex flex-col md:w-[750px] gap-8">
 							<h1 className="text-[26px] lg:text-[36px] font-semibold text-white lg:leading-[56px]">
@@ -59,7 +62,7 @@ export default function Home() {
 						</div>
 					</div>
 
-					{!users?.length && womans?.length ? (
+					{!searched && womans?.length ? (
 						<div className="pt-[4%] sm:pt-[40px] bg-gray dark:bg-black">
 							<h2 className="text-[26px] sm:text-[36px] text-white font-semibold sm:pl-[40px] z-20 relative text-center sm:text-start">
 								Содержанки
@@ -89,7 +92,7 @@ export default function Home() {
 					) : null}
 
 					<div className="pt-[40px] sm:pt-[100px] bg-gray dark:bg-black">
-						{!users?.length && mens?.length ? (
+						{!searched && mens?.length ? (
 							<>
 								<h2 className="text-[26px] sm:text-[36px] text-black dark:text-white font-semibold sm:pl-[40px] z-20 relative text-center sm:text-start">
 									Наши мужчины
@@ -118,7 +121,7 @@ export default function Home() {
 							</>
 						) : null}
 
-						{users?.length ? (
+						{searched ? (
 							<>
 								<h2 className="text-[26px] sm:text-[36px] text-white font-semibold sm:pl-[40px] z-20 relative text-center sm:text-start">
 									Результаты поиска
