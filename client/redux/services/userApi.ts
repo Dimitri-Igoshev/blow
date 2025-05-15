@@ -70,7 +70,15 @@ export const userApi = createApi({
         body: body,
       }),
       invalidatesTags: ["User"],
-    })
+    }),
+    newVisit: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/${id}/visit`,
+        method: "PATCH",
+        body: body,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -80,4 +88,5 @@ export const {
   useGetUsersQuery,
   useUpdateUserMutation,
   useSetActivityMutation,
+  useNewVisitMutation,
 } = userApi;

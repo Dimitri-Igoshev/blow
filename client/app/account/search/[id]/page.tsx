@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Image } from "@heroui/image";
 import { MdOutlineHeight } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
@@ -10,7 +10,7 @@ import { PiWaveform } from "react-icons/pi";
 
 import { getCityString } from "@/helper/getCityString";
 import { config } from "@/common/env";
-import { useGetUserQuery } from "@/redux/services/userApi";
+import { useGetMeQuery, useGetUserQuery, useNewVisitMutation } from "@/redux/services/userApi";
 import { getActivityString } from "@/helper/getActivityString";
 
 interface ProfileViewProps {
@@ -20,7 +20,19 @@ interface ProfileViewProps {
 const ProfileView: FC<ProfileViewProps> = ({ params }) => {
 	const router = useRouter();
 
+	const { data: me } = useGetMeQuery(null);
 	const { data: user } = useGetUserQuery(params?.id);
+
+	const [newVisit] = useNewVisitMutation();
+
+	useEffect(() => {
+		if (!me?._id || !params?.id) return;
+
+		newVisit({ id: params.id, body: { timestamp: new Date(), guest: me._id } })
+			.unwrap()
+			.then(() => console.log("New visit"))
+			.catch((err) => console.log(err));
+	}, [me, params]);
 
 	const [currentImage, setCurrentImage] = useState(user?.photos[0]?.url);
 

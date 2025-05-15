@@ -45,7 +45,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 	const [ageToOptions, setAgeToOptions] = useState([...ages]);
 	const [ageTo, setAgeTo] = useState(search?.maxage ? search.maxage : "");
 	const [city, setCity] = useState(search?.city || "");
-	const [isOnline, setIsOnline] = useState(false);
+	const [isOnline, setIsOnline] = useState(!!search?.online);
 
 	useEffect(() => {
 		if (!search?.city) return;

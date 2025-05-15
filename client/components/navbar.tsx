@@ -25,7 +25,6 @@ import { ROUTES } from "@/app/routes";
 import { useGetMeQuery, useSetActivityMutation } from "@/redux/services/userApi";
 import { config } from "@/common/env";
 import { CameraIcon } from "@/common/icons";
-import { useActivityTracker } from "@/hooks/useActivityTracker";
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -35,17 +34,13 @@ export const Navbar = () => {
 	const { data: me } = useGetMeQuery(null);
 
 	const [setActivity] = useSetActivityMutation();
-    
 
     useEffect(() => {
       if (!me?._id) return
       
       const activityHandler = () => {
-        console.log("Activity tracked");
-  
         setActivity({ id: me._id, body: { timestamp: new Date() } })
           .unwrap()
-          .then(() => console.log("Activity logged"))
           .catch((err) => console.error(err));
       };
   
