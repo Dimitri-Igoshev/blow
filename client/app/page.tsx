@@ -25,7 +25,7 @@ export default function Home() {
 
 	const state = useSelector((state: any) => state);
 	const search = state?.search?.search ? state.search.search : null;
-	const { data: users } = useGetUsersQuery(search, { skip: !search.sex && !search.city && !search.minage && !search.maxage });
+	const { data: users } = useGetUsersQuery(search, { skip: !search.online && !search.sex && !search.city && !search.minage && !search.maxage });
 
 	return (
 		<>

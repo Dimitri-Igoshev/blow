@@ -34,8 +34,8 @@ export const userApi = createApi({
       providesTags: ["User"],
     }),
     getUsers: builder.query({
-      query: ({ sex, city, minage, maxage, limit }) =>
-        `?sex=${sex || ""}&city=${city || ""}&minage=${minage || ""}&maxage=${maxage || ""}&limit=${limit || "16"}`,
+      query: ({ online, sex, city, minage, maxage, limit }) =>
+        `?online=${online || ""}&sex=${sex || ""}&city=${city || ""}&minage=${minage || ""}&maxage=${maxage || ""}&limit=${limit || "16"}`,
       providesTags: ["User"],
     }),
     // createUser: builder.mutation({
@@ -63,6 +63,14 @@ export const userApi = createApi({
     //   }),
     //   invalidatesTags: ['User']
     // }),
+    setActivity: builder.mutation({
+      query: ({ id, body }) => ({
+        url: `/${id}/activity`,
+        method: "PATCH",
+        body: body,
+      }),
+      invalidatesTags: ["User"],
+    })
   }),
 });
 
@@ -71,4 +79,5 @@ export const {
   useGetUserQuery,
   useGetUsersQuery,
   useUpdateUserMutation,
+  useSetActivityMutation,
 } = userApi;

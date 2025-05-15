@@ -3,17 +3,18 @@ import { PayloadAction } from '@reduxjs/toolkit'
 
 export interface ISearch {
   search: {
+    online: string,
     sex: string,
     minage: string,
     maxage: string,
     city: string,
     limit: string
   }
-  
 }
 
 const INITIAL_STATE: ISearch = {
   search: {
+    online: '',
     sex: '',
     minage: '',
     maxage: '',
