@@ -19,14 +19,15 @@ import { useGetMeQuery } from "@/redux/services/userApi";
 import { config } from "@/common/env";
 
 const AccountProfilePage = () => {
-  const router = useRouter();
+  // const router = useRouter();
 
   const { data: me } = useGetMeQuery(null);
 
   const logout = () => {
     localStorage.setItem("access-token", "");
-    router.replace(ROUTES.HOME);
-    window.location.reload();
+    // router.replace(ROUTES.HOME);
+    // window.location.reload();
+    window.open("/", "_self");
   };
 
   const [width, setWidth] = useState();
