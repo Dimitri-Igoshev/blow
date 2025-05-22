@@ -1,8 +1,11 @@
 "use client";
 
 import { ServiceCard } from "@/components/ServiceCard";
+import { useGetMeQuery } from "@/redux/services/userApi";
 
 export default function accountServices() {
+  const { data: me } = useGetMeQuery(null)
+
   return (
     <div className="flex w-full flex-col px-9 pt-[84px] gap-[30px]">
       <div className="flex w-full items-center justify-between">
@@ -18,7 +21,7 @@ export default function accountServices() {
           "Ваши данные карты остаются конфиденциальными. Мы их не видим, и банк не передает эту информацию третьим лицам.",
           "Мы не подключаем автоподписки и не выполняем повторные списания.",
         ]}
-        subtile="3000 ₽"
+        subtile={`${me?.balance || 0} ₽`}
         title="Кошелек"
         onClick={(value: any) => console.log(value)}
       />
