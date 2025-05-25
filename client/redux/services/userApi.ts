@@ -103,6 +103,15 @@ export const userApi = createApi({
 			}),
 			invalidatesTags: ["User"],
 		}),
+		addBalance: builder.mutation({
+			query: (body) => ({
+				url: `/test/add-balance`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["User"],
+
+		})
 	}),
 });
 
@@ -116,4 +125,5 @@ export const {
 	useCreateNoteMutation,
 	useUpdateNoteMutation,
 	useDeleteNoteMutation,
+	useAddBalanceMutation
 } = userApi;

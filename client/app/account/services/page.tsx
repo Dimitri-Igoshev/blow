@@ -1,10 +1,17 @@
 "use client";
 
 import { ServiceCard } from "@/components/ServiceCard";
-import { useGetMeQuery } from "@/redux/services/userApi";
+import { useAddBalanceMutation, useGetMeQuery } from "@/redux/services/userApi";
 
 export default function accountServices() {
   const { data: me } = useGetMeQuery(null)
+
+  const [addBalance] = useAddBalanceMutation()
+
+  const addMoney = (price: number) => {
+    if (!me?._id) return
+    addBalance({ id: me._id, sum: +price }).unwrap().catch(() => console.log('error'))
+  }
 
   return (
     <div className="flex w-full flex-col px-9 pt-[84px] gap-[30px]">
@@ -23,7 +30,8 @@ export default function accountServices() {
         ]}
         subtile={`${me?.balance || 0} ₽`}
         title="Кошелек"
-        onClick={(value: any) => console.log(value)}
+        onClick={({price}) => addMoney(price)}
+        transactions={me?.transactions || []}
       />
 
       <ServiceCard
