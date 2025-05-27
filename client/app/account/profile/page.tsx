@@ -9,7 +9,6 @@ import { FiEdit } from "react-icons/fi";
 import { LuCrown, LuWallet } from "react-icons/lu";
 import { IoArrowUp } from "react-icons/io5";
 import { LuTrash } from "react-icons/lu";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 

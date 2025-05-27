@@ -17,9 +17,9 @@ export const serviceApi = createApi({
   tagTypes: ["Service"],
   endpoints: (builder) => ({
     getServices: builder.query({
-			query: () => '',
-			providesTags: ["Service"],
-		}),
+      query: () => "",
+      providesTags: ["Service"],
+    }),
   }),
 });
 

@@ -7,9 +7,8 @@ import { Image } from "@heroui/image";
 
 import { ROUTES } from "../routes";
 
-import Protected from "@/components/Protected";
 import { SearchWidget } from "@/components/search-widget";
-import { useGetMeQuery } from "@/redux/services/userApi"
+import { useGetMeQuery } from "@/redux/services/userApi";
 
 export default function PanelLayout({
   children,
@@ -18,7 +17,7 @@ export default function PanelLayout({
 }>) {
   const pathname = usePathname();
   const [tab, setTab] = useState("profile");
-  const { data: me } = useGetMeQuery(null)
+  const { data: me } = useGetMeQuery(null);
 
   const isSearch = pathname === ROUTES.ACCOUNT.SEARCH;
 
@@ -59,7 +58,7 @@ export default function PanelLayout({
 
   return (
     // <Protected>
-      <>
+    <>
       <div className="relative">
         <img
           alt=""
@@ -85,7 +84,6 @@ export default function PanelLayout({
           src={isSearch ? "/bg-m.png" : "/bg-min.png"}
         />
 
-        
         <div
           className={cn(
             "absolute sm:fixed z-10 sm:px-9 top-[96px] sm:mt-[30px] w-full",
@@ -93,50 +91,50 @@ export default function PanelLayout({
         >
           {me ? (
             <div className="sm:mb-[40px]">
-            <Tabs
-              fullWidth
-              aria-label="Tabs"
-              className="hidden sm:flex"
-              classNames={{
-                tabContent: "text-white",
-              }}
-              radius="full"
-              selectedKey={tab}
-              variant="bordered"
-            >
-              <Tab
-                key="search"
-                href={ROUTES.ACCOUNT.SEARCH}
-                title="Поиск анкет"
-              />
-              <Tab
-                key="profile"
-                href={ROUTES.ACCOUNT.PROFILE}
-                title="Профиль"
-              />
-              <Tab
-                key="dialogues"
-                href={ROUTES.ACCOUNT.DIALOGUES}
-                title="Диалоги"
-              />
-              <Tab
-                key="guests"
-                href={ROUTES.ACCOUNT.GUESTS}
-                title="Кто смотрел"
-              />
-              <Tab
-                key="services"
-                href={ROUTES.ACCOUNT.SERVICES}
-                title="Услуги"
-              />
-              <Tab key="notes" href={ROUTES.ACCOUNT.NOTES} title="Заметки" />
-              <Tab
-                key="mailings"
-                href={ROUTES.ACCOUNT.MAILINGS}
-                title="Рассылки"
-              />
-            </Tabs>
-          </div>
+              <Tabs
+                fullWidth
+                aria-label="Tabs"
+                className="hidden sm:flex"
+                classNames={{
+                  tabContent: "text-white",
+                }}
+                radius="full"
+                selectedKey={tab}
+                variant="bordered"
+              >
+                <Tab
+                  key="search"
+                  href={ROUTES.ACCOUNT.SEARCH}
+                  title="Поиск анкет"
+                />
+                <Tab
+                  key="profile"
+                  href={ROUTES.ACCOUNT.PROFILE}
+                  title="Профиль"
+                />
+                <Tab
+                  key="dialogues"
+                  href={ROUTES.ACCOUNT.DIALOGUES}
+                  title="Диалоги"
+                />
+                <Tab
+                  key="guests"
+                  href={ROUTES.ACCOUNT.GUESTS}
+                  title="Кто смотрел"
+                />
+                <Tab
+                  key="services"
+                  href={ROUTES.ACCOUNT.SERVICES}
+                  title="Услуги"
+                />
+                <Tab key="notes" href={ROUTES.ACCOUNT.NOTES} title="Заметки" />
+                <Tab
+                  key="mailings"
+                  href={ROUTES.ACCOUNT.MAILINGS}
+                  title="Рассылки"
+                />
+              </Tabs>
+            </div>
           ) : null}
 
           {isSearch ? (
@@ -195,7 +193,7 @@ export default function PanelLayout({
           </div>
         </footer>
       </div>
-      </>
+    </>
     // </Protected>
   );
 }

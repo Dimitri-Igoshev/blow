@@ -1,10 +1,8 @@
 import { Button } from "@heroui/button";
 import { cn, Input, Select, SelectItem } from "@heroui/react";
-import { useEffect, useState, type FC } from "react";
-import { is, ru, se } from "date-fns/locale";
-import { periods } from "@/data/periods";
+import { useState, type FC } from "react";
+import { ru } from "date-fns/locale";
 import { format } from "date-fns";
-import { useBuyServiceMutation, useBuyServicesKitMutation } from "@/redux/services/userApi";
 
 interface ServiceCardProps {
   title: string;
@@ -29,7 +27,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
   buttonText,
   defaultVlue,
   transactions = [],
-  options = []
+  options = [],
 }) => {
   const [value, setValue] = useState({
     label: "",
@@ -75,10 +73,12 @@ export const ServiceCard: FC<ServiceCardProps> = ({
     <div className="bg-white dark:bg-foreground-100 rounded-[36px] p-[30px] flex flex-col gap-6">
       <div className="flex flex-wrap justify-between items-center text-[24px] font-semibold">
         <p>{title}</p>
-        <p className={cn("font-medium sm:font-semibold", {
-          ['text-[20px] sm:text-[24px] ']: oneTime,
-          ['text-[16px] sm:text-[20px] ']: !oneTime,
-        })}>
+        <p
+          className={cn("font-medium sm:font-semibold", {
+            ["text-[20px] sm:text-[24px] "]: oneTime,
+            ["text-[16px] sm:text-[20px] "]: !oneTime,
+          })}
+        >
           {subtile}
         </p>
       </div>
@@ -96,7 +96,10 @@ export const ServiceCard: FC<ServiceCardProps> = ({
       {isHistory ? (
         <div className="flex flex-col gap-3 p-4 rounded-[24px] bg-foreground-100">
           {transactions.map((item: any) => (
-            <div className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-3 items-center">
+            <div
+              key={item._id}
+              className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-3 items-center"
+            >
               <div className="font-medium">
                 {item?.type === "credit" ? "Пополнение" : "Снятие"}
               </div>
@@ -140,8 +143,8 @@ export const ServiceCard: FC<ServiceCardProps> = ({
             <Select
               className="text-primary z-0 relative rounded-full w-full sm:w-[150px]"
               classNames={{ value: "font-semibold" }}
-              radius="full"
               placeholder="Выберите"
+              radius="full"
               selectedKeys={[value.value]}
               onChange={(el) =>
                 setValue({
@@ -160,12 +163,12 @@ export const ServiceCard: FC<ServiceCardProps> = ({
           <Input
             className="z-0 relative w-full sm:w-[150px]"
             classNames={{ input: "font-semibold" }}
+            disabled={!oneTime}
             endContent={<span className="text-primary">₽</span>}
             placeholder=""
             radius="full"
             value={value.value || oneTime ? value.price : ""}
             onChange={(e) => setValue({ ...value, price: e.target.value })}
-            disabled={!oneTime}
           />
 
           <Button

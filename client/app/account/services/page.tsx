@@ -1,5 +1,8 @@
 "use client";
 
+import { ru } from "date-fns/locale";
+import { format } from "date-fns";
+
 import { ServiceCard } from "@/components/ServiceCard";
 import { useGetServicesQuery } from "@/redux/services/serviceApi";
 import {
@@ -8,10 +11,8 @@ import {
   useBuyServicesKitMutation,
   useGetMeQuery,
 } from "@/redux/services/userApi";
-import { ru } from "date-fns/locale";
-import { format } from "date-fns";
 
-export default function accountServices() {
+export default function AccountServices() {
   const { data: me } = useGetMeQuery(null);
   const { data: services } = useGetServicesQuery(null);
 
@@ -32,27 +33,31 @@ export default function accountServices() {
     if (isExist?.quantity) {
       return `осталось ${isExist.quantity}`;
     } else {
-      return `до ${format(new Date(isExist?.expiredAt || Date.now()), "dd.MM.yyyy", {
-        locale: ru,
-      })}`;
+      return `до ${format(
+        new Date(isExist?.expiredAt || Date.now()),
+        "dd.MM.yyyy",
+        {
+          locale: ru,
+        },
+      )}`;
     }
   };
 
   const [getService] = useBuyServiceMutation();
   const [getServicesKit] = useBuyServicesKitMutation();
 
-  const buyService = (item: any, value: any) => {   
+  const buyService = (item: any, value: any) => {
     // if (!item?.services?.length) {
-      getService({
-        userId: me._id,
-        serviceId: item._id,
-        name: item?.name,
-        period: value?.period,
-        quantity: value?.quantity,
-        price: value?.price,
-      })
-        .unwrap()
-        .catch((e) => console.log("ошибка покупки сервиса"));
+    getService({
+      userId: me._id,
+      serviceId: item._id,
+      name: item?.name,
+      period: value?.period,
+      quantity: value?.quantity,
+      price: value?.price,
+    })
+      .unwrap()
+      .catch((e) => console.log("ошибка покупки сервиса"));
     // } else {
     //   getServicesKit({
     //     userId: me._id,
@@ -84,18 +89,19 @@ export default function accountServices() {
         ]}
         subtile={`${me?.balance || 0} ₽`}
         title="Кошелек"
-        onClick={({ price }) => addMoney(price)}
         transactions={me?.transactions || []}
+        onClick={({ price }) => addMoney(price)}
       />
 
       {services?.map((item: any) => (
         <ServiceCard
+          key={item._id}
           buttonText={item?.btn || "Купить"}
           defaultVlue={item.options[0]}
+          options={item.options}
           subtile={getSubtitle(item)}
           text={item.description}
           title={item.name}
-          options={item.options}
           onClick={(value: any) => buyService(item, value)}
         />
       ))}

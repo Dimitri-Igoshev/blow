@@ -4,5 +4,5 @@ export const Note = ({ text }: { text: string }) => {
       <b>Заметка</b>
       <p>{text}</p>
     </div>
-  )
-}
+  );
+};
