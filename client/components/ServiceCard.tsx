@@ -1,9 +1,10 @@
 import { Button } from "@heroui/button";
 import { cn, Input, Select, SelectItem } from "@heroui/react";
-import { useState, type FC } from "react";
-import { ru } from "date-fns/locale";
+import { useEffect, useState, type FC } from "react";
+import { is, ru, se } from "date-fns/locale";
 import { periods } from "@/data/periods";
 import { format } from "date-fns";
+import { useBuyServiceMutation, useBuyServicesKitMutation } from "@/redux/services/userApi";
 
 interface ServiceCardProps {
   title: string;
@@ -13,8 +14,9 @@ interface ServiceCardProps {
   oneTime?: boolean;
   onClick: (value: any) => void;
   buttonText: string;
-  defaultVlue?: { price: string; period?: string };
+  defaultVlue?: { price: string; period?: string; quantity?: string };
   transactions?: any[];
+  options?: any[];
 }
 
 export const ServiceCard: FC<ServiceCardProps> = ({
@@ -27,11 +29,45 @@ export const ServiceCard: FC<ServiceCardProps> = ({
   buttonText,
   defaultVlue,
   transactions = [],
+  options = []
 }) => {
   const [value, setValue] = useState({
-    period: defaultVlue?.period || "month",
+    label: "",
+    value: "",
     price: defaultVlue?.price || "",
   });
+
+  const getPeriodLabel = (value: any) => {
+    switch (value) {
+      case "day":
+        return "1 день";
+      case "3days":
+        return "3 дня";
+      case "week":
+        return "неделя";
+      case "month":
+        return "месяц";
+      case "quarter":
+        return "3 месяца";
+      case "year":
+        return "год";
+      default:
+        return "";
+    }
+  };
+
+  const isQuantity = !options[0]?.period || options[0]?.period === "quantity";
+  const selectOptions = isQuantity
+    ? options.map((i) => ({
+        label: i.quantity.toString(),
+        value: i.quantity,
+        price: i.price,
+      }))
+    : options.map((i) => ({
+        label: getPeriodLabel(i.period.toString()),
+        value: i.period,
+        price: i.price,
+      }));
 
   const [isHistory, setIsHistory] = useState(false);
 
@@ -39,7 +75,10 @@ export const ServiceCard: FC<ServiceCardProps> = ({
     <div className="bg-white dark:bg-foreground-100 rounded-[36px] p-[30px] flex flex-col gap-6">
       <div className="flex flex-wrap justify-between items-center text-[24px] font-semibold">
         <p>{title}</p>
-        <p className="text-[20px] font-medium sm:text-[24px] sm:font-semibold">
+        <p className={cn("font-medium sm:font-semibold", {
+          ['text-[20px] sm:text-[24px] ']: oneTime,
+          ['text-[16px] sm:text-[20px] ']: !oneTime,
+        })}>
           {subtile}
         </p>
       </div>
@@ -58,14 +97,22 @@ export const ServiceCard: FC<ServiceCardProps> = ({
         <div className="flex flex-col gap-3 p-4 rounded-[24px] bg-foreground-100">
           {transactions.map((item: any) => (
             <div className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-3 items-center">
-              <div className="font-medium">{item?.type === "credit" ? "Пополнение" : "Снятие"}</div>
-              <div className="flex justify-center text-xs">{format(new Date(item.updatedAt), "dd.MM.yyyy", {
-                locale: ru,
-              })}</div>
-              <div className={cn("flex justify-end", {
-                ["text-red-500"]: item?.type === "debit",
-                ["text-green-500"]: item?.type === "credit"
-              })}>{item.sum}₽</div>
+              <div className="font-medium">
+                {item?.type === "credit" ? "Пополнение" : "Снятие"}
+              </div>
+              <div className="flex justify-center text-xs">
+                {format(new Date(item.updatedAt), "dd.MM.yyyy", {
+                  locale: ru,
+                })}
+              </div>
+              <div
+                className={cn("flex justify-end", {
+                  ["text-red-500"]: item?.type === "debit",
+                  ["text-green-500"]: item?.type === "credit",
+                })}
+              >
+                {item.sum}₽
+              </div>
             </div>
           ))}
         </div>
@@ -80,7 +127,6 @@ export const ServiceCard: FC<ServiceCardProps> = ({
         {transactions?.length ? (
           <Button
             className="z-0 relative w-full sm:w-auto"
-            // color="secondary"
             radius="full"
             variant="solid"
             onPress={() => setIsHistory(!isHistory)}
@@ -95,11 +141,18 @@ export const ServiceCard: FC<ServiceCardProps> = ({
               className="text-primary z-0 relative rounded-full w-full sm:w-[150px]"
               classNames={{ value: "font-semibold" }}
               radius="full"
-              selectedKeys={[value.period]}
-              onChange={(el) => setValue({ ...value, period: el.target.value })}
+              placeholder="Выберите"
+              selectedKeys={[value.value]}
+              onChange={(el) =>
+                setValue({
+                  ...value,
+                  value: el.target.value,
+                  price: options[+el.target.value || 0]?.price,
+                })
+              }
             >
-              {periods.map((period: any) => (
-                <SelectItem key={period.value}>{period.label}</SelectItem>
+              {selectOptions.map((i: any, idx: number) => (
+                <SelectItem key={idx}>{i.label}</SelectItem>
               ))}
             </Select>
           ) : null}
@@ -110,8 +163,9 @@ export const ServiceCard: FC<ServiceCardProps> = ({
             endContent={<span className="text-primary">₽</span>}
             placeholder=""
             radius="full"
-            value={value.price}
+            value={value.value || oneTime ? value.price : ""}
             onChange={(e) => setValue({ ...value, price: e.target.value })}
+            disabled={!oneTime}
           />
 
           <Button
@@ -120,7 +174,11 @@ export const ServiceCard: FC<ServiceCardProps> = ({
             radius="full"
             variant="solid"
             onPress={() =>
-              onClick({ period: value.period, price: value.price })
+              onClick({
+                period: isQuantity ? "" : options[+value?.value]?.period,
+                price: value.price,
+                quantity: isQuantity ? options[+value?.value]?.quantity : "",
+              })
             }
           >
             {buttonText}

@@ -110,7 +110,20 @@ export const userApi = createApi({
 				body: body,
 			}),
 			invalidatesTags: ["User"],
-
+		}),
+		buyService: builder.mutation({
+			query: (body) => ({
+				url: `/buy/service`,
+				method: "POST",
+				body: body,
+			}),
+		}),
+		buyServicesKit: builder.mutation({
+			query: (body) => ({
+				url: `console.log(1, userId, price, name, serviceId, quantity, period)`,
+				method: "POST",
+				body: body,
+			}),
 		})
 	}),
 });
@@ -125,5 +138,7 @@ export const {
 	useCreateNoteMutation,
 	useUpdateNoteMutation,
 	useDeleteNoteMutation,
-	useAddBalanceMutation
+	useAddBalanceMutation,
+	useBuyServiceMutation,
+	useBuyServicesKitMutation
 } = userApi;

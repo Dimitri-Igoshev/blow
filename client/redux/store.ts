@@ -5,6 +5,7 @@ import searchReducer from "./features/searchSlice";
 import { authApi } from "./services/authApi";
 import { userApi } from "./services/userApi";
 import { uploadApi } from "./services/uploadApi";
+import { serviceApi } from "./services/serviceApi";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [uploadApi.reducerPath]: uploadApi.reducer,
+    [serviceApi.reducerPath]: serviceApi.reducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) => {
@@ -19,6 +21,7 @@ export const store = configureStore({
       authApi.middleware,
       userApi.middleware,
       uploadApi.middleware,
+      serviceApi.middleware,
     ]);
   },
 });

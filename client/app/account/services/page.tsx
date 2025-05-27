@@ -1,20 +1,74 @@
 "use client";
 
 import { ServiceCard } from "@/components/ServiceCard";
-import { useAddBalanceMutation, useGetMeQuery } from "@/redux/services/userApi";
+import { useGetServicesQuery } from "@/redux/services/serviceApi";
+import {
+  useAddBalanceMutation,
+  useBuyServiceMutation,
+  useBuyServicesKitMutation,
+  useGetMeQuery,
+} from "@/redux/services/userApi";
+import { ru } from "date-fns/locale";
+import { format } from "date-fns";
 
 export default function accountServices() {
-  const { data: me } = useGetMeQuery(null)
+  const { data: me } = useGetMeQuery(null);
+  const { data: services } = useGetServicesQuery(null);
 
-  const [addBalance] = useAddBalanceMutation()
+  const [addBalance] = useAddBalanceMutation();
 
   const addMoney = (price: number) => {
-    if (!me?._id) return
-    addBalance({ id: me._id, sum: +price }).unwrap().catch(() => console.log('error'))
-  }
+    if (!me?._id) return;
+    addBalance({ id: me._id, sum: +price })
+      .unwrap()
+      .catch(() => console.log("error"));
+  };
+
+  const getSubtitle = (item: any): string => {
+    const isExist = me?.services.find((i: any) => i._id === item._id);
+
+    if (!isExist) return "";
+
+    if (isExist?.quantity) {
+      return `осталось ${isExist.quantity}`;
+    } else {
+      return `до ${format(new Date(isExist?.expiredAt || Date.now()), "dd.MM.yyyy", {
+        locale: ru,
+      })}`;
+    }
+  };
+
+  const [getService] = useBuyServiceMutation();
+  const [getServicesKit] = useBuyServicesKitMutation();
+
+  const buyService = (item: any, value: any) => {   
+    // if (!item?.services?.length) {
+      getService({
+        userId: me._id,
+        serviceId: item._id,
+        name: item?.name,
+        period: value?.period,
+        quantity: value?.quantity,
+        price: value?.price,
+      })
+        .unwrap()
+        .catch((e) => console.log("ошибка покупки сервиса"));
+    // } else {
+    //   getServicesKit({
+    //     userId: me._id,
+    //     serviceId: item._id,
+    //     name: item?.name,
+    //     period: value?.period,
+    //     price: value?.price,
+    //     services: item?.services,
+    //   })
+    //     .unwrap()
+    //     .catch((e) => console.log("ошибка покупки сервисного набора"));
+    // }
+  };
 
   return (
-    <div className="flex w-full flex-col px-9 pt-[84px] gap-[30px]">
+    <div className="flex w-full flex-col px-9 pt-[84px] gap-[30px] min-h-screen">
       <div className="flex w-full items-center justify-between">
         <h1 className="font-semibold text-[36px]">Услуги</h1>
       </div>
@@ -30,11 +84,23 @@ export default function accountServices() {
         ]}
         subtile={`${me?.balance || 0} ₽`}
         title="Кошелек"
-        onClick={({price}) => addMoney(price)}
+        onClick={({ price }) => addMoney(price)}
         transactions={me?.transactions || []}
       />
 
-      <ServiceCard
+      {services?.map((item: any) => (
+        <ServiceCard
+          buttonText={item?.btn || "Купить"}
+          defaultVlue={item.options[0]}
+          subtile={getSubtitle(item)}
+          text={item.description}
+          title={item.name}
+          options={item.options}
+          onClick={(value: any) => buyService(item, value)}
+        />
+      ))}
+
+      {/* <ServiceCard
         buttonText="Продлить"
         defaultVlue={{ period: "month", price: "7900" }}
         subtile="осталось 3 дня"
@@ -60,7 +126,7 @@ export default function accountServices() {
         text='Для закрепления анкеты в "ТОП" требуется активный премиум-аккаунт. Это необходимо, потому что без премиум-аккаунта вы не сможете отвечать на сообщения девушек, и вложенные средства не принесут желаемого результата.'
         title="В топ"
         onClick={(value: any) => console.log(value)}
-      />
+      /> */}
     </div>
   );
 }
