@@ -1,6 +1,6 @@
 import { Button } from "@heroui/button";
 import { cn, Input, Select, SelectItem } from "@heroui/react";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { ru } from "date-fns/locale";
 import { format } from "date-fns";
 
@@ -101,7 +101,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
               className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-3 items-center"
             >
               <div className="font-medium">
-                {item?.type === "credit" ? "Пополнение" : "Снятие"}
+                {item?.type === "credit" ? "Пополнение" : "Списание"}
               </div>
               <div className="flex justify-center text-xs">
                 {format(new Date(item.updatedAt), "dd.MM.yyyy", {
@@ -173,9 +173,10 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 
           <Button
             className="z-0 relative w-full sm:w-auto"
-            color="primary"
+            color={value.price && (value.value || oneTime) ? "primary" : "default"}
             radius="full"
             variant="solid"
+            disabled={!value.price && !value.value}
             onPress={() =>
               onClick({
                 period: isQuantity ? "" : options[+value?.value]?.period,

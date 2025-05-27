@@ -22,7 +22,7 @@ export default function EditProfile() {
   const [user, setUser] = useState<any>();
   const [loading, setLoading] = useState(false);
 
-  const { data: me, refetch } = useGetMeQuery(null);
+  const { data: me } = useGetMeQuery(null);
 
   useEffect(() => {
     if (!me) return;
@@ -55,7 +55,7 @@ export default function EditProfile() {
       about: user.about,
     };
 
-    await update({ id: me._id, body: data })
+    await update({ id: me?._id, body: data })
       .unwrap()
       .then(() => {
         router.push(ROUTES.ACCOUNT.PROFILE);

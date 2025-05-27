@@ -21,17 +21,17 @@ export const userApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["User"],
+  tagTypes: ["User", "Me"],
   endpoints: (builder) => ({
     getMe: builder.query({
       query: () => "me",
-      providesTags: ["User"],
+      providesTags: ["Me"],
     }),
     getUser: builder.query({
       query: (id) => ({
         url: `/${id}`,
       }),
-      providesTags: ["User"],
+      providesTags: ["User", "Me"],
     }),
     getUsers: builder.query({
       query: ({ online, sex, city, minage, maxage, limit }) =>
@@ -54,7 +54,7 @@ export const userApi = createApi({
         body,
         formData: true,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Me"],
     }),
     // removeUser: builder.mutation({
     //   query: (id) => ({
@@ -77,7 +77,7 @@ export const userApi = createApi({
         method: "PATCH",
         body: body,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Me"],
     }),
     createNote: builder.mutation({
       query: ({ id, body }) => ({
@@ -85,7 +85,7 @@ export const userApi = createApi({
         method: "PATCH",
         body: body,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Me"],
     }),
     updateNote: builder.mutation({
       query: ({ id, body }) => ({
@@ -93,7 +93,7 @@ export const userApi = createApi({
         method: "PATCH",
         body: body,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Me"],
     }),
     deleteNote: builder.mutation({
       query: ({ id, body }) => ({
@@ -101,7 +101,7 @@ export const userApi = createApi({
         method: "PATCH",
         body: body,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Me"],
     }),
     addBalance: builder.mutation({
       query: (body) => ({
@@ -109,7 +109,7 @@ export const userApi = createApi({
         method: "POST",
         body: body,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Me"],
     }),
     buyService: builder.mutation({
       query: (body) => ({
@@ -117,13 +117,15 @@ export const userApi = createApi({
         method: "POST",
         body: body,
       }),
+      invalidatesTags: ["User", "Me"],
     }),
     buyServicesKit: builder.mutation({
       query: (body) => ({
-        url: `console.log(1, userId, price, name, serviceId, quantity, period)`,
+        url: `/buy/services-kit`,
         method: "POST",
         body: body,
       }),
+      invalidatesTags: ["User", "Me"],
     }),
   }),
 });
