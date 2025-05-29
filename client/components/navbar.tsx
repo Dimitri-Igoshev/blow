@@ -28,6 +28,8 @@ import {
 } from "@/redux/services/userApi";
 import { config } from "@/common/env";
 import { CameraIcon } from "@/common/icons";
+import { isPremium } from "@/helper/checkIsActive"
+import { FaCrown } from "react-icons/fa6";
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -162,6 +164,7 @@ export const Navbar = () => {
 								onClick={() => router.push(ROUTES.ACCOUNT.PROFILE)}
 							>
 								<div className="flex items-center gap-3">
+									
 									<p className="text-white hover:underline">
 										{me?.firstName
 											? me.firstName
@@ -169,9 +172,11 @@ export const Navbar = () => {
 												? "Мужчина"
 												: "Девушка"}
 									</p>
-									<div className="rounded-full border-white">
+									<div className="rounded-full border-white relative">
+									{isPremium(me) ? (<FaCrown className="text-[24px] text-white absolute -top-[14px] left-2 z-0" />) : null}
 										<Avatar
 											showFallback
+                      // isBordered={isPremium(me)}
 											fallback={
 												<CameraIcon
 													className="animate-pulse w-6 h-6 text-default-500"

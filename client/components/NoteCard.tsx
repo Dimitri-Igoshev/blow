@@ -11,11 +11,11 @@ export const NoteCard = ({ note }: any) => {
   const router = useRouter();
 
 	return (
-		<button className="bg-white dark:bg-black flex gap-5 rounded-[24px] p-5 cursor-pointer" onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + note._id)}>
+		<button className="bg-white flex flex-col sm:flex-row dark:bg-black flex gap-5 rounded-[24px] p-5 cursor-pointer" onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + note._id)}>
       <div className="rounded-[18px] overflow-hidden">
 			<Image
 				alt=""
-				className="z-0 relative w-full h-full xl:h-[100px] xl:w-[90px]"
+				className="z-0 relative w-full h-auto xl:h-[100px] xl:w-[90px]"
 				radius="none"
 				src={
 					user?.photos[0]?.url
