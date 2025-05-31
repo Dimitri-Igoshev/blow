@@ -43,6 +43,8 @@ export const Navbar = () => {
 	useEffect(() => {
 		if (!me?._id) return;
 
+		let debounce = 0;
+
 		const activityHandler = () => {
 			events.forEach((event) =>
 				window.removeEventListener(event, activityHandler)
@@ -55,7 +57,9 @@ export const Navbar = () => {
 				events.forEach((event) =>
 					window.addEventListener(event, activityHandler)
 				);
-			}, 60000);
+
+				debounce = 10000;
+			}, debounce);
 		};
 
 		const events = ["mousemove", "keydown", "click"];
