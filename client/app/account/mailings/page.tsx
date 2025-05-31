@@ -5,8 +5,9 @@ import { Button } from "@heroui/button";
 import {
 	useCreateMailingMutation,
 	useGetMailingsQuery,
+	useUpdateMailingMutation,
 } from "@/redux/services/mailingApi";
-import { useGetMeQuery } from "@/redux/services/userApi";
+import { useGetMeQuery, useUpdateUserMutation } from "@/redux/services/userApi";
 import { InfoModal } from "@/components/InfoModal";
 import {
 	Modal,
@@ -16,10 +17,15 @@ import {
 	ModalHeader,
 	useDisclosure,
 	Textarea,
+	Avatar,
+	AvatarGroup,
 } from "@heroui/react";
 import { ROUTES } from "@/app/routes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { config } from "@/common/env";
+import { CameraIcon } from "@/common/icons";
+import { FaHeart } from "react-icons/fa6";
 
 const MAILINGS_ID = "6831854519e3572edace86b7";
 
@@ -52,16 +58,60 @@ export default function AccountMailings() {
 	};
 
 	const [createMailing] = useCreateMailingMutation();
+	const [updateMailing] = useUpdateMailingMutation();
+	const [updateUser] = useUpdateUserMutation();
 
 	const save = () => {
 		createMailing({
 			owner: me?._id,
 			text,
-		});
+		})
+			.unwrap()
+			.then(() => {
+				onOpenChange();
+				setText("");
+
+				const services = me?.services?.map((service: any) => {
+					if (service?._id == MAILINGS_ID) {
+						return {
+							...service,
+							quantity: +service?.quantity - 1,
+						};
+					} else {
+						return service;
+					}
+				});
+
+        console.log(services);
+
+				updateUser({
+					id: me?._id,
+					body: { services },
+				})
+					.unwrap()
+					.then()
+					.catch((err) => console.log(err));
+			})
+			.catch((err) => console.log(err));
+	};
+
+	const onLike = (mailing: any) => {
+		if (isLikes(mailing)) return;
+
+		updateMailing({
+			id: mailing?._id,
+			body: { interested: [me?._id, ...mailing.interested] },
+		})
+			.unwrap()
+			.catch((err) => console.log(err));
+	};
+
+	const isLikes = (mailing: any) => {
+		return !!mailing?.interested?.find((i: any) => i?._id == me?._id);
 	};
 
 	return (
-		<div className="flex w-full flex-col px-9 h-screen pt-[84px] gap-[30px]">
+		<div className="flex w-full flex-col px-9 min-h-screen pt-[84px] gap-[30px]">
 			<div className="flex w-full items-center justify-between">
 				<h1 className="font-semibold text-[36px]">Рассылки</h1>
 
@@ -82,9 +132,77 @@ export default function AccountMailings() {
 					{mailings?.map((mailing: any) => (
 						<div
 							key={mailing._id}
-							className="bg-white w-full flex-col sm:flex-row dark:bg-black flex gap-5 rounded-[24px] p-5 cursor-pointer"
+							className="bg-white w-full flex-col sm:flex-row justify-between items-start dark:bg-black flex gap-5 rounded-[24px] p-5 cursor-pointer"
 						>
-							{mailing.text}
+							<div className="flex flex-col gap-3">
+								<div className="text-[18px]">{mailing.text}</div>
+								{mailing?.owner?._id === me?._id ? (
+									<div className="flex flex-row gap-6 items-center mt-3">
+										<p className="text-[14px] font-semibold">Откликнулись:</p>
+										<AvatarGroup isBordered>
+											{mailing?.interested?.map((item: any) => (
+												<Avatar
+													key={item._id}
+													fallback={
+														<CameraIcon
+															className="animate-pulse w-6 h-6 text-default-500"
+															fill="currentColor"
+															size={20}
+														/>
+													}
+													src={
+														item?.photos[0]?.url
+															? `${config.MEDIA_URL}/${item?.photos[0]?.url}`
+															: item?.sex === "male"
+																? "/men.jpg"
+																: "/woman.jpg"
+													}
+													onClick={() =>
+														router.push(`${ROUTES.ACCOUNT.SEARCH}/${item?._id}`)
+													}
+												/>
+											))}
+										</AvatarGroup>
+									</div>
+								) : null}
+							</div>
+
+							<div className="flex items-center gap-3">
+								<Avatar
+									showFallback
+									// isBordered={isPremium(me)}
+									fallback={
+										<CameraIcon
+											className="animate-pulse w-6 h-6 text-default-500"
+											fill="currentColor"
+											size={20}
+										/>
+									}
+									src={
+										mailing?.owner?.photos[0]?.url
+											? `${config.MEDIA_URL}/${mailing?.owner?.photos[0]?.url}`
+											: mailing?.owner?.sex === "male"
+												? "/men.jpg"
+												: "/woman.jpg"
+									}
+									onClick={() =>
+										router.push(
+											`${ROUTES.ACCOUNT.SEARCH}/${mailing?.owner?._id}`
+										)
+									}
+								/>
+								{mailing?.owner?._id !== me?._id && !isLikes(mailing) ? (
+									<Button
+										radius="full"
+										// variant="bordered"
+										className="bg-transparent hover:bg-primary transition-all group"
+										isIconOnly
+										onPress={() => onLike(mailing)}
+									>
+										<FaHeart className="text-[20px] text-primary group-hover:text-white transition-all" />
+									</Button>
+								) : null}
+							</div>
 						</div>
 					))}
 				</div>
