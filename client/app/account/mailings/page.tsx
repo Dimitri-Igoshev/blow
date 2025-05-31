@@ -82,8 +82,6 @@ export default function AccountMailings() {
 					}
 				});
 
-        console.log(services);
-
 				updateUser({
 					id: me?._id,
 					body: { services },
@@ -132,7 +130,7 @@ export default function AccountMailings() {
 					{mailings?.map((mailing: any) => (
 						<div
 							key={mailing._id}
-							className="bg-white w-full flex-col sm:flex-row justify-between items-start dark:bg-black flex gap-5 rounded-[24px] p-5 cursor-pointer"
+							className="bg-white w-full flex-col sm:flex-row justify-between items-start dark:bg-foreground-100 flex gap-5 rounded-[24px] p-5 cursor-pointer"
 						>
 							<div className="flex flex-col gap-3">
 								<div className="text-[18px]">{mailing.text}</div>
@@ -191,7 +189,7 @@ export default function AccountMailings() {
 										)
 									}
 								/>
-								{mailing?.owner?._id !== me?._id && !isLikes(mailing) ? (
+								{me?.sex !== 'male' && mailing?.owner?._id !== me?._id && !isLikes(mailing) ? (
 									<Button
 										radius="full"
 										// variant="bordered"
