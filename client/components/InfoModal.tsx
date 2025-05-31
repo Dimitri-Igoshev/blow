@@ -15,6 +15,8 @@ interface InfoModalProps {
 	onOpenChange: () => void;
 	title: string;
 	text: string;
+	onAction?: () => void;
+	actionBtn?: string;
 }
 
 export const InfoModal: FC<InfoModalProps> = ({
@@ -22,6 +24,8 @@ export const InfoModal: FC<InfoModalProps> = ({
 	onOpenChange,
 	title,
 	text,
+	onAction,
+	actionBtn,
 }) => {
 	return (
 		<Modal
@@ -45,15 +49,15 @@ export const InfoModal: FC<InfoModalProps> = ({
 							<div>{text}</div>
 						</ModalBody>
 						<ModalFooter>
-							<div className="flex flex-col w-full">
-								<Button
-									className="w-full"
-									radius="full"
-									type="submit"
-                  onPress={onClose}
-								>
+							<div className="flex flex-raw w-full gap-3">
+								<Button className="w-full" radius="full" onPress={onClose}>
 									Закрыть
 								</Button>
+								{onAction && actionBtn ? (
+									<Button color="primary" className="w-full" radius="full" onPress={onAction}>
+										{actionBtn}
+									</Button>
+								) : null}
 							</div>
 						</ModalFooter>
 					</>

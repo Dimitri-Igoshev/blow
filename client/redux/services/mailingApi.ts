@@ -8,10 +8,11 @@ export const mailingApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${config.API_URL}/mailing`,
     prepareHeaders: (headers, { getState }) => {
-      const token = localStorage.getItem('access-token')
-      if (token) headers.set('Authorization', `Bearer ${token}`)
+      const token = localStorage.getItem("access-token");
 
-      return headers
+      if (token) headers.set("Authorization", `Bearer ${token}`);
+
+      return headers;
     },
   }),
   tagTypes: ["Mailing"],
@@ -21,7 +22,7 @@ export const mailingApi = createApi({
       providesTags: ["Mailing"],
     }),
     getMailingById: builder.query({
-      query: (id) => `/${id}`
+      query: (id) => `/${id}`,
     }),
     createMailing: builder.mutation({
       query: (body) => ({
@@ -45,8 +46,14 @@ export const mailingApi = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["Mailing"],
-    })
+    }),
   }),
 });
 
-export const { useGetMailingsQuery } = mailingApi;
+export const {
+  useGetMailingsQuery,
+  useGetMailingByIdQuery,
+  useCreateMailingMutation,
+  useUpdateMailingMutation,
+  useDeleteMailingMutation,
+} = mailingApi;

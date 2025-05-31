@@ -1,6 +1,6 @@
 import { Button } from "@heroui/button";
 import { cn, Input, Select, SelectItem } from "@heroui/react";
-import { useEffect, useState, type FC } from "react";
+import { useState, type FC } from "react";
 import { ru } from "date-fns/locale";
 import { format } from "date-fns";
 
@@ -173,10 +173,12 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 
           <Button
             className="z-0 relative w-full sm:w-auto"
-            color={value.price && (value.value || oneTime) ? "primary" : "default"}
+            color={
+              value.price && (value.value || oneTime) ? "primary" : "default"
+            }
+            disabled={!value.price && !value.value}
             radius="full"
             variant="solid"
-            disabled={!value.price && !value.value}
             onPress={() =>
               onClick({
                 period: isQuantity ? "" : options[+value?.value]?.period,

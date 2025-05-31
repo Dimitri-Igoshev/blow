@@ -15,7 +15,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [uploadApi.reducerPath]: uploadApi.reducer,
     [serviceApi.reducerPath]: serviceApi.reducer,
-    [mailingApi.reducerPath]: mailingApi.reducer
+    [mailingApi.reducerPath]: mailingApi.reducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) => {
@@ -24,7 +24,7 @@ export const store = configureStore({
       userApi.middleware,
       uploadApi.middleware,
       serviceApi.middleware,
-      mailingApi.middleware
+      mailingApi.middleware,
     ]);
   },
 });
