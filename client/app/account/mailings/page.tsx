@@ -4,6 +4,7 @@ import { Button } from "@heroui/button";
 
 import {
 	useCreateMailingMutation,
+	useDeleteMailingMutation,
 	useGetMailingsQuery,
 	useUpdateMailingMutation,
 } from "@/redux/services/mailingApi";
@@ -26,6 +27,7 @@ import { useState } from "react";
 import { config } from "@/common/env";
 import { CameraIcon } from "@/common/icons";
 import { FaHeart } from "react-icons/fa6";
+import { MdDeleteOutline } from "react-icons/md";
 
 const MAILINGS_ID = "6831854519e3572edace86b7";
 
@@ -108,6 +110,12 @@ export default function AccountMailings() {
 		return !!mailing?.interested?.find((i: any) => i?._id == me?._id);
 	};
 
+	const [removeMailing] =  useDeleteMailingMutation()
+
+	const remove = (id: string) => {
+		removeMailing(id).unwrap().then().catch(err => console.log(err))
+	}
+
 	return (
 		<div className="flex w-full flex-col px-9 min-h-screen pt-[84px] gap-[30px]">
 			<div className="flex w-full items-center justify-between">
@@ -130,7 +138,7 @@ export default function AccountMailings() {
 					{mailings?.map((mailing: any) => (
 						<div
 							key={mailing._id}
-							className="bg-white w-full flex-col sm:flex-row justify-between items-start dark:bg-foreground-100 flex gap-5 rounded-[24px] p-5 cursor-pointer"
+							className="bg-white w-full flex-col sm:flex-row justify-between items-start dark:bg-foreground-100 flex gap-5 rounded-[24px] p-5"
 						>
 							<div className="flex flex-col gap-3">
 								<div className="text-[18px]">{mailing.text}</div>
@@ -166,6 +174,9 @@ export default function AccountMailings() {
 							</div>
 
 							<div className="flex items-center gap-3">
+								{me?._id === mailing?.owner?._id ? (
+									<Button isIconOnly radius="full" className="hover:bg-primary"><MdDeleteOutline className="text-[18px]" onClick={() => remove(mailing?._id)} /></Button>
+								) : (
 								<Avatar
 									showFallback
 									// isBordered={isPremium(me)}
@@ -188,16 +199,16 @@ export default function AccountMailings() {
 											`${ROUTES.ACCOUNT.SEARCH}/${mailing?.owner?._id}`
 										)
 									}
-								/>
+								/>)}
 								{me?.sex !== 'male' && mailing?.owner?._id !== me?._id && !isLikes(mailing) ? (
 									<Button
 										radius="full"
 										// variant="bordered"
-										className="bg-transparent hover:bg-primary transition-all group"
+										className="hover:bg-primary transition-all group"
 										isIconOnly
 										onPress={() => onLike(mailing)}
 									>
-										<FaHeart className="text-[20px] text-primary group-hover:text-white transition-all" />
+										<FaHeart className="text-[18px]" />
 									</Button>
 								) : null}
 							</div>
