@@ -8,143 +8,146 @@ import { useState } from "react";
 import { ServiceCard } from "@/components/ServiceCard";
 import { useGetServicesQuery } from "@/redux/services/serviceApi";
 import {
-  useAddBalanceMutation,
-  useBuyServiceMutation,
-  useBuyServicesKitMutation,
-  useGetMeQuery,
+	useAddBalanceMutation,
+	useBuyServiceMutation,
+	useBuyServicesKitMutation,
+	useGetMeQuery,
 } from "@/redux/services/userApi";
 import { InfoModal } from "@/components/InfoModal";
+import { MAILING_ID, TOP_ID } from "@/helper/checkIsActive";
 
 export default function AccountServices() {
-  const { data: me } = useGetMeQuery(null);
-  const { data: services } = useGetServicesQuery(null);
+	const { data: me } = useGetMeQuery(null);
+	const { data: services } = useGetServicesQuery(null);
 
-  const [addBalance] = useAddBalanceMutation();
+	const [addBalance] = useAddBalanceMutation();
 
-  const addMoney = (price: number) => {
-    if (!me?._id) return;
-    addBalance({ id: me._id, sum: +price })
-      .unwrap()
-      .catch(() => console.log("error"));
-  };
+	const addMoney = (price: number) => {
+		if (!me?._id) return;
+		addBalance({ id: me._id, sum: +price })
+			.unwrap()
+			.catch(() => console.log("error"));
+	};
 
-  const getSubtitle = (item: any): string => {
-    const isExist = me?.services.find((i: any) => i._id === item._id);
+	const getSubtitle = (item: any): string => {
+		const isExist = me?.services.find((i: any) => i._id === item._id);
 
-    if (!isExist) return "";
+		if (!isExist) return "";
 
-    if (isExist?.quantity) {
-      return `осталось ${isExist.quantity}`;
-    } else if (isExist?.expiredAt) {
-      return `до ${format(
-        new Date(isExist.expiredAt),
-        "dd.MM.yyyy",
-        {
-          locale: ru,
-        },
-      )}`;
-    } else {
-      return "";
-    }
-  };
+		if (isExist?.quantity) {
+			return `осталось ${isExist.quantity}`;
+		} else if (isExist?.expiredAt) {
+			return `до ${format(new Date(isExist.expiredAt), "dd.MM.yyyy", {
+				locale: ru,
+			})}`;
+		} else {
+			return "";
+		}
+	};
 
-  const [getService] = useBuyServiceMutation();
-  const [getServicesKit] = useBuyServicesKitMutation();
-  const [info, setInfo] = useState({
-    title: "",
-    text: "",
-  });
+	const [getService] = useBuyServiceMutation();
+	const [getServicesKit] = useBuyServicesKitMutation();
+	const [info, setInfo] = useState({
+		title: "",
+		text: "",
+	});
 
-  const buyService = (item: any, value: any) => {
-    if (me?.balance < +value?.price) {
-      setInfo({
-        title: "Ошибка",
-        text: "Недостаточно средств!",
-      });
+	const buyService = (item: any, value: any) => {
+		if (me?.balance < +value?.price) {
+			setInfo({
+				title: "Ошибка",
+				text: "Недостаточно средств!",
+			});
 
-      return onOpen();
-    }
-    if (!item?.services?.length) {
-      getService({
-        userId: me._id,
-        serviceId: item._id,
-        name: item?.name,
-        period: value?.period,
-        quantity: value?.quantity,
-        price: value?.price,
-      })
-        .unwrap()
-        .then((res) => {
-          setInfo({
-            title: "Поздравляем",
-            text: "Услуга добавлена!",
-          });
+			return onOpen();
+		}
+		if (!item?.services?.length) {
+			getService({
+				userId: me._id,
+				serviceId: item._id,
+				name: item?.name,
+				period: value?.period,
+				quantity: value?.quantity,
+				price: value?.price,
+			})
+				.unwrap()
+				.then((res) => {
+					setInfo({
+						title: "Поздравляем",
+						text: "Услуга добавлена!",
+					});
 
-          return onOpen();
-        })
-        .catch((e) => console.log("ошибка покупки сервиса"));
-    } else {
-      const option = item.options.find((i: any) => i.price == value.price);
+					return onOpen();
+				})
+				.catch((e) => console.log("ошибка покупки сервиса"));
+		} else {
+			const option = item.options.find((i: any) => i.price == value.price);
 
-      getServicesKit({
-        userId: me._id,
-        serviceId: item._id,
-        name: item?.name,
-        period: value?.period,
-        price: value?.price,
-        services: item?.services,
-        servicesOptions: option?.servicesOptions,
-      })
-        .unwrap()
-        .then((res) => {
-          setInfo({
-            title: "Поздравляем",
-            text: "Премиум добавлен!",
-          });
+			getServicesKit({
+				userId: me._id,
+				serviceId: item._id,
+				name: item?.name,
+				period: value?.period,
+				price: value?.price,
+				services: item?.services,
+				servicesOptions: option?.servicesOptions,
+			})
+				.unwrap()
+				.then((res) => {
+					setInfo({
+						title: "Поздравляем",
+						text: "Премиум добавлен!",
+					});
 
-          return onOpen();
-        })
-        .catch((e) => console.log("ошибка покупки сервисного набора"));
-    }
-  };
+					return onOpen();
+				})
+				.catch((e) => console.log("ошибка покупки сервисного набора"));
+		}
+	};
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  return (
-    <div className="flex w-full flex-col px-9 pt-[84px] gap-[30px] min-h-screen">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="font-semibold text-[36px]">Услуги</h1>
-      </div>
+	const womenServices = services?.filter(
+		(item: any) => item?._id !== MAILING_ID
+	);
+	const menServices = services?.filter((item: any) => item?._id !== TOP_ID);
 
-      <ServiceCard
-        oneTime
-        buttonText="Пополнить"
-        defaultVlue={{ period: "", price: "5000" }}
-        list={[
-          "При оплате картой в выписке и личном кабинете не будет указано, что платеж связан с сайтом знакомств.",
-          "Ваши данные карты остаются конфиденциальными. Мы их не видим, и банк не передает эту информацию третьим лицам.",
-          "Мы не подключаем автоподписки и не выполняем повторные списания.",
-        ]}
-        subtile={`${me?.balance || 0} ₽`}
-        title="Кошелек"
-        transactions={me?.transactions || []}
-        onClick={({ price }) => addMoney(price)}
-      />
+	const genderServices = me?.sex === "male" ? menServices : womenServices;
 
-      {services?.map((item: any) => (
-        <ServiceCard
-          key={item._id}
-          buttonText={item?.btn || "Купить"}
-          // defaultVlue={item.options[0]}
-          options={item.options}
-          subtile={getSubtitle(item)}
-          text={item.description}
-          title={item.name}
-          onClick={(value: any) => buyService(item, value)}
-        />
-      ))}
+	return (
+		<div className="flex w-full flex-col px-9 pt-[84px] gap-[30px] min-h-screen">
+			<div className="flex w-full items-center justify-between">
+				<h1 className="font-semibold text-[36px]">Услуги</h1>
+			</div>
 
-      {/* <ServiceCard
+			<ServiceCard
+				oneTime
+				buttonText="Пополнить"
+				defaultVlue={{ period: "", price: "5000" }}
+				list={[
+					"При оплате картой в выписке и личном кабинете не будет указано, что платеж связан с сайтом знакомств.",
+					"Ваши данные карты остаются конфиденциальными. Мы их не видим, и банк не передает эту информацию третьим лицам.",
+					"Мы не подключаем автоподписки и не выполняем повторные списания.",
+				]}
+				subtile={`${me?.balance || 0} ₽`}
+				title="Кошелек"
+				transactions={me?.transactions || []}
+				onClick={({ price }) => addMoney(price)}
+			/>
+
+			{genderServices?.map((item: any) => (
+				<ServiceCard
+					key={item._id}
+					buttonText={item?.btn || "Купить"}
+					options={item.options}
+					subtile={getSubtitle(item)}
+					text={item.description}
+					title={item.name}
+					onClick={(value: any) => buyService(item, value)}
+				/>
+			))}
+
+			{/* <ServiceCard
         buttonText="Продлить"
         defaultVlue={{ period: "month", price: "7900" }}
         subtile="осталось 3 дня"
@@ -172,12 +175,12 @@ export default function AccountServices() {
         onClick={(value: any) => console.log(value)}
       /> */}
 
-      <InfoModal
-        isOpen={isOpen}
-        text={info.text}
-        title={info.title}
-        onOpenChange={onOpenChange}
-      />
-    </div>
-  );
+			<InfoModal
+				isOpen={isOpen}
+				text={info.text}
+				title={info.title}
+				onOpenChange={onOpenChange}
+			/>
+		</div>
+	);
 }
