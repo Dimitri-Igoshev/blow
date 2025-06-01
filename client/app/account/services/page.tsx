@@ -35,14 +35,16 @@ export default function AccountServices() {
 
     if (isExist?.quantity) {
       return `осталось ${isExist.quantity}`;
-    } else {
+    } else if (isExist?.expiredAt) {
       return `до ${format(
-        new Date(isExist?.expiredAt || Date.now()),
+        new Date(isExist.expiredAt),
         "dd.MM.yyyy",
         {
           locale: ru,
         },
       )}`;
+    } else {
+      return "";
     }
   };
 
@@ -133,7 +135,7 @@ export default function AccountServices() {
         <ServiceCard
           key={item._id}
           buttonText={item?.btn || "Купить"}
-          defaultVlue={item.options[0]}
+          // defaultVlue={item.options[0]}
           options={item.options}
           subtile={getSubtitle(item)}
           text={item.description}
