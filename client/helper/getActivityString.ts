@@ -7,7 +7,7 @@ import {
 export const getActivityString = (date: Date): string => {
   if (!date) return "нет данных";
 
-  const now = new Date();
+  const now = new Date(Date.now());
   const target = new Date(date);
 
   const diffMin = differenceInMinutes(now, target);

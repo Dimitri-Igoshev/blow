@@ -127,8 +127,16 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["User", "Me"],
     }),
-  }),
-});
+    reiseProfile: builder.mutation({
+      query: (id) => ({
+        url: `/use/raise-profile`,
+        method: "PATCH",
+        body: { id },
+      }),
+      invalidatesTags: ["User", "Me"],
+    }),
+  })
+})
 
 export const {
   useGetMeQuery,
@@ -143,4 +151,5 @@ export const {
   useAddBalanceMutation,
   useBuyServiceMutation,
   useBuyServicesKitMutation,
+  useReiseProfileMutation
 } = userApi;
