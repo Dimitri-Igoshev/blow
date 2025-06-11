@@ -7,6 +7,7 @@ import { userApi } from "./services/userApi";
 import { uploadApi } from "./services/uploadApi";
 import { serviceApi } from "./services/serviceApi";
 import { mailingApi } from "./services/mailingApi";
+import { chatApi } from "./services/chatApi";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [uploadApi.reducerPath]: uploadApi.reducer,
     [serviceApi.reducerPath]: serviceApi.reducer,
     [mailingApi.reducerPath]: mailingApi.reducer,
+    [chatApi.reducerPath]: chatApi.reducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) => {
@@ -25,6 +27,7 @@ export const store = configureStore({
       uploadApi.middleware,
       serviceApi.middleware,
       mailingApi.middleware,
+      chatApi.middleware,
     ]);
   },
 });

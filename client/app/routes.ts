@@ -5,7 +5,7 @@ export const ROUTES = {
     PROFILE: "/account/profile",
     PROFILE_EDIT: "/account/profile/edit",
     GUESTS: "/account/guests",
-    DIALOGUES: "/account/dialogues",
+    DIALOGUES: "/account/dialogues/",
     MAILINGS: "/account/mailings",
     NOTES: "/account/notes",
     SEARCH: "/account/search",

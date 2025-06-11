@@ -8,28 +8,32 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import { Providers as ReduxProvider } from "@/redux/provider";
+import { SocketListener } from "@/components/SocketListener";
 
 export interface ProvidersProps {
-  children: React.ReactNode;
-  themeProps?: ThemeProviderProps;
+	children: React.ReactNode;
+	themeProps?: ThemeProviderProps;
 }
 
 declare module "@react-types/shared" {
-  interface RouterConfig {
-    routerOptions: NonNullable<
-      Parameters<ReturnType<typeof useRouter>["push"]>[1]
-    >;
-  }
+	interface RouterConfig {
+		routerOptions: NonNullable<
+			Parameters<ReturnType<typeof useRouter>["push"]>[1]
+		>;
+	}
 }
 
 export function Providers({ children, themeProps }: ProvidersProps) {
-  const router = useRouter();
+	const router = useRouter();
 
-  return (
-    <ReduxProvider>
-      <HeroUIProvider navigate={router.push}>
-        <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-      </HeroUIProvider>
-    </ReduxProvider>
-  );
+	return (
+		<ReduxProvider>
+			<HeroUIProvider navigate={router.push}>
+				<NextThemesProvider {...themeProps}>
+					<SocketListener />
+					{children}
+				</NextThemesProvider>
+			</HeroUIProvider>
+		</ReduxProvider>
+	);
 }
