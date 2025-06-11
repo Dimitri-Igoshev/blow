@@ -37,7 +37,7 @@ export default function AccountServices() {
 		if (isExist?.quantity) {
 			return `осталось ${isExist.quantity}`;
 		} else if (isExist?.expiredAt) {
-			return new Date(isExist.expiredAt) < new Date(Date.now()) ? "" : `до ${format(new Date(isExist.expiredAt), "dd.MM.yyyy", {
+			return new Date(isExist.expiredAt) < new Date(Date.now()) ? "" : `до ${format(new Date(isExist.expiredAt), "dd.MM.yyyy, HH:mm", {
 				locale: ru,
 			})}`;
 		} else {
