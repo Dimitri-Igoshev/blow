@@ -63,7 +63,7 @@ export default function AccountDialogues({
 	}, []);
 
 	useEffect(() => {
-		if (!chats) return;
+		if (!chats || currentChat) return;
 
 		if (id === '1') {
 			setCurrentChat(chats[0]);
@@ -91,8 +91,6 @@ export default function AccountDialogues({
 			.catch((err) => setText(""));
 	};
 
-	// const [windowHeight, setWindowHeight] = useState<number>();
-
 	useEffect(() => {
 		document.body.style.overflow = "hidden";
 		return () => {
@@ -119,17 +117,6 @@ export default function AccountDialogues({
 			onPremiumRequired();
 		}
 	}, [me]);
-
-	// useEffect(() => {
-	// 	if (window?.innerHeight) return;
-	// 	setWindowHeight((window?.innerHeight / 100) * 50);
-	// }, [window?.innerHeight]);
-
-	// useEffect(() => {
-	// 	if (!chat) return;
-
-	// 	console.log(chat);
-	// }, [chat]);
 
 	return (
 		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] h-screen">
