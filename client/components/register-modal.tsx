@@ -23,7 +23,7 @@ import { cities } from "@/data/cities";
 import { ages } from "@/data/ages";
 import { heights } from "@/data/heights";
 import { weights } from "@/data/weights";
-import { useUploadMutation } from "@/redux/services/uploadApi";
+import { isAnimationTerminatingCalculation } from "react-native-reanimated/lib/typescript/animation/springUtils"
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -45,11 +45,8 @@ export const RegisterModal: FC<RegisterModalProps> = ({
   const [age, setAge] = useState("");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
-  const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState<any>();
   const [imgSrc, setImgSrc] = useState<string>("");
-
-  const [upload] = useUploadMutation();
 
   const inputRef = useRef<any>(null);
 
@@ -93,6 +90,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
         placement="center"
         size="sm"
         onOpenChange={onOpenChange}
+        isDismissable={false}
       >
         <ModalContent>
           {(onClose) => (

@@ -104,7 +104,6 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
   const [error, setError] = useState("");
 
   const handleError = (error: string) => {
-    console.log("error", error);
     setError(error);
     onError();
   };
