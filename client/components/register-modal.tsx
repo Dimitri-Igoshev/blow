@@ -23,7 +23,6 @@ import { cities } from "@/data/cities";
 import { ages } from "@/data/ages";
 import { heights } from "@/data/heights";
 import { weights } from "@/data/weights";
-import { isAnimationTerminatingCalculation } from "react-native-reanimated/lib/typescript/animation/springUtils"
 
 interface RegisterModalProps {
   isOpen: boolean;
