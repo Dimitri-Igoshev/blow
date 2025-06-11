@@ -13,7 +13,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 COPY --from=builder /app ./
-RUN npm install --production
+RUN npm install --production --legacy-peer-deps
 
 EXPOSE 3000
 CMD ["npm", "start"]
