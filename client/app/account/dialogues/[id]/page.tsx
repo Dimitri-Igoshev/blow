@@ -15,10 +15,10 @@ import { config } from "@/common/env";
 import { getCityString } from "@/helper/getCityString";
 import { Message } from "@/components/Message";
 import { InfoModal } from "@/components/InfoModal";
-import { useDisclosure } from "@heroui/react"
-import { isPremium } from "@/helper/checkIsActive"
-import { useRouter } from "next/navigation"
-import { ROUTES } from "@/app/routes"
+import { useDisclosure } from "@heroui/react";
+import { isPremium } from "@/helper/checkIsActive";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/app/routes";
 
 interface ProfileViewProps {
 	params: any;
@@ -30,7 +30,7 @@ export default function AccountDialogues({
 	params: Promise<{ id: string }>;
 }) {
 	const { id } = use(params);
-	const [currentChat, setCurrentChat] = useState(null);
+	const [currentChat, setCurrentChat] = useState<any>();
 	const [text, setText] = useState("");
 
 	const { data: me } = useGetMeQuery(null);
@@ -38,7 +38,9 @@ export default function AccountDialogues({
 		skip: !me?._id,
 	});
 	const { data: chat, refetch: refetch2 } = useGetChatMessagesQuery(
-		currentChat?._id
+		// @ts-ignore
+		currentChat?._id,
+		{ skip: !currentChat?._id }
 	);
 
 	const [send] = useSendMessageMutation();
@@ -63,18 +65,18 @@ export default function AccountDialogues({
 	useEffect(() => {
 		if (!chats) return;
 
-		if (id == 1) {
+		if (id === '1') {
 			setCurrentChat(chats[0]);
 		} else {
-			setCurrentChat(chats.find((item) => item._id === id));
+			setCurrentChat(chats.find((item: any) => item._id === id));
 		}
 	}, [chats]);
 
-		const {
-				isOpen: isPremiumRequired,
-				onOpen: onPremiumRequired,
-				onOpenChange: onPremiumRequiredChange,
-			} = useDisclosure();
+	const {
+		isOpen: isPremiumRequired,
+		onOpen: onPremiumRequired,
+		onOpenChange: onPremiumRequiredChange,
+	} = useDisclosure();
 
 	const handleSubmit = async () => {
 		const body = {
@@ -98,7 +100,7 @@ export default function AccountDialogues({
 		};
 	}, []);
 
-	const handleKeyDown = (event) => {
+	const handleKeyDown = (event: any) => {
 		if (event.key === "Enter") {
 			if (event.shiftKey) {
 				setText((prev) => prev + "\n");
@@ -113,10 +115,10 @@ export default function AccountDialogues({
 
 	useEffect(() => {
 		if (!me) return;
-		if (me?.sex === 'male' && !isPremium(me)) {
-			onPremiumRequired()
+		if (me?.sex === "male" && !isPremium(me)) {
+			onPremiumRequired();
 		}
-	}, [me])
+	}, [me]);
 
 	// useEffect(() => {
 	// 	if (window?.innerHeight) return;
