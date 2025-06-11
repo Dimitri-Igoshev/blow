@@ -104,6 +104,7 @@ export const EmailModal: FC<EmailModalProps> = ({
       placement="center"
       size="sm"
       onOpenChange={onOpenChange}
+      isDismissable={false}
     >
       <ModalContent>
         {(onClose) => (
