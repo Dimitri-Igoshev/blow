@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import {
 	useGetChatMessagesQuery,
 	useGetChatsQuery,
@@ -65,7 +65,7 @@ export default function AccountDialogues({
 	useEffect(() => {
 		if (!chats || currentChat) return;
 
-		if (id === '1') {
+		if (id === "1") {
 			setCurrentChat(chats[0]);
 		} else {
 			setCurrentChat(chats.find((item: any) => item._id === id));
@@ -79,6 +79,8 @@ export default function AccountDialogues({
 	} = useDisclosure();
 
 	const handleSubmit = async () => {
+		if (!text) return;
+
 		const body = {
 			chat: chat?._id,
 			sender: me._id,
@@ -118,6 +120,37 @@ export default function AccountDialogues({
 		}
 	}, [me]);
 
+	const containerRef = useRef(null);
+
+	useEffect(() => {
+		const container = containerRef.current;
+		if (container) {
+			// @ts-ignore
+			container.scrollTop = container.scrollHeight;
+		}
+	}, [chat]);
+
+	const [sortedChats, setSortedChats] = useState<any[]>([]);
+
+	function sortChatsByLastMessage(chats: any) {
+  return [...chats].sort((a: any, b: any) => {
+    const aLastMessage = a.messages[0];
+    const bLastMessage = b.messages[0];
+
+    const aDate = aLastMessage ? new Date(aLastMessage.updatedAt) : new Date(0);
+    const bDate = bLastMessage ? new Date(bLastMessage.updatedAt) : new Date(0);
+
+		// @ts-ignore
+    return bDate - aDate;
+  });
+}
+
+	useEffect(() => {
+		if (!chat) return
+
+		setSortedChats(sortChatsByLastMessage(chats))
+	}, [chat]);
+
 	return (
 		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] h-screen">
 			{/* <div className="flex w-full items-center justify-between">
@@ -145,7 +178,7 @@ export default function AccountDialogues({
 					)}
 					style={{ height: (window.innerHeight / 100) * 65 }}
 				>
-					{chats?.map((chat: any) => (
+					{sortedChats?.map((chat: any) => (
 						<button
 							key={chat._id}
 							className={cn(
@@ -195,15 +228,17 @@ export default function AccountDialogues({
 							}
 						)}
 						style={{ height: (window.innerHeight / 100) * 65 }}
+						ref={containerRef}
 					>
-						<div className="flex flex-col gap-1 w-full">
+						<div className="flex flex-col gap-4 w-full">
 							{chat ? (
 								<>
 									{chat?.map((message: any, idx: number) => (
 										<Message
 											message={message}
 											key={message?._id}
-											left={message?.sender?._id !== me?._id}
+											// left={message?.sender?._id !== me?._id}
+											left
 											sameSender={
 												chat?.[idx - 1]?.sender?._id === message?.sender?._id
 											}
