@@ -47,7 +47,13 @@ export const Message: FC<MessageProps> = ({
 							["text-primary"]: message?.sender?._id !== me?._id,
 						})}
 					>
-						{left ? message?.sender?.firstName : "Вы"}
+						{left
+							? message?.sender?.firstName
+								? message?.sender?.firstName
+								: message?.sender?.sex === "male"
+									? "Мужчина"
+									: "Девушка"
+							: "Вы"}
 					</p>
 				</div>
 			) : null}

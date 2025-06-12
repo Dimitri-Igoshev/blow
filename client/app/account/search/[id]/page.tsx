@@ -125,9 +125,8 @@ const ProfileView: FC<ProfileViewProps> = ({
 					<div className="flex w-full items-center justify-between">
 						<div>
 							<Button
-								className="w-full z-0 relative bg-white"
+								className="w-full z-0 relative"
 								radius="full"
-								variant="bordered"
 								onPress={() => router.back()}
 							>
 								Назад к результатам
@@ -151,8 +150,8 @@ const ProfileView: FC<ProfileViewProps> = ({
 									height={"100%"}
 									radius="none"
 									src={
-										currentImage || user.photos[0].url
-											? `${config.MEDIA_URL}/${currentImage || user.photos[0].url}`
+										currentImage || user?.photos[0]?.url
+											? `${config.MEDIA_URL}/${currentImage || user?.photos[0]?.url}`
 											: user?.sex === "male"
 												? "/men2.png"
 												: "/woman2.png"

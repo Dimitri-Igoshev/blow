@@ -9,6 +9,7 @@ import {
 	useGetChatMessagesQuery,
 	useGetChatsQuery,
 	useSendMessageMutation,
+	useUpdateMessageMutation,
 } from "@/redux/services/chatApi";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { config } from "@/common/env";
@@ -67,8 +68,10 @@ export default function AccountDialogues({
 
 		if (id === "1") {
 			setCurrentChat(chats[0]);
+			readMessages(chats[0]);
 		} else {
 			setCurrentChat(chats.find((item: any) => item._id === id));
+			readMessages(chats.find((item: any) => item._id === id));
 		}
 	}, [chats]);
 
@@ -133,23 +136,49 @@ export default function AccountDialogues({
 	const [sortedChats, setSortedChats] = useState<any[]>([]);
 
 	function sortChatsByLastMessage(chats: any) {
-  return [...chats].sort((a: any, b: any) => {
-    const aLastMessage = a.messages[0];
-    const bLastMessage = b.messages[0];
+		return [...chats].sort((a: any, b: any) => {
+			const aLastMessage = a.messages[0];
+			const bLastMessage = b.messages[0];
 
-    const aDate = aLastMessage ? new Date(aLastMessage.updatedAt) : new Date(0);
-    const bDate = bLastMessage ? new Date(bLastMessage.updatedAt) : new Date(0);
+			const aDate = aLastMessage
+				? new Date(aLastMessage.updatedAt)
+				: new Date(0);
+			const bDate = bLastMessage
+				? new Date(bLastMessage.updatedAt)
+				: new Date(0);
 
-		// @ts-ignore
-    return bDate - aDate;
-  });
-}
+			// @ts-ignore
+			return bDate - aDate;
+		});
+	}
 
 	useEffect(() => {
-		if (!chat) return
+		if (!chat) return;
 
-		setSortedChats(sortChatsByLastMessage(chats))
+		setSortedChats(sortChatsByLastMessage(chats));
 	}, [chat]);
+
+	const hasUnreadedMesages = (chat: any) => {
+		let quantity = 0;
+
+		chat?.messages?.forEach((message: any) => {
+			if (message?.sender !== me?._id && message.isReaded === false) {
+				quantity += 1;
+			}
+		});
+
+		return quantity;
+	};
+
+	const [updateMessage] = useUpdateMessageMutation();
+
+	const readMessages = (chat: any) => {
+		chat?.messages?.forEach(async (message: any) => {
+			if (!message.isReaded && message?.sender !== me?._id) {
+				updateMessage({ id: message._id, body: { isReaded: true } });
+			}
+		});
+	};
 
 	return (
 		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] h-screen">
@@ -189,11 +218,17 @@ export default function AccountDialogues({
 										currentChat?._id === chat._id,
 								}
 							)}
-							onClick={() => setCurrentChat(chat)}
+							onClick={() => {
+								setCurrentChat(chat);
+
+								if (hasUnreadedMesages(chat)) {
+									readMessages(chat);
+								}
+							}}
 						>
 							<Image
 								alt=""
-								className="rounded-[20px] z-0 relative min-w-[50px] min-h-[50px]"
+								className="rounded-[20px] z-0 relative w-[50px] min-w-[50px] min-h-[50px]"
 								height={50}
 								src={
 									getInterlocutor(chat)?.photos[0]?.url
@@ -204,17 +239,34 @@ export default function AccountDialogues({
 								}
 								style={{ objectFit: "cover" }}
 								width={50}
+								onClick={(e) => {
+									e.stopPropagation();
+									router.push(
+										ROUTES.ACCOUNT.SEARCH + "/" + getInterlocutor(chat)?._id
+									);
+								}}
 							/>
 
 							<div className="flex flex-col justify-center items-start text-sm w-full">
 								<p className="font-semibold">
-									{getInterlocutor(chat)?.firstName}
+									{getInterlocutor(chat)?.firstName
+										? getInterlocutor(chat)?.firstName
+										: getInterlocutor(chat)?.sex === "male"
+											? "Мужчина"
+											: "Девушка"}
 								</p>
 								<p className="-mt-[2px]">
 									{getInterlocutor(chat)?.age},{" "}
 									{getCityString(getInterlocutor(chat)?.city)}
 								</p>
 							</div>
+
+							{currentChat?._id !== chat?._id &&
+							hasUnreadedMesages(chat) > 0 ? (
+								<div className="w-4 min-w-4 h-4 rounded-full bg-primary text-white text-[8px] flex font-semibold justify-center items-center -mt-[24px] mr-1">
+									{hasUnreadedMesages(chat)}
+								</div>
+							) : null}
 						</button>
 					))}
 				</div>
