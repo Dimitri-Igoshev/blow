@@ -4,7 +4,7 @@ export const cities = [
   { label: "Астрахань", value: "astrahan" },
   { label: "Барнаул", value: "barnaul" },
   { label: "Владивосток", value: "vladivostok" },
-  { label: "Екатиренбург", value: "ekaterinburg" },
+  { label: "Екатеринбург", value: "ekaterinburg" },
   { label: "Ижевск", value: "izhevsk" },
   { label: "Казань", value: "kazan" },
   { label: "Кемерово", value: "kemerovo" },

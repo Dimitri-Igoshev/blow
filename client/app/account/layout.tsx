@@ -9,6 +9,7 @@ import { ROUTES } from "../routes";
 
 import { SearchWidget } from "@/components/search-widget";
 import { useGetMeQuery } from "@/redux/services/userApi";
+import { useGetChatsQuery } from "@/redux/services/chatApi";
 
 export default function PanelLayout({
 	children,
@@ -55,6 +56,28 @@ export default function PanelLayout({
 			setTab("dialogues");
 		}
 	}, [pathname]);
+
+	const { data: chats } = useGetChatsQuery(me?._id, {
+		skip: !me?._id,
+	});
+
+	const [unreaded, setUnreaded] = useState<number>(0);
+
+	useEffect(() => {
+		if (!chats) return;
+
+		let quantity = 0;
+
+		chats?.forEach((item: any) => {
+			item?.messages?.forEach((message: any) => {
+				if (message?.sender !== me?._id && message.isReaded === false) {
+					quantity += 1;
+				}
+			});
+		});
+
+		setUnreaded(quantity);
+	}, [chats]);
 
 	return (
 		// <Protected>
@@ -115,7 +138,16 @@ export default function PanelLayout({
 								<Tab
 									key="dialogues"
 									href={ROUTES.ACCOUNT.DIALOGUES + "1"}
-									title="Диалоги"
+									title={
+										<div className="flex w-full justify-between items-center gap-3">
+											<span>Диалоги</span>
+											{unreaded ? (
+												<div className="w-4 min-w-4 h-4 rounded-full bg-primary text-white text-[8px] flex font-semibold justify-center items-center">
+													{unreaded}
+												</div>
+											) : null}
+										</div>
+									}
 								/>
 								<Tab
 									key="guests"
