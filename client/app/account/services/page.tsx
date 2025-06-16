@@ -34,15 +34,15 @@ export default function AccountServices() {
 			const res = await createPayment({
 				payerId: me._id,
 				checkout: {
-					test: true, // true => тестовое окружение
-					transaction_type: "payment", //тип транзакции (authorization, payment, tokenization, charge)
-					attempts: 3, //макс. кол-во попыток оплаты по токену платежа
+					test: true,
+					transaction_type: "payment",
+					attempts: 3,
 					iframe: true,
 					order: {
 						currency: "RUB",
 						amount: price * 100,
 						description: "Пополнение счета на сайте blow.ru",
-						tracking_id: uuidv4(), //идентификатор транзакции на стороне торговца
+						tracking_id: uuidv4().toString(), //идентификатор транзакции на стороне торговца
 						additional_data: {
 							contract: ["recurring", "card_on_flie"],
 						}, //заполнить при необходимости получить в ответе токен.
@@ -59,10 +59,10 @@ export default function AccountServices() {
 						auto_pay: false,
 						language: "ru",
 						customer_fields: {
-							visible: [
-								me?.firstName || "",
-								me?.lastName || "", //массив дополнительных полей на виджете
-							],
+							// visible: [
+							// 	me?.firstName || "",
+							// 	me?.lastName || "", //массив дополнительных полей на виджете
+							// ],
 						},
 						payment_method: {
 							types: ["credit_card"], //массив доступных платежных методов
@@ -70,13 +70,7 @@ export default function AccountServices() {
                     "token": "13dded21-ed69-4590-8bcb-db522a89735c"
                 }*/ //токен необходимо отправить при использовании auto_pay
 						},
-						customer: {
-							first_name: me?.firstName || "",
-							last_name: me?.lastName || "",
-							address: "",
-							country: "RU",
-							city: me?.city || "",
-						}, //объект, содержаший дополнительную информацию о покупателе
+		
 					},
 				},
 			}).unwrap();
