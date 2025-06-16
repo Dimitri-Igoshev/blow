@@ -15,18 +15,80 @@ import {
 } from "@/redux/services/userApi";
 import { InfoModal } from "@/components/InfoModal";
 import { MAILING_ID, TOP_ID } from "@/helper/checkIsActive";
+import { useCreatePaymentMutation } from "@/redux/services/paymentApi";
+import { v4 as uuidv4 } from "uuid";
 
 export default function AccountServices() {
 	const { data: me } = useGetMeQuery(null);
 	const { data: services } = useGetServicesQuery(null);
 
 	const [addBalance] = useAddBalanceMutation();
+	const [createPayment] = useCreatePaymentMutation();
 
-	const addMoney = (price: number) => {
+	const addMoney = async (price: number) => {
 		if (!me?._id) return;
-		addBalance({ id: me._id, sum: +price })
-			.unwrap()
-			.catch(() => console.log("error"));
+
+		const win = window.open("", "_blank");
+
+		try {
+			const res = await createPayment({
+				payerId: me._id,
+				checkout: {
+					test: true, // true => тестовое окружение
+					transaction_type: "payment", //тип транзакции (authorization, payment, tokenization, charge)
+					attempts: 3, //макс. кол-во попыток оплаты по токену платежа
+					iframe: true,
+					order: {
+						currency: "RUB",
+						amount: price * 100,
+						description: "Пополнение счета на сайте blow.ru",
+						tracking_id: uuidv4(), //идентификатор транзакции на стороне торговца
+						additional_data: {
+							contract: ["recurring", "card_on_flie"],
+						}, //заполнить при необходимости получить в ответе токен.
+					},
+					settings: {
+						return_url: "https://blow.ru/account/services", //URL, на который будет перенаправлен покупатель после завершения оплаты.
+						success_url: "https://blow.ru/account/services",
+						decline_url: "https://blow.ru/account/services",
+						fail_url: "https://blow.ru/account/services",
+						cancel_url: "https://blow.ru/account/services",
+						notification_url:
+							"https://blow.igoshev.de/api/payment/notification", //адрес сервера торговца, на который система отправит автоматическое уведомление с финальным статусом транзакции.
+						button_next_text: "Вернуться в магазин",
+						auto_pay: false,
+						language: "ru",
+						customer_fields: {
+							visible: [
+								me?.firstName || "",
+								me?.lastName || "", //массив дополнительных полей на виджете
+							],
+						},
+						payment_method: {
+							types: ["credit_card"], //массив доступных платежных методов
+							/*"credit_card": {
+                    "token": "13dded21-ed69-4590-8bcb-db522a89735c"
+                }*/ //токен необходимо отправить при использовании auto_pay
+						},
+						customer: {
+							first_name: me?.firstName || "",
+							last_name: me?.lastName || "",
+							address: "",
+							country: "RU",
+							city: me?.city || "",
+						}, //объект, содержаший дополнительную информацию о покупателе
+					},
+				},
+			}).unwrap();
+
+			if (win) {
+				win.location.href = res.checkout.redirect_url;
+			}
+		} catch (error) {
+			if (win) {
+				win.close(); // Закрываем вкладку, если не удалось получить URL
+			}
+		}
 	};
 
 	const getSubtitle = (item: any): string => {
@@ -37,9 +99,11 @@ export default function AccountServices() {
 		if (isExist?.quantity) {
 			return `осталось ${isExist.quantity}`;
 		} else if (isExist?.expiredAt) {
-			return new Date(isExist.expiredAt) < new Date(Date.now()) ? "" : `до ${format(new Date(isExist.expiredAt), "dd.MM.yyyy, HH:mm", {
-				locale: ru,
-			})}`;
+			return new Date(isExist.expiredAt) < new Date(Date.now())
+				? ""
+				: `до ${format(new Date(isExist.expiredAt), "dd.MM.yyyy, HH:mm", {
+						locale: ru,
+					})}`;
 		} else {
 			return "";
 		}

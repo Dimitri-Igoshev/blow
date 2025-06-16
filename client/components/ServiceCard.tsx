@@ -98,7 +98,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 					{transactions.map((item: any) => (
 						<div
 							key={item._id}
-							className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-3 items-center"
+							className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-4 items-center"
 						>
 							<div className="font-medium">
 								{item?.type === "credit" ? "Пополнение" : "Списание"}
@@ -108,10 +108,11 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 									locale: ru,
 								})}
 							</div>
+							<div className="flex justify-end text-xs">{item?.type === "debit" ? 'Списано со счета' : item.status === 'failed' ? 'Ошибка оплаты' : item.status === 'new' ? 'Ожидает оплаты' : 'Оплачено'}</div>
 							<div
 								className={cn("flex justify-end", {
 									["text-red-500"]: item?.type === "debit",
-									["text-green-500"]: item?.type === "credit",
+									["text-green-500"]: item?.type === "credit" && item.status === 'paid',
 								})}
 							>
 								{item.sum}₽
