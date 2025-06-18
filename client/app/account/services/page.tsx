@@ -22,7 +22,7 @@ export default function AccountServices() {
 	const { data: me } = useGetMeQuery(null);
 	const { data: services } = useGetServicesQuery(null);
 
-	const [addBalance] = useAddBalanceMutation();
+	// const [addBalance] = useAddBalanceMutation();
 	const [createPayment] = useCreatePaymentMutation();
 
 	const addMoney = async (price: number) => {
@@ -30,58 +30,69 @@ export default function AccountServices() {
 
 		const win = window.open("", "_blank");
 
-		try {
-			const res = await createPayment({
-				payerId: me._id,
-				checkout: {
-					test: true,
-					transaction_type: "payment",
-					attempts: 3,
-					iframe: true,
-					order: {
-						currency: "RUB",
-						amount: price * 100,
-						description: "Пополнение счета на сайте blow.ru",
-						tracking_id: uuidv4().toString(), //идентификатор транзакции на стороне торговца
-						additional_data: {
-							contract: ["recurring", "card_on_flie"],
-						}, //заполнить при необходимости получить в ответе токен.
+		const body = {
+			payerId: me._id,
+			checkout: {
+				test: true,
+				transaction_type: "payment",
+				attempts: 3,
+				iframe: true,
+				order: {
+					currency: "RUB",
+					amount: price * 100,
+					description: "Пополнение счета на сайте blow.ru",
+					tracking_id: uuidv4().toString(), //идентификатор транзакции на стороне торговца
+					additional_data: {
+						contract: ["recurring", "card_on_flie"],
+					}, //заполнить при необходимости получить в ответе токен.
+				},
+				settings: {
+					return_url: "https://blow.ru/account/services", //URL, на который будет перенаправлен покупатель после завершения оплаты.
+					success_url: "https://blow.ru/account/services",
+					decline_url: "https://blow.ru/account/services",
+					fail_url: "https://blow.ru/account/services",
+					cancel_url: "https://blow.ru/account/services",
+					notification_url: "https://blow.ru/api/notification", //адрес сервера торговца, на который система отправит автоматическое уведомление с финальным статусом транзакции.
+					button_next_text: "Вернуться в магазин",
+					auto_pay: false,
+					language: "ru",
+					customer_fields: {
+						// visible: [
+						// 	me?.firstName || "",
+						// 	me?.lastName || "", //массив дополнительных полей на виджете
+						// ],
 					},
-					settings: {
-						return_url: "https://blow.ru/account/services", //URL, на который будет перенаправлен покупатель после завершения оплаты.
-						success_url: "https://blow.ru/account/services",
-						decline_url: "https://blow.ru/account/services",
-						fail_url: "https://blow.ru/account/services",
-						cancel_url: "https://blow.ru/account/services",
-						notification_url:
-							"https://blow.igoshev.de/api/payment/notification", //адрес сервера торговца, на который система отправит автоматическое уведомление с финальным статусом транзакции.
-						button_next_text: "Вернуться в магазин",
-						auto_pay: false,
-						language: "ru",
-						customer_fields: {
-							// visible: [
-							// 	me?.firstName || "",
-							// 	me?.lastName || "", //массив дополнительных полей на виджете
-							// ],
-						},
-						payment_method: {
-							types: ["credit_card"], //массив доступных платежных методов
-							/*"credit_card": {
+					payment_method: {
+						types: ["credit_card"], //массив доступных платежных методов
+						/*"credit_card": {
                     "token": "13dded21-ed69-4590-8bcb-db522a89735c"
                 }*/ //токен необходимо отправить при использовании auto_pay
-						},
-		
 					},
 				},
-			}).unwrap();
+			},
+		};
+
+		try {
+			const response = await fetch("/api/payment", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(body), // передаем данные в body
+			});
+
+			const result = await response.json();
 
 			if (win) {
-				win.location.href = res.checkout.redirect_url;
+				win.location.href = result.checkout.redirect_url;
 			}
+			
 		} catch (error) {
 			if (win) {
 				win.close(); // Закрываем вкладку, если не удалось получить URL
 			}
+
+			console.error("Ошибка при отправке данных:", error);
 		}
 	};
 
