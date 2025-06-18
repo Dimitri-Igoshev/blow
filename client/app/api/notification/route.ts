@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     // });
 
 		const result = await fetch(
-			`https://blow.igoshev.de/api/notification`,
+			`https://blow.igoshev.de/api/payment/notification`,
 			{
 				method: "POST",
 				headers: {
