@@ -33,7 +33,7 @@ export default function AccountServices() {
 		const body = {
 			payerId: me._id,
 			checkout: {
-				test: true,
+				test: false,
 				transaction_type: "payment",
 				attempts: 3,
 				iframe: true,
@@ -86,7 +86,7 @@ export default function AccountServices() {
 			if (win) {
 				win.location.href = result.checkout.redirect_url;
 			}
-			
+
 		} catch (error) {
 			if (win) {
 				win.close(); // Закрываем вкладку, если не удалось получить URL
