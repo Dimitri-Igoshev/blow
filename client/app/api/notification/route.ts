@@ -7,8 +7,25 @@ export async function POST(req: NextRequest) {
 	try {
 		const data: IncomingPayload = await req.json();
 
-		const response = await fetch(
-			`https://blow.ru/api/notification`,
+		console.log('Полученные данные от внешнего API:', data);
+
+		// Пример: делаем какие-то дополнительные действия с полученными данными
+    // Например, можно добавить какое-то поле или изменить данные
+    // const processedData = {
+    //   ...data,
+    //   receivedAt: new Date().toISOString(), // Добавим время получения
+    //   status: 'processed', // Статус обработки
+    // };
+
+    // Возвращаем результат обработки данных
+    // return Response.json({
+    //   status: 'success',
+    //   message: 'Данные успешно получены и обработаны!',
+    //   processedData,
+    // });
+
+		const result = await fetch(
+			`https://blow.igoshev.de/api/notification`,
 			{
 				method: "POST",
 				headers: {
@@ -18,9 +35,9 @@ export async function POST(req: NextRequest) {
 			}
 		);
 
-		const result = await response.json();
+		// const result = await response.json();
 
-		console.log('[NOTIFICATION RESPONSE]', result);
+		// console.log('[NOTIFICATION RESPONSE]', result);
 
 		return Response.json({
 			message: "Данные получены и пересланы",

@@ -22,6 +22,16 @@ export async function POST(req: NextRequest) {
 
     console.log('[FORWARD RESPONSE]', result);
 
+    const transaction = fetch('https://blow.igoshev.de/api/payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    console.log('[TRANSACTION RESPONSE]', transaction);
+
     return Response.json(result);
   } catch (error) {
     console.error('[FORWARD ERROR]', error);
