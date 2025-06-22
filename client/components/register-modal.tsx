@@ -77,6 +77,8 @@ export const RegisterModal: FC<RegisterModalProps> = ({
   //     .finally(() => setLoading(false));
   // };
 
+  const [accept, setAccept] = useState(false);
+
   return (
     <>
       <Modal
@@ -270,7 +272,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                 <div className="flex flex-col w-full">
                   <Button
                     className="w-full"
-                    color="primary"
+                    color={!accept ? "default" : "primary"}
                     radius="full"
                     onPress={() => {
                       onNext({
@@ -285,9 +287,23 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                       });
                       onClose();
                     }}
+                    disabled={!accept}
                   >
                     Все верно
                   </Button>
+
+                  <Checkbox
+                    // defaultSelected
+                    className="mt-1"
+                    classNames={{
+                      wrapper: "bg-white dark:bg-foreground-300",
+                    }}
+                    // icon={<HeartIcon />}
+                    isSelected={accept}
+                    onChange={() => setAccept(!accept)}
+                  >
+                    соглашенаюсь с офертой
+                  </Checkbox>
 
                   <div className="flex items-center justify-between w-full gap-4 text-xs mt-2 -mb-3">
                     <Button

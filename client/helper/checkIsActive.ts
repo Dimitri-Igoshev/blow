@@ -1,6 +1,6 @@
 export const PREMIUM_ID = "6831be446c59cd4bad808bb5";
 export const TOP_ID = "6830b9a752bb4caefa0418a8";
-export const MAILING_ID = "6831854519e3572edace86b7"
+export const MAILING_ID = "6831854519e3572edace86b7";
 export const RAISE_ID = '6830b4d752bb4caefa041497';
 
 export const checkIsActive = (expiredAt: Date) => {

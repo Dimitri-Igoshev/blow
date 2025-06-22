@@ -17,12 +17,14 @@ import { getCityString } from "@/helper/getCityString";
 import {
 	useGetMeQuery,
 	useReiseProfileMutation,
+	useRemoveUserMutation,
 } from "@/redux/services/userApi";
 import { config } from "@/common/env";
 import { RAISE_ID } from "@/helper/checkIsActive";
 import { useDisclosure } from "@heroui/react";
 import { InfoModal } from "@/components/InfoModal";
 import { useRouter } from "next/navigation";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 const AccountProfilePage = () => {
 	const router = useRouter();
@@ -54,6 +56,11 @@ const AccountProfilePage = () => {
 	}, []);
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const {
+		isOpen: isOpenRemove,
+		onOpen: onOpenRemove,
+		onOpenChange: onOpenChangeRemove,
+	} = useDisclosure();
 
 	const [raise] = useReiseProfileMutation();
 
@@ -91,6 +98,20 @@ const AccountProfilePage = () => {
 				});
 
 				onOpen();
+			})
+			.catch((err) => console.log(err));
+	};
+
+	const [removeProfile] = useRemoveUserMutation();
+
+	const remove = () => {
+		if (!me) return;
+
+		removeProfile(me?._id)
+			.unwrap()
+			.then(() => {
+				localStorage.setItem("access-token", "");
+				window.open("/", "_self");
 			})
 			.catch((err) => console.log(err));
 	};
@@ -156,10 +177,13 @@ const AccountProfilePage = () => {
 						</p>
 					</button>
 
-					<div className="flex gap-2.5 cursor-pointer group transition-all">
+					<button
+						className="flex gap-2.5 cursor-pointer group transition-all"
+						onClick={onOpenRemove}
+					>
 						<LuTrash className="text-primary min-w-4" size={16} />
 						<p className="-mt-[3px] group-hover:text-primary">Удалить анкету</p>
-					</div>
+					</button>
 
 					<button
 						className="flex gap-2.5 cursor-pointer group transition-all"
@@ -261,6 +285,15 @@ const AccountProfilePage = () => {
 					info.btn ? router.push(ROUTES.ACCOUNT.SERVICES) : null
 				}
 				actionBtn={info.btn ? info.btn : ""}
+			/>
+
+			<ConfirmModal
+				isOpen={isOpenRemove}
+				title="Удаление анкеты"
+				text="Вы уверены что хотите удалить свою анкету?"
+				onOpenChange={onOpenChangeRemove}
+				onAction={remove}
+				actionBtn="Удалить"
 			/>
 		</div>
 	);

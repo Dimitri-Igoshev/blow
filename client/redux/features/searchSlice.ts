@@ -19,7 +19,7 @@ const INITIAL_STATE: ISearch = {
     minage: "",
     maxage: "",
     city: "",
-    limit: "16",
+    limit: "12",
   },
 };
 

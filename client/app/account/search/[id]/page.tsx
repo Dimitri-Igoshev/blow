@@ -88,10 +88,10 @@ const ProfileView: FC<ProfileViewProps> = ({
 	};
 
 	const {
-			isOpen: isPremiumRequired,
-			onOpen: onPremiumRequired,
-			onOpenChange: onPremiumRequiredChange,
-		} = useDisclosure();
+		isOpen: isPremiumRequired,
+		onOpen: onPremiumRequired,
+		onOpenChange: onPremiumRequiredChange,
+	} = useDisclosure();
 
 	const [startChat] = useStartChatMutation();
 
@@ -99,8 +99,8 @@ const ProfileView: FC<ProfileViewProps> = ({
 		if (me?.sex === "male" && !isPremium(me)) {
 			onPremiumRequired();
 
-			return
-		};
+			return;
+		}
 
 		await startChat({ sender: me?._id, recipient: id })
 			.unwrap()
@@ -115,8 +115,6 @@ const ProfileView: FC<ProfileViewProps> = ({
 
 		onNote();
 	};
-
-	
 
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[86px] gap-[30px]">
@@ -275,15 +273,19 @@ const ProfileView: FC<ProfileViewProps> = ({
 										<Note text={note} />
 									</div>
 								) : null}
-								<Button
-									className="z-0 relative"
-									color="secondary"
-									radius="full"
-									variant="solid"
-									onPress={onNote}
-								>
-									{note ? "Редактировать заметку" : "Создать заметку"}
-								</Button>
+								{me ? (
+									<>
+										<Button
+											className="z-0 relative"
+											color="secondary"
+											radius="full"
+											variant="solid"
+											onPress={onNote}
+										>
+											{note ? "Редактировать заметку" : "Создать заметку"}
+										</Button>
+									</>
+								) : null}
 								<Button
 									className="z-0 relative"
 									color="primary"

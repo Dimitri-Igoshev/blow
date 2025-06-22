@@ -56,13 +56,13 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["User", "Me"],
     }),
-    // removeUser: builder.mutation({
-    //   query: (id) => ({
-    //     url: `/${id}`,
-    //     method: 'DELETE'
-    //   }),
-    //   invalidatesTags: ['User']
-    // }),
+    removeUser: builder.mutation({
+      query: (id) => ({
+        url: `/${id}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['User']
+    }),
     setActivity: builder.mutation({
       query: ({ id, body }) => ({
         url: `/${id}/activity`,
@@ -143,6 +143,7 @@ export const {
   useGetUserQuery,
   useGetUsersQuery,
   useUpdateUserMutation,
+  useRemoveUserMutation,
   useSetActivityMutation,
   useNewVisitMutation,
   useCreateNoteMutation,
