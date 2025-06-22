@@ -21,8 +21,8 @@ export default function Home() {
   const cities5 = cities.slice(24, 30);
   const cities6 = cities.slice(30, 34);
 
-  const { data: mens } = useGetUsersQuery({ sex: "male" });
-  const { data: womans } = useGetUsersQuery({ sex: "female" });
+  const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true });
+  const { data: womans } = useGetUsersQuery({ sex: "female", withPhoto: true });
 
   const state = useSelector((state: any) => state);
   const search = state?.search?.search ? state.search.search : null;

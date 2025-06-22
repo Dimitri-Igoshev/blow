@@ -272,32 +272,34 @@ export default function AccountDialogues({
 				</div>
 
 				<div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4">
-					<div
-						className={cn(
-							"col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 border-[7px] p-6 border-white dark:border-foreground-100 w-full rounded-[24px] relative text-[14px] overflow-y-scroll hide-scroll",
-							{
-								"hidden md:flex": !currentChat,
-							}
-						)}
-						style={{ height: (window.innerHeight / 100) * 65 }}
-						ref={containerRef}
-					>
-						<div className="flex flex-col gap-4 w-full">
-							{chat ? (
-								<>
-									{chat?.map((message: any, idx: number) => (
-										<Message
-											message={message}
-											key={message?._id}
-											// left={message?.sender?._id !== me?._id}
-											left
-											sameSender={
-												chat?.[idx - 1]?.sender?._id === message?.sender?._id
-											}
-										/>
-									))}
-								</>
-							) : null}
+					<div className="rounded-[24px] border-[7px] p-3 border-white dark:border-foreground-100">
+						<div
+							className={cn(
+								"col-span-1 md:col-span-2 p-3 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[24px] relative text-[14px] overflow-y-scroll scroll-transparent",
+								{
+									"hidden md:flex": !currentChat,
+								}
+							)}
+							style={{ height: (window.innerHeight / 100) * 65 }}
+							ref={containerRef}
+						>
+							<div className="flex flex-col gap-4 w-full">
+								{chat ? (
+									<>
+										{chat?.map((message: any, idx: number) => (
+											<Message
+												message={message}
+												key={message?._id}
+												// left={message?.sender?._id !== me?._id}
+												left
+												sameSender={
+													chat?.[idx - 1]?.sender?._id === message?.sender?._id
+												}
+											/>
+										))}
+									</>
+								) : null}
+							</div>
 						</div>
 					</div>
 

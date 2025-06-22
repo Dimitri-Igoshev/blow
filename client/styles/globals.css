@@ -22,6 +22,23 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+/* Для WebKit-браузеров */
+::-webkit-scrollbar {
+  width: 8px; /* или height: 8px для горизонтального */
+  background-color: rgba(100, 100, 100, 0.1); /* Прозрачный фон */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(100, 100, 100, 0.1); /* Трек — прозрачный */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5); /* Цвет "ползунка" с прозрачностью */
+  border-radius: 4px;
+}
+
 /*Баг айфона*/
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
 	select:focus,
