@@ -14,9 +14,9 @@ const AccountSearch = () => {
 	const [limit, setLimit] = useState(20);
 
 	const { ref, inView } = useInView();
-
+ 
 	const { data: users, isFetching } = useGetUsersQuery(
-		{ ...search, limit } || { limit }
+		search ? { ...search, limit } : { limit }
 	);
 
 	useEffect(() => {
