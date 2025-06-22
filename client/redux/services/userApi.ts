@@ -35,7 +35,7 @@ export const userApi = createApi({
     }),
     getUsers: builder.query({
       query: ({ online, sex, city, minage, maxage, withPhoto, limit }) =>
-        `?online=${online || ""}&sex=${sex || ""}&city=${city || ""}&minage=${minage || ""}&maxage=${maxage || ""}&=withPhoto=${withPhoto || ""}&limit=${limit || "16"}`,
+        `?online=${online || ""}&sex=${sex || ""}&city=${city || ""}&minage=${minage || ""}&maxage=${maxage || ""}&withPhoto=${withPhoto || ""}&limit=${limit || "16"}`,
       providesTags: ["User"],
     }),
     // createUser: builder.mutation({
