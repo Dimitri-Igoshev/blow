@@ -88,6 +88,7 @@ const ToLogin: FunctionComponent<ToLoginProps> = ({ children }) => {
         showError={(error: string) => handleError(error)}
         onOpenChange={onLoginChange}
         onRegister={onRegister}
+        onRecovery={() => null}
       />
       <RegisterModal
         isOpen={isRegister}
