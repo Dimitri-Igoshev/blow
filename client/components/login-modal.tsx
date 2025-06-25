@@ -28,7 +28,7 @@ interface LoginModalProps {
   onRecovery: () => void;
   onOpenChange: () => void;
   showError: (error: string) => void;
-  onConfirmationRequired: () => void
+  onConfirmationRequired?: () => void
 }
 
 export const LoginModal: FC<LoginModalProps> = ({

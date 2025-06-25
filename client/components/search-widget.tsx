@@ -283,6 +283,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 				showError={(error: string) => handleError(error)}
 				onOpenChange={onLoginChange}
 				onRegister={onRegister}
+				onRecovery={() => null}
 			/>
 			<RegisterModal
 				isOpen={isRegister}
