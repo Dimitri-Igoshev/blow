@@ -15,7 +15,7 @@ import { FaLock } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { useLoginMutation } from "@/redux/services/authApi";
+import { useLoginMutation, useRecoveryPasswordMutation } from "@/redux/services/authApi";
 
 type Inputs = {
   email: string;
@@ -25,15 +25,19 @@ type Inputs = {
 interface LoginModalProps {
   isOpen: boolean;
   onRegister: () => void;
+  onRecovery: () => void;
   onOpenChange: () => void;
   showError: (error: string) => void;
+  onConfirmationRequired: () => void
 }
 
 export const LoginModal: FC<LoginModalProps> = ({
   isOpen,
   onRegister,
+  onRecovery,
   onOpenChange,
   showError,
+  onConfirmationRequired
 }) => {
   const router = useRouter();
 
@@ -63,7 +67,12 @@ export const LoginModal: FC<LoginModalProps> = ({
         window.location.reload();
         onOpenChange();
       })
-      .catch(() => {
+      .catch((err) => {
+        // if (err?.data?.message === "Confirm your email address") {
+        //   onConfirmationRequired()
+        //   onOpenChange();
+        //   return
+        // }
         showError("Неверный логин или пароль");
       })
       .finally(() => {
@@ -140,6 +149,10 @@ export const LoginModal: FC<LoginModalProps> = ({
                     className="cursor-pointer hover:text-primary bg-transparent text-xs"
                     radius="full"
                     variant="flat"
+                    onPress={() => {
+                      onRecovery()
+                      onClose();
+                    }}
                   >
                     Забыли пароль?
                   </Button>

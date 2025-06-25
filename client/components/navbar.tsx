@@ -30,9 +30,16 @@ import {
 import { config } from "@/common/env";
 import { CameraIcon } from "@/common/icons";
 import { isPremium } from "@/helper/checkIsActive";
+import { RecoveryPasswordModal } from "./RecoveryPasswordModal";
+import { RecoverySuccessModal } from "./RecoverySuccesModal"
+import { ConfirmationModal } from "./ConfirmationModal"
+import { usePathname } from 'next/navigation'
 
 export const Navbar = () => {
 	const router = useRouter();
+	const pathname = usePathname()
+
+  const isConfirmPage = pathname.includes('confirm')
 
 	const [newUser, setNewUser] = useState(null);
 
@@ -73,6 +80,12 @@ export const Navbar = () => {
 		};
 	}, [me]);
 
+	useEffect(() => {
+		if (!me) return
+
+		if (me.status === 'new' && !isConfirmPage) onConfirmationRequired()
+	}, [me])
+	
 	const {
 		isOpen: isLogin,
 		onOpen: onLogin,
@@ -92,6 +105,21 @@ export const Navbar = () => {
 		isOpen: isError,
 		onOpen: onError,
 		onOpenChange: onErrorChange,
+	} = useDisclosure();
+	const {
+		isOpen: isRecovery,
+		onOpen: onRecovery,
+		onOpenChange: onRecoveryChange,
+	} = useDisclosure();
+	const {
+		isOpen: isRecoverySuccess,
+		onOpen: onRecoverySuccess,
+		onOpenChange: onRecoverySuccessChange,
+	} = useDisclosure();
+	const {
+		isOpen: isConfirmationRequired,
+		onOpen: onConfirmationRequired,
+		onOpenChange: onConfirmationRequiredChange,
 	} = useDisclosure();
 
 	const onNext = (value: any) => {
@@ -348,6 +376,8 @@ export const Navbar = () => {
 				showError={(error: string) => handleError(error)}
 				onOpenChange={onLoginChange}
 				onRegister={onRegister}
+				onRecovery={() => onRecovery()}
+				onConfirmationRequired={onConfirmationRequired}
 			/>
 			<RegisterModal
 				isOpen={isRegister}
@@ -363,6 +393,13 @@ export const Navbar = () => {
 				onRegister={registration}
 			/>
 			<ErrorModal error={error} isOpen={isError} onOpenChange={onErrorChange} />
+			<RecoveryPasswordModal
+				isOpen={isRecovery}
+				onOpenChange={onRecoveryChange}
+				onSend={onRecoverySuccess}
+			/>
+			<RecoverySuccessModal isOpen={isRecoverySuccess} onOpenChange={onRecoverySuccessChange}/>
+			<ConfirmationModal isOpen={isConfirmationRequired} onOpenChange={onConfirmationRequiredChange} />
 		</>
 	);
 };

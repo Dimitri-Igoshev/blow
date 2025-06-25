@@ -10,24 +10,14 @@ import {
 } from "@heroui/react";
 import { FC } from "react";
 
-interface InfoModalProps {
+interface RecoverySuccessModalProps {
 	isOpen: boolean;
 	onOpenChange: () => void;
-	title: string;
-	text: string;
-	onAction?: () => void;
-	actionBtn?: string;
-	closeBtn?: string;
 }
 
-export const InfoModal: FC<InfoModalProps> = ({
+export const RecoverySuccessModal: FC<RecoverySuccessModalProps> = ({
 	isOpen,
 	onOpenChange,
-	title,
-	text,
-	onAction,
-	actionBtn,
-	closeBtn
 }) => {
 	return (
 		<Modal
@@ -45,21 +35,24 @@ export const InfoModal: FC<InfoModalProps> = ({
 				{(onClose) => (
 					<>
 						<ModalHeader className="flex flex-col gap-1 text-[20px]">
-							{title}
+							Восстановление пароля
 						</ModalHeader>
 						<ModalBody>
-							<div>{text}</div>
+							<div className="flex flex-col gap-5 my-6">
+								Ссылка для восстановления пароля отправлена на указанную почту.
+							</div>
 						</ModalBody>
 						<ModalFooter>
-							<div className="flex flex-raw w-full gap-3">
-								<Button className="w-full" radius="full" onPress={onClose}>
-									{closeBtn ? closeBtn : "Закрыть"}
+							<div className="flex flex-col w-full">
+								<Button
+									className="w-full"
+									color="primary"
+									radius="full"
+									type="submit"
+                  onPress={onClose}
+								>
+									Закрыть
 								</Button>
-								{onAction && actionBtn ? (
-									<Button color="primary" className="w-full" radius="full" onPress={onAction}>
-										{actionBtn}
-									</Button>
-								) : null}
 							</div>
 						</ModalFooter>
 					</>
