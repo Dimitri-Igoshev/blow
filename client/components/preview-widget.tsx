@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@heroui/theme";
-import { FC } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Image } from "@heroui/image";
 import { useRouter } from "next/navigation";
 
@@ -18,22 +18,32 @@ interface PreviewWidgetProps {
 
 export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
 	const router = useRouter();
+	const ref = useRef<any>(null);
+
+	const [width, setWidth] = useState<number | null>(null);
+
+	useEffect(() => {
+		if (ref?.current?.offsetWidth) {
+			setWidth(ref.current.offsetWidth);
+		}
+	}, []);
 
 	return (
 		<button
+			ref={ref}
 			className={cn(
-				"w-full h-full border-[5px] rounded-[32px] border-white overflow-hidden cursor-pointer text-white sm:hover:scale-110 transition-all z-0 relative",
+				"w-full border-[5px] rounded-[32px] border-white overflow-hidden cursor-pointer text-white sm:hover:scale-110 transition-all z-0 relative",
 				{
 					["border-white dark:border-white/25"]: !isTop(item),
 					["border-primary dark:border-primary/75"]: isTop(item),
 				},
 				className
 			)}
+			style={{ height: `${width ? width * 1.4 : 0}px` }}
 			onClick={() => router.push(`${ROUTES.ACCOUNT.SEARCH}/${item._id}`)}
 		>
 			<Image
 				alt=""
-				height={"100%"}
 				src={
 					item?.photos[0]?.url
 						? `${config.MEDIA_URL}/${item?.photos[0]?.url}`
@@ -42,6 +52,8 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
 							: "/woman2.png"
 				}
 				width={"100%"}
+				height={width ? width * 1.4 : 0}
+				className="object-cover"
 			/>
 
 			<div className="text-sm sm:text-base p-[7px] bg-transparent w-full absolute left-0 bottom-0 z-10">

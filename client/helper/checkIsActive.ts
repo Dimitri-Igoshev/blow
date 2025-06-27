@@ -25,7 +25,7 @@ export const isPremium = (user: any) => {
 export const isTop = (user: any) => {
 	if (!user) return false;
 
-	if (user.sex === "male") return false;
+	// if (user.sex === "male") return false;
 
 	const top = user.services.find((service: any) => service._id === TOP_ID);
 

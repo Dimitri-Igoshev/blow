@@ -280,7 +280,7 @@ export default function AccountDialogues({
 									"hidden md:flex": !currentChat,
 								}
 							)}
-							style={{ height: (window.innerHeight / 100) * 65 }}
+							style={{ height: ((window.innerHeight - 210) / 100) * 70 }}
 							ref={containerRef}
 						>
 							<div className="flex flex-col gap-4 w-full">

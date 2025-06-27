@@ -176,12 +176,10 @@ export default function AccountServices() {
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const womenServices = services?.filter(
-		(item: any) => item?._id !== MAILING_ID
-	);
-	const menServices = services?.filter((item: any) => item?._id !== TOP_ID);
+	const womenServices = services?.filter((item: any) => item?._id !== MAILING_ID);
+	// const menServices = services?.filter((item: any) => item?._id !== TOP_ID);
 
-	const genderServices = me?.sex === "male" ? menServices : womenServices;
+	const genderServices = me?.sex === "male" ? services : womenServices;
 
 	return (
 		<div className="flex w-full flex-col px-9 pt-[84px] gap-[30px] min-h-screen">

@@ -36,34 +36,29 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 	refresh = () => null,
 }) => {
 	const router = useRouter();
-	const search = useSelector((state: any) => state.searchReducer);
+	const search = useSelector((state: any) => state.search.search);
 	const dispatch = useDispatch();
 
 	const { data: me } = useGetMeQuery(null);
 
-	const [men, setMen] = useState(search?.sex === "male");
-	const [woman, setWoman] = useState(search?.sex === "female");
 	const [ageFromOptions, setAgeFromOptions] = useState([...ages]);
-	const [ageFrom, setAgeFrom] = useState(search?.minage ? search.minage : "");
 	const [ageToOptions, setAgeToOptions] = useState([...ages]);
-	const [ageTo, setAgeTo] = useState(search?.maxage ? search.maxage : "");
-	const [isOnline, setIsOnline] = useState(false);
 
 	useEffect(() => {
-		if (!ageFrom) return;
+		if (!search?.minage) return;
 
 		setAgeToOptions([
-			...ages.filter(({ value }) => parseInt(value) >= parseInt(ageFrom)),
+			...ages.filter(({ value }) => parseInt(value) >= parseInt(search?.minage)),
 		]);
-	}, [ageFrom]);
+	}, [search?.minage]);
 
 	useEffect(() => {
-		if (!ageTo) return;
+		if (!search?.maxage) return;
 
 		setAgeFromOptions([
-			...ages.filter(({ value }) => parseInt(value) <= parseInt(ageTo)),
+			...ages.filter(({ value }) => parseInt(value) <= parseInt(search?.maxage)),
 		]);
-	}, [ageTo]);
+	}, [search?.maxage]);
 
 	const [newUser, setNewUser] = useState(null);
 
@@ -115,22 +110,23 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 	};
 
 	const onSearch = (onlineSwitch = false) => {
-		dispatch(
-			setSearch({
-				...search,
-				online: onlineSwitch
-					? isOnline
-						? ""
-						: "true"
-					: isOnline
-						? "true"
-						: "",
-				sex: men && woman ? "" : men ? "male" : woman ? "female" : "",
-				minage: ageFrom ? ageFrom.toString() : "",
-				maxage: ageTo ? ageTo.toString() : "",
-				limit: "16",
-			})
-		);
+	// 	dispatch(
+	// 		setSearch({
+	// 			...search,
+	// 			online: onlineSwitch
+	// 				? search?.online
+	// 					? ""
+	// 					: "true"
+	// 				: search?.isOnline
+	// 					? "true"
+	// 					: "",
+	// 			sex,
+	// 			minage: search.minage ? search.minage.toString() : "",
+	// 			maxage: ageTo ? ageTo.toString() : "",
+	// 			limit: "16",
+	// 			city,
+	// 		})
+	// 	);
 
 		if (!me) {
 			// window.open(`${ROUTES.HOME}?sex=${men && woman ? "" : men ? "male" : woman ? "female" : ""}&minage=${ageFrom ? ageFrom.toString() : ""}&maxage=${ageTo ? ageTo.toString() : ""}&city=${city || ""}`, "_self");
@@ -163,21 +159,35 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 				<div className="flex items-center gap-2.5 lx:gap-4">
 					<Button
 						className={cn("text-xs font-regular", {
-							"bg-dark dark:bg-black text-white": men,
+							"bg-dark dark:bg-black text-white": search.sex === "male",
 						})}
 						radius="full"
 						startContent={<MenIcon className="text-danger" />}
-						onPress={() => setMen(!men)}
+						onPress={() =>
+							dispatch(
+								setSearch({
+									...search,
+									sex: "male",
+								})
+							)
+						}
 					>
 						мужчину
 					</Button>
 					<Button
 						className={cn("text-xs  font-regular", {
-							"bg-dark dark:bg-black text-white": woman,
+							"bg-dark dark:bg-black text-white": search.sex === "female",
 						})}
 						radius="full"
 						startContent={<WomenIcon className="text-danger" />}
-						onPress={() => setWoman(!woman)}
+						onPress={() =>
+							dispatch(
+								setSearch({
+									...search,
+									sex: "female",
+								})
+							)
+						}
 					>
 						девушку
 					</Button>
@@ -196,9 +206,15 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 						className="w-[119px] text-primary"
 						placeholder="от"
 						radius="full"
-						// @ts-ignore
-						selectedKeys={[ageFrom]}
-						onChange={(el: any) => setAgeFrom(el.target.value)}
+						selectedKeys={[search.minage]}
+						onChange={(el: any) => 
+							dispatch(
+								setSearch({
+									...search,
+									minage: el.target.value,
+								})
+							)
+						}
 					>
 						{ageFromOptions.map((age) => (
 							<SelectItem key={age.value}>{age.label}</SelectItem>
@@ -209,8 +225,13 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 						placeholder="до"
 						radius="full"
 						// @ts-ignore
-						selectedKeys={[ageTo]}
-						onChange={(el: any) => setAgeTo(el.target.value)}
+						selectedKeys={[search.maxage]}
+						onChange={(el: any) => dispatch(
+								setSearch({
+									...search,
+									maxage: el.target.value,
+								})
+							)}
 					>
 						{ageToOptions.map((age) => (
 							<SelectItem key={age.value}>{age.label}</SelectItem>
@@ -230,16 +251,15 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 					className="max-w-[248px] xl:max-w-[254px] text-primary"
 					placeholder="выберите город"
 					radius="full"
-					// @ts-ignore
-					selectedKeys={search?.city || ""}
-					onChange={(el: any) =>
+					selectedKeys={[search.city]}
+					onChange={(el: any) => {
 						dispatch(
 							setSearch({
 								...search,
 								city: el.target.value,
 							})
-						)
-					}
+						);
+					}}
 				>
 					{cities.map((city) => (
 						<SelectItem key={city.value}>{city.label}</SelectItem>
@@ -254,10 +274,15 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 							label: "text-white",
 						}}
 						color="success"
-						isSelected={isOnline}
+						isSelected={!!search.online}
 						onValueChange={(value) => {
-							setIsOnline(value);
-							onSearch(true);
+							dispatch(
+							setSearch({
+								...search,
+								online: value ? "true" : ""
+							})
+						);
+							// onSearch(true);
 						}}
 					>
 						Онлайн
