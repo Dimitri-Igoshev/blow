@@ -19,9 +19,7 @@ function WrapperEmailConf({ children }: any) {
 
 		if (me?.status === "new") {
 			onOpen();
-		} else {
-			redirect(ROUTES.ACCOUNT.PROFILE);
-		}
+    }
 	}, [me]);
 
 	return (
