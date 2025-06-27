@@ -26,7 +26,7 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
 		if (ref?.current?.offsetWidth) {
 			setWidth(ref.current.offsetWidth);
 		}
-	}, []);
+	}, [ref?.current?.offsetWidth]);
 
 	return (
 		<button
