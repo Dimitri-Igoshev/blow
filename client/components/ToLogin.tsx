@@ -12,100 +12,123 @@ import { ErrorModal } from "./ErrorModal";
 
 import { ROUTES } from "@/app/routes";
 import { useGetMeQuery } from "@/redux/services/userApi";
+import { RecoveryPasswordModal } from "./RecoveryPasswordModal";
+import { RecoverySuccessModal } from "./RecoverySuccesModal";
 
 interface ToLoginProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 const ToLogin: FunctionComponent<ToLoginProps> = ({ children }) => {
-  const router = useRouter();
+	const router = useRouter();
 
-  const [newUser, setNewUser] = useState(null);
+	const [newUser, setNewUser] = useState(null);
 
-  const { data: me } = useGetMeQuery(null);
+	const { data: me } = useGetMeQuery(null);
 
-  const {
-    isOpen: isLogin,
-    onOpen: onLogin,
-    onOpenChange: onLoginChange,
-  } = useDisclosure();
-  const {
-    isOpen: isRegister,
-    onOpen: onRegister,
-    onOpenChange: onRegisterChange,
-  } = useDisclosure();
-  const {
-    isOpen: isEmail,
-    onOpen: onEmail,
-    onOpenChange: onEmailChange,
-  } = useDisclosure();
-  const {
-    isOpen: isError,
-    onOpen: onError,
-    onOpenChange: onErrorChange,
-  } = useDisclosure();
+	const {
+		isOpen: isLogin,
+		onOpen: onLogin,
+		onOpenChange: onLoginChange,
+	} = useDisclosure();
+	const {
+		isOpen: isRegister,
+		onOpen: onRegister,
+		onOpenChange: onRegisterChange,
+	} = useDisclosure();
+	const {
+		isOpen: isEmail,
+		onOpen: onEmail,
+		onOpenChange: onEmailChange,
+	} = useDisclosure();
+	const {
+		isOpen: isError,
+		onOpen: onError,
+		onOpenChange: onErrorChange,
+	} = useDisclosure();
+	const {
+		isOpen: isRecovery,
+		onOpen: onRecovery,
+		onOpenChange: onRecoveryChange,
+	} = useDisclosure();
+	const {
+		isOpen: isRecoverySuccess,
+		onOpen: onRecoverySuccess,
+		onOpenChange: onRecoverySuccessChange,
+	} = useDisclosure();
 
-  const onNext = (value: any) => {
-    setNewUser(value);
+	const onNext = (value: any) => {
+		setNewUser(value);
 
-    onEmail();
-  };
+		onEmail();
+	};
 
-  const [error, setError] = useState("");
+	const [error, setError] = useState("");
 
-  const handleError = (error: string) => {
-    console.log("error", error);
-    setError(error);
-    onError();
-  };
+	const handleError = (error: string) => {
+		console.log("error", error);
+		setError(error);
+		onError();
+	};
 
-  const registration = () => {};
+	const registration = () => {};
 
-  const [mobileMenu, setMobileMenu] = useState(false);
+	const [mobileMenu, setMobileMenu] = useState(false);
 
-  const logout = () => {
-    localStorage.setItem("access-token", "");
-    router.replace(ROUTES.HOME);
-    window.location.reload();
-  };
+	const logout = () => {
+		localStorage.setItem("access-token", "");
+		router.replace(ROUTES.HOME);
+		window.location.reload();
+	};
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!me) onLogin();
-    }, 100);
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			if (!me) onLogin();
+		}, 100);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [me]);
+		return () => {
+			clearTimeout(timeout);
+		};
+	}, [me]);
 
-  return (
-    <>
-      {me ? children : <Loader />}
+	return (
+		<>
+			{me ? children : <Loader />}
 
-      <LoginModal
-        isOpen={isLogin}
-        showError={(error: string) => handleError(error)}
-        onOpenChange={onLoginChange}
-        onRegister={onRegister}
-        onRecovery={() => null}
-      />
-      <RegisterModal
-        isOpen={isRegister}
-        onLogin={onLogin}
-        onNext={onNext}
-        onOpenChange={onRegisterChange}
-      />
-      <EmailModal
-        isOpen={isEmail}
-        newUser={newUser}
-        onLogin={onLoginChange}
-        onOpenChange={onEmailChange}
-        onRegister={registration}
-      />
-      <ErrorModal error={error} isOpen={isError} onOpenChange={onErrorChange} />
-    </>
-  );
+			<LoginModal
+				isOpen={isLogin}
+				showError={(error: string) => handleError(error)}
+				onOpenChange={onLoginChange}
+				onRegister={onRegister}
+				onRecovery={onRecovery}
+			/>
+			<RegisterModal
+				isOpen={isRegister}
+				onLogin={onLogin}
+				onNext={onNext}
+				onOpenChange={onRegisterChange}
+				onRecovery={onRecovery}
+			/>
+			<EmailModal
+				isOpen={isEmail}
+				newUser={newUser}
+				onLogin={onLoginChange}
+				onOpenChange={onEmailChange}
+				onRegister={registration}
+				onRecovery={onRecovery}
+			/>
+			<ErrorModal error={error} isOpen={isError} onOpenChange={onErrorChange} />
+			<RecoveryPasswordModal
+				isOpen={isRecovery}
+				onOpenChange={onRecoveryChange}
+				onSend={onRecoverySuccess}
+			/>
+			<RecoverySuccessModal
+				isOpen={isRecoverySuccess}
+				onOpenChange={onRecoverySuccessChange}
+			/>
+		</>
+	);
 };
 
 export default ToLogin;

@@ -21,6 +21,8 @@ import { useGetMeQuery } from "@/redux/services/userApi";
 import { ROUTES } from "@/app/routes";
 import { setSearch } from "@/redux/features/searchSlice";
 import { isPremium } from "@/helper/checkIsActive";
+import { RecoveryPasswordModal } from "./RecoveryPasswordModal";
+import { RecoverySuccessModal } from "./RecoverySuccesModal";
 
 interface SearchWidgetProps {
 	horizontal?: boolean;
@@ -80,6 +82,16 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 		onOpen: onEmail,
 		onOpenChange: onEmailChange,
 	} = useDisclosure();
+	const {
+		isOpen: isRecovery,
+		onOpen: onRecovery,
+		onOpenChange: onRecoveryChange,
+	} = useDisclosure();
+	const {
+		isOpen: isRecoverySuccess,
+		onOpen: onRecoverySuccess,
+		onOpenChange: onRecoverySuccessChange,
+	} = useDisclosure();
 
 	const onNext = (value: any) => {
 		setNewUser(value);
@@ -105,7 +117,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 	const onSearch = (onlineSwitch = false) => {
 		dispatch(
 			setSearch({
-        ...search,
+				...search,
 				online: onlineSwitch
 					? isOnline
 						? ""
@@ -290,6 +302,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 				onLogin={onLogin}
 				onNext={onNext}
 				onOpenChange={onRegisterChange}
+				onRecovery={onRecovery}
 			/>
 			<EmailModal
 				isOpen={isEmail}
@@ -297,8 +310,18 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 				onLogin={onLoginChange}
 				onOpenChange={onEmailChange}
 				onRegister={registration}
+				onRecovery={onRecovery}
 			/>
 			<ErrorModal error={error} isOpen={isError} onOpenChange={onErrorChange} />
+			<RecoveryPasswordModal
+				isOpen={isRecovery}
+				onOpenChange={onRecoveryChange}
+				onSend={onRecoverySuccess}
+			/>
+			<RecoverySuccessModal
+				isOpen={isRecoverySuccess}
+				onOpenChange={onRecoverySuccessChange}
+			/>
 		</div>
 	);
 };
