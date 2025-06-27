@@ -10,6 +10,7 @@ import { ROUTES } from "../routes";
 import { SearchWidget } from "@/components/search-widget";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { useGetChatsQuery } from "@/redux/services/chatApi";
+import WrapperEmailConf from "./WrapperEmailConf";
 
 export default function PanelLayout({
 	children,
@@ -186,7 +187,9 @@ export default function PanelLayout({
 					) : null}
 				</div>
 
-				<div className="pt-[100px] sm:pt-[160px] pb-[50px]">{children}</div>
+				<div className="pt-[100px] sm:pt-[160px] pb-[50px]">
+					<WrapperEmailConf>{children}</WrapperEmailConf>
+				</div>
 
 				<footer className="bg-gray dark:bg-black w-full">
 					<div className="bg-dark rounded-t-[50px] px-3 sm:px-12 py-[28px] grid grid-cols-1 sm:grid-cols-3 text-white items-center text-xs sm:text-base">

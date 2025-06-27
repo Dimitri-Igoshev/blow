@@ -33,3 +33,10 @@ export const isTop = (user: any) => {
 
 	return checkIsActive(top?.expiredAt);
 };
+
+
+export const isActive = (user: any) => {
+	if (!user) return false;
+
+	return user.status === "active"
+}

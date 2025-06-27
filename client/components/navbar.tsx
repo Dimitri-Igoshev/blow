@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 import { Avatar, useDisclosure } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { RiCloseFill, RiMenu4Fill } from "react-icons/ri";
-import { FaCrown } from "react-icons/fa6";
 
 import { RegisterModal } from "./register-modal";
 import { LoginModal } from "./login-modal";
@@ -384,6 +383,7 @@ export const Navbar = () => {
 				onLogin={onLogin}
 				onNext={onNext}
 				onOpenChange={onRegisterChange}
+				onRecovery={() => onRecovery()}
 			/>
 			<EmailModal
 				isOpen={isEmail}
@@ -391,6 +391,7 @@ export const Navbar = () => {
 				onLogin={onLoginChange}
 				onOpenChange={onEmailChange}
 				onRegister={registration}
+				onRecovery={() => onRecovery()}
 			/>
 			<ErrorModal error={error} isOpen={isError} onOpenChange={onErrorChange} />
 			<RecoveryPasswordModal

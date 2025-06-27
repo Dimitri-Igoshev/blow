@@ -38,7 +38,7 @@ export const RecoverySuccessModal: FC<RecoverySuccessModalProps> = ({
 							Восстановление пароля
 						</ModalHeader>
 						<ModalBody>
-							<div className="flex flex-col gap-5 my-6">
+							<div className="flex flex-col gap-5">
 								Ссылка для восстановления пароля отправлена на указанную почту.
 							</div>
 						</ModalBody>

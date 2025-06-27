@@ -31,6 +31,7 @@ interface EmailModalProps {
   onRegister: () => void;
   onOpenChange: () => void;
   newUser: any;
+  onRecovery: () => void;
 }
 
 export const EmailModal: FC<EmailModalProps> = ({
@@ -39,6 +40,7 @@ export const EmailModal: FC<EmailModalProps> = ({
   onRegister,
   onOpenChange,
   newUser,
+  onRecovery
 }) => {
   const router = useRouter();
 
@@ -168,6 +170,10 @@ export const EmailModal: FC<EmailModalProps> = ({
                         className="cursor-pointer hover:text-primary bg-transparent text-xs"
                         radius="full"
                         variant="flat"
+                        onPress={() => {
+                          onRecovery()
+                          onClose()
+                        }}
                       >
                         Забыли пароль?
                       </Button>

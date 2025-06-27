@@ -29,6 +29,7 @@ interface RegisterModalProps {
   onLogin: () => void;
   onOpenChange: () => void;
   onNext: (value: any) => void;
+  onRecovery: () => void;
 }
 
 export const RegisterModal: FC<RegisterModalProps> = ({
@@ -36,6 +37,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
   onLogin,
   onNext,
   onOpenChange,
+  onRecovery
 }) => {
   const [men, setMen] = useState(true);
   const [woman, setWoman] = useState(false);
@@ -302,7 +304,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                     isSelected={accept}
                     onChange={() => setAccept(!accept)}
                   >
-                    соглашенаюсь с офертой
+                    соглашаюсь с офертой
                   </Checkbox>
 
                   <div className="flex items-center justify-between w-full gap-4 text-xs mt-2 -mb-3">
@@ -310,8 +312,12 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                       className="cursor-pointer hover:text-primary bg-transparent text-xs"
                       radius="full"
                       variant="flat"
+                      onPress={() => {
+                        onRecovery()
+                        onClose();
+                      }}
                     >
-                      Забыл{woman ? "a" : ""} пароль?
+                      Забыли пароль?
                     </Button>
                     <Button
                       className="cursor-pointer hover:text-primary bg-transparent text-xs"
