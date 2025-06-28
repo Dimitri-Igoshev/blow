@@ -110,7 +110,7 @@ export default function PanelLayout({
 
 				<div
 					className={cn(
-						"absolute sm:fixed z-10 sm:px-9 top-[96px] sm:mt-[30px] w-full"
+						"absolute sm:fixed z-10 px-3 sm:px-9 top-[96px] mt-0 sm:mt-[30px] w-full"
 					)}
 				>
 					{me ? (
@@ -118,7 +118,7 @@ export default function PanelLayout({
 							<Tabs
 								fullWidth
 								aria-label="Tabs"
-								className="hidden sm:flex"
+								className="flex"
 								classNames={{
 									tabContent: "text-white",
 								}}
