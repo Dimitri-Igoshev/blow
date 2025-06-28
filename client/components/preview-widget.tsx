@@ -20,7 +20,7 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
 	const router = useRouter();
 	const ref = useRef<any>(null);
 
-	const [width, setWidth] = useState<number | null>(null);
+	const [width, setWidth] = useState<number | null>();
 
 	useEffect(() => {
 		if (ref?.current?.offsetWidth) {

@@ -38,6 +38,7 @@ export const AllCitiesModal: FC<AllCitiesModalProps> = ({
 			isOpen={isOpen}
 			size="5xl"
 			onOpenChange={onOpenChange}
+      placement="top"
 		>
 			<ModalContent>
 				{(onClose) => (
