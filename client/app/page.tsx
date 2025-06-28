@@ -13,7 +13,9 @@ import { SearchWidget } from "@/components/search-widget";
 import { cities } from "@/data/cities";
 import { useGetUsersQuery } from "@/redux/services/userApi";
 import { setSearch } from "@/redux/features/searchSlice";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { useDisclosure } from "@heroui/react";
+import { AllCitiesModal } from "@/components/AllCitiesModal";
 
 export default function Home() {
 	const cities1 = cities.slice(0, 6);
@@ -33,7 +35,13 @@ export default function Home() {
 
 	const [searched, setSearched] = useState(false);
 
-  const router = useRouter();
+	const router = useRouter();
+
+	const {
+		isOpen: isAllCitiesOpen,
+		onOpen: onAllCities,
+		onOpenChange: onAllCitiesChange,
+	} = useDisclosure();
 
 	return (
 		<>
@@ -266,12 +274,12 @@ export default function Home() {
 													city: item.value,
 												})
 											);
-                      const interval = setInterval(() => {
-                        if (search.city) {
-                          router.push(ROUTES.ACCOUNT.SEARCH)
-                          clearInterval(interval)
-                        }
-                      }, 100)
+											const interval = setInterval(() => {
+												if (search.city) {
+													router.push(ROUTES.ACCOUNT.SEARCH);
+													clearInterval(interval);
+												}
+											}, 100);
 										}}
 									>
 										{item.label}
@@ -377,9 +385,12 @@ export default function Home() {
 										{item.label}
 									</button>
 								))}
-								<div className="cursor-pointer text-primary hover:text-dark font-semibold mt-6">
+								<button
+									className="cursor-pointer text-primary flex w-full hover:text-dark font-semibold mt-6"
+									onClick={onAllCities}
+								>
 									Все города
-								</div>
+								</button>
 							</div>
 						</div>
 
@@ -423,6 +434,11 @@ export default function Home() {
 					</div>
 				</div>
 			</div>
+
+			<AllCitiesModal
+				isOpen={isAllCitiesOpen}
+				onOpenChange={onAllCitiesChange}
+			/>
 		</>
 	);
 }
