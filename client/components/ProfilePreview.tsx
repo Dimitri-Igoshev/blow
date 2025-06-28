@@ -36,7 +36,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				>
 					<Image
 						alt=""
-						className="z-0 relative sm:w-auto h-full xl:h-[345px] xl:w-[230px] object-cover"
+						className="z-0 relative w-full sm:w-auto h-full xl:h-[345px] xl:w-[230px] object-cover"
 						radius="none"
 						src={
 							item?.photos[0]?.url
