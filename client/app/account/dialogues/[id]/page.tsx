@@ -200,7 +200,7 @@ export default function AccountDialogues({
 				{/* <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1> */}
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[250px] left-[40px] right-[40px]">
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[260px] left-0 w-full">
 				<div
 					className={cn(
 						"col-span-1 flex-col gap-1 w-full mt-8 overflow-y-scroll hide-scroll relative",
@@ -275,8 +275,8 @@ export default function AccountDialogues({
 					))}
 				</div>
 
-				<div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col h-full pb-[70px]">
-					<div className="rounded-[24px] border-[7px] p-3 border-white dark:border-foreground-100">
+				<div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col h-full pb-[70px] w-full">
+					<div className="rounded-[24px] border-0 sm:border-[7px] p-3 border-white dark:border-foreground-100">
 						<div
 							ref={containerRef}
 							className={cn(
