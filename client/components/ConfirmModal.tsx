@@ -54,7 +54,12 @@ export const ConfirmModal: FC<ConfirmModalProps> = ({
                   Закрыть
                 </Button>
                 {onAction && actionBtn ? (
-                  <Button color="primary" className="w-full" radius="full" onPress={onAction}>
+                  <Button
+                    className="w-full"
+                    color="primary"
+                    radius="full"
+                    onPress={onAction}
+                  >
                     {actionBtn}
                   </Button>
                 ) : null}

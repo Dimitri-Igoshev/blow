@@ -11,14 +11,12 @@ import {
 } from "@heroui/react";
 import { FC, useState } from "react";
 import { MdEmail } from "react-icons/md";
-import { FaLock } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import Loader from "./Loader";
 
-import { useRecoveryPasswordMutation, useRegisterMutation } from "@/redux/services/authApi";
-import { useUploadMutation } from "@/redux/services/uploadApi";
+import { useRecoveryPasswordMutation } from "@/redux/services/authApi";
 
 type Inputs = {
   email: string;
@@ -46,7 +44,7 @@ export const RecoveryPasswordModal: FC<RecoveryPasswordModalProps> = ({
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [recovery] = useRecoveryPasswordMutation()
+  const [recovery] = useRecoveryPasswordMutation();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
@@ -58,7 +56,7 @@ export const RecoveryPasswordModal: FC<RecoveryPasswordModalProps> = ({
     recovery(body)
       .unwrap()
       .then((res) => {
-        onSend()
+        onSend();
         onOpenChange();
         setIsLoading(false);
       })
@@ -76,11 +74,11 @@ export const RecoveryPasswordModal: FC<RecoveryPasswordModalProps> = ({
       classNames={{
         closeButton: `m-3.5 ${isLoading && "hidden"}`,
       }}
+      isDismissable={false}
       isOpen={isOpen}
       placement="center"
       size="sm"
       onOpenChange={onOpenChange}
-      isDismissable={false}
     >
       <ModalContent>
         {(onClose) => (

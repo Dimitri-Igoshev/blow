@@ -2,10 +2,10 @@
 
 import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
-import { PiWaveform } from "react-icons/pi";
 import { Input, Textarea } from "@heroui/input";
 import { Checkbox, Select, SelectItem } from "@heroui/react";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { cities } from "@/data/cities";
 import { ages } from "@/data/ages";
@@ -17,10 +17,9 @@ import { ROUTES } from "@/app/routes";
 import UploadImages from "@/components/UploadImages";
 import { IPhoto } from "@/common/interface/photo.interface";
 import { truncateString } from "@/helper/truncateStr";
-import dynamic from 'next/dynamic';
 
-const VoiceRecorder = dynamic(() => import('@/components/VoiceRecoder'), {
-  ssr: false
+const VoiceRecorder = dynamic(() => import("@/components/VoiceRecoder"), {
+  ssr: false,
 });
 
 export default function EditProfile() {

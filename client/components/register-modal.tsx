@@ -37,7 +37,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
   onLogin,
   onNext,
   onOpenChange,
-  onRecovery
+  onRecovery,
 }) => {
   const [men, setMen] = useState(true);
   const [woman, setWoman] = useState(false);
@@ -89,11 +89,11 @@ export const RegisterModal: FC<RegisterModalProps> = ({
         classNames={{
           closeButton: "m-3.5",
         }}
+        isDismissable={false}
         isOpen={isOpen}
         placement="center"
         size="sm"
         onOpenChange={onOpenChange}
-        isDismissable={false}
       >
         <ModalContent>
           {(onClose) => (
@@ -275,6 +275,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                   <Button
                     className="w-full"
                     color={!accept ? "default" : "primary"}
+                    disabled={!accept}
                     radius="full"
                     onPress={() => {
                       onNext({
@@ -289,7 +290,6 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                       });
                       onClose();
                     }}
-                    disabled={!accept}
                   >
                     Все верно
                   </Button>
@@ -313,7 +313,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                       radius="full"
                       variant="flat"
                       onPress={() => {
-                        onRecovery()
+                        onRecovery();
                         onClose();
                       }}
                     >

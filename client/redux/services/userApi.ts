@@ -59,9 +59,9 @@ export const userApi = createApi({
     removeUser: builder.mutation({
       query: (id) => ({
         url: `/${id}`,
-        method: 'DELETE'
+        method: "DELETE",
       }),
-      invalidatesTags: ['User']
+      invalidatesTags: ["User"],
     }),
     setActivity: builder.mutation({
       query: ({ id, body }) => ({
@@ -135,8 +135,8 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["User", "Me"],
     }),
-  })
-})
+  }),
+});
 
 export const {
   useGetMeQuery,
@@ -152,5 +152,5 @@ export const {
   useAddBalanceMutation,
   useBuyServiceMutation,
   useBuyServicesKitMutation,
-  useReiseProfileMutation
+  useReiseProfileMutation,
 } = userApi;

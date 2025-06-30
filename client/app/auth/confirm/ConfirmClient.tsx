@@ -1,47 +1,48 @@
 "use client";
 
-import { ROUTES } from "@/app/routes";
-import { InfoModal } from "@/components/InfoModal";
-import { useConfirmationMutation } from "@/redux/services/authApi";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import { ROUTES } from "@/app/routes";
+import { InfoModal } from "@/components/InfoModal";
+import { useConfirmationMutation } from "@/redux/services/authApi";
+
 export default function ConfirmClient() {
-	const searchParams = useSearchParams();
-	const token = searchParams.get("token");
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
 
-	const router = useRouter();
+  const router = useRouter();
 
-	const [confirm] = useConfirmationMutation();
+  const [confirm] = useConfirmationMutation();
 
-	const confirmation = () => {
-		confirm({ token })
-			.unwrap()
-			.then((res) => {
-				localStorage.setItem("access-token", res.accessToken);
+  const confirmation = () => {
+    confirm({ token })
+      .unwrap()
+      .then((res) => {
+        localStorage.setItem("access-token", res.accessToken);
         window.location.reload();
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-	useEffect(() => {
-		if (!token) return;
+  useEffect(() => {
+    if (!token) return;
 
-		confirmation();
-	}, [token]);
+    confirmation();
+  }, [token]);
 
-	return (
-		<div className="h-screen flex items-center justify-center">
-			<InfoModal
-				isOpen={true}
-				onOpenChange={() => router.push(ROUTES.ACCOUNT.PROFILE)}
-				title="Поздравляем!"
-				text="Ваша почта успешно подтверждена."
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <InfoModal
         closeBtn="В профиль"
-			/>
-		</div>
-	);
+        isOpen={true}
+        text="Ваша почта успешно подтверждена."
+        title="Поздравляем!"
+        onOpenChange={() => router.push(ROUTES.ACCOUNT.PROFILE)}
+      />
+    </div>
+  );
 }

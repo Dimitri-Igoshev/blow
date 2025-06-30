@@ -1,15 +1,16 @@
 // app/api/webhook/route.ts
 
 import { NextRequest } from "next/server";
+
 import { IncomingPayload } from "../types";
 
 export async function POST(req: NextRequest) {
-	try {
-		const data: IncomingPayload = await req.json();
+  try {
+    const data: IncomingPayload = await req.json();
 
-		console.log('Полученные данные от внешнего API:', data);
+    console.log("Полученные данные от внешнего API:", data);
 
-		// Пример: делаем какие-то дополнительные действия с полученными данными
+    // Пример: делаем какие-то дополнительные действия с полученными данными
     // Например, можно добавить какое-то поле или изменить данные
     // const processedData = {
     //   ...data,
@@ -24,29 +25,30 @@ export async function POST(req: NextRequest) {
     //   processedData,
     // });
 
-		const result = await fetch(
-			`https://blow.igoshev.de/api/payment/notification`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		);
+    const result = await fetch(
+      `https://blow.igoshev.de/api/payment/notification`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
 
-		// const result = await response.json();
+    // const result = await response.json();
 
-		// console.log('[NOTIFICATION RESPONSE]', result);
+    // console.log('[NOTIFICATION RESPONSE]', result);
 
-		return Response.json({
-			message: "Данные получены и пересланы",
-			notificationResponse: result,
-		});
-	} catch (error) {
-		console.error("[WEBHOOK ERROR]", error);
-		return new Response(JSON.stringify({ message: "Ошибка сервера" }), {
-			status: 500,
-		});
-	}
+    return Response.json({
+      message: "Данные получены и пересланы",
+      notificationResponse: result,
+    });
+  } catch (error) {
+    console.error("[WEBHOOK ERROR]", error);
+
+    return new Response(JSON.stringify({ message: "Ошибка сервера" }), {
+      status: 500,
+    });
+  }
 }

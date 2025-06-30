@@ -8,7 +8,7 @@ import { uploadApi } from "./services/uploadApi";
 import { serviceApi } from "./services/serviceApi";
 import { mailingApi } from "./services/mailingApi";
 import { chatApi } from "./services/chatApi";
-import { paymentApi } from "./services/paymentApi"
+import { paymentApi } from "./services/paymentApi";
 
 export const store = configureStore({
   reducer: {

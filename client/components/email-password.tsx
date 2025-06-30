@@ -40,7 +40,7 @@ export const EmailModal: FC<EmailModalProps> = ({
   onRegister,
   onOpenChange,
   newUser,
-  onRecovery
+  onRecovery,
 }) => {
   const router = useRouter();
 
@@ -102,11 +102,11 @@ export const EmailModal: FC<EmailModalProps> = ({
       classNames={{
         closeButton: `m-3.5 ${isLoading && "hidden"}`,
       }}
+      isDismissable={false}
       isOpen={isOpen}
       placement="center"
       size="sm"
       onOpenChange={onOpenChange}
-      isDismissable={false}
     >
       <ModalContent>
         {(onClose) => (
@@ -171,8 +171,8 @@ export const EmailModal: FC<EmailModalProps> = ({
                         radius="full"
                         variant="flat"
                         onPress={() => {
-                          onRecovery()
-                          onClose()
+                          onRecovery();
+                          onClose();
                         }}
                       >
                         Забыли пароль?

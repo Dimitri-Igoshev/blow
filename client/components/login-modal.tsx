@@ -15,7 +15,7 @@ import { FaLock } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { useLoginMutation, useRecoveryPasswordMutation } from "@/redux/services/authApi";
+import { useLoginMutation } from "@/redux/services/authApi";
 
 type Inputs = {
   email: string;
@@ -28,7 +28,7 @@ interface LoginModalProps {
   onRecovery: () => void;
   onOpenChange: () => void;
   showError: (error: string) => void;
-  onConfirmationRequired?: () => void
+  onConfirmationRequired?: () => void;
 }
 
 export const LoginModal: FC<LoginModalProps> = ({
@@ -37,7 +37,7 @@ export const LoginModal: FC<LoginModalProps> = ({
   onRecovery,
   onOpenChange,
   showError,
-  onConfirmationRequired
+  onConfirmationRequired,
 }) => {
   const router = useRouter();
 
@@ -150,7 +150,7 @@ export const LoginModal: FC<LoginModalProps> = ({
                     radius="full"
                     variant="flat"
                     onPress={() => {
-                      onRecovery()
+                      onRecovery();
                       onClose();
                     }}
                   >

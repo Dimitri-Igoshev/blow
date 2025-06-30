@@ -35,23 +35,29 @@ export const authApi = createApi({
         url: "/confirmation",
         method: "POST",
         body,
-      })
+      }),
     }),
     recoveryPassword: builder.mutation({
       query: (body) => ({
         url: "/recovery-password",
         method: "POST",
         body,
-      })
+      }),
     }),
     resetPassword: builder.mutation({
       query: (body) => ({
         url: "/reset-password",
         method: "POST",
         body,
-      })
+      }),
     }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useConfirmationMutation, useRecoveryPasswordMutation, useResetPasswordMutation } = authApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useConfirmationMutation,
+  useRecoveryPasswordMutation,
+  useResetPasswordMutation,
+} = authApi;
