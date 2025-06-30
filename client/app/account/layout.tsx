@@ -118,7 +118,7 @@ export default function PanelLayout({
 							<Tabs
 								fullWidth
 								aria-label="Tabs"
-								className="flex"
+								className="flex mb-3 sm:mb-0"
 								classNames={{
 									tabContent: "text-white",
 								}}

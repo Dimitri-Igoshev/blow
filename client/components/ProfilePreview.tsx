@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { cn } from "@heroui/theme";
 import { Image } from "@heroui/image";
 import { Button } from "@heroui/button";
@@ -9,7 +9,8 @@ import { config } from "@/common/env";
 import { getCityString } from "@/helper/getCityString";
 import { ROUTES } from "@/app/routes";
 import { getActivityString } from "@/helper/getActivityString";
-import { isTop } from "@/helper/checkIsActive";
+import { isPremium, isTop } from "@/helper/checkIsActive";
+import { useGetMeQuery } from "@/redux/services/userApi";
 
 interface ProfilePreviewProps {
 	item: any;
@@ -21,6 +22,9 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 	className = "",
 }) => {
 	const router = useRouter();
+	const { data: me } = useGetMeQuery(null);
+
+	const audioRef = useRef<any>(null);
 
 	return (
 		<>
@@ -108,17 +112,30 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 					</div>
 
 					<div className="grid grid-cols-5 gap-3">
-						<div className="col-span-3">
-							{item?.voice ? (
-								<Button
-									className="w-full z-0 relative"
-									color="primary"
-									radius="full"
-									startContent={<PiWaveform className="w-5 h-5" />}
-									variant="bordered"
-								>
-									{item?.voice ? "Прослушать голос" : "Записать голос"}
-								</Button>
+						<div className="col-span-1" />
+						<div className="col-span-2">
+							{item?.voice && isPremium(me) ? (
+								<>
+									<audio
+										className="hidden"
+										ref={audioRef}
+										src={`${config.MEDIA_URL}/${item.voice}` || ""}
+										preload="auto"
+										controls
+									>
+										<track kind="captions" />
+									</audio>
+									<Button
+										className="w-full z-0 relative"
+										color="primary"
+										radius="full"
+										startContent={<PiWaveform className="w-5 h-5" />}
+										variant="bordered"
+										onPress={() => audioRef.current?.play()}
+									>
+										Прослушать голос
+									</Button>
+								</>
 							) : null}
 						</div>
 						<Button

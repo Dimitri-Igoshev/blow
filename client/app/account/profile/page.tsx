@@ -235,15 +235,17 @@ const AccountProfilePage = () => {
 						</div>
 
 						<div>
-							<Button
-								className="w-full z-0 relative mt-8"
-								color="primary"
-								radius="full"
-								startContent={<PiWaveform className="w-5 h-5" />}
-								variant="bordered"
-							>
-								{me?.voice ? "Прослушать голос" : "Записать голос"}
-							</Button>
+							{me?.voice ? (
+								<Button
+									className="w-full z-0 relative mt-8"
+									color="primary"
+									radius="full"
+									startContent={<PiWaveform className="w-5 h-5" />}
+									variant="bordered"
+								>
+									Прослушать голос
+								</Button>
+							) : null}
 						</div>
 					</div>
 

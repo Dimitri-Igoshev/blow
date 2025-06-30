@@ -17,6 +17,11 @@ import { ROUTES } from "@/app/routes";
 import UploadImages from "@/components/UploadImages";
 import { IPhoto } from "@/common/interface/photo.interface";
 import { truncateString } from "@/helper/truncateStr";
+import dynamic from 'next/dynamic';
+
+const VoiceRecorder = dynamic(() => import('@/components/VoiceRecoder'), {
+  ssr: false
+});
 
 export default function EditProfile() {
   const router = useRouter();
@@ -116,16 +121,7 @@ export default function EditProfile() {
         <h1 className="block sm:hidden font-semibold text-[24px]">
           Редактирование
         </h1>
-
-        <Button
-          className="z-0 relative"
-          color="secondary"
-          radius="full"
-          startContent={<PiWaveform className="w-5 h-5" />}
-          variant="solid"
-        >
-          {me?.voice ? "Прослушать голос" : "Записать голос"}
-        </Button>
+        <VoiceRecorder />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-5 gap-5 w-full mt-3 sm:mt-0">

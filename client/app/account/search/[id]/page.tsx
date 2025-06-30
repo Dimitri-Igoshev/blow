@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FC, use, useEffect, useState } from "react";
+import { FC, use, useEffect, useRef, useState } from "react";
 import { Image } from "@heroui/image";
 import { MdOutlineHeight } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
@@ -116,6 +116,8 @@ const ProfileView: FC<ProfileViewProps> = ({
 		onNote();
 	};
 
+	const audioRef = useRef<any>(null);
+
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[86px] gap-[30px]">
 			{user ? (
@@ -228,16 +230,28 @@ const ProfileView: FC<ProfileViewProps> = ({
 										<p>вес - {user?.weight} кг</p>
 									</div>
 								</div>
-								{user?.voice ? (
-									<Button
-										className="w-full z-0 relative"
-										color="primary"
-										radius="full"
-										startContent={<PiWaveform className="w-5 h-5" />}
-										variant="bordered"
-									>
-										{user?.voice ? "Прослушать голос" : "Записать голос"}
-									</Button>
+								{user?.voice && isPremium(me) ? (
+									<>
+										<audio
+											className="hidden"
+											ref={audioRef}
+											src={`${config.MEDIA_URL}/${user.voice}` || ""}
+											preload="auto"
+											controls
+										>
+											<track kind="captions" />
+										</audio>
+										<Button
+											className="w-full z-0 relative"
+											color="primary"
+											radius="full"
+											startContent={<PiWaveform className="w-5 h-5" />}
+											variant="bordered"
+											onPress={() => audioRef.current?.play()}
+										>
+											Прослушать голос
+										</Button>
+									</>
 								) : null}
 
 								<div className="flex flex-col gap-1 pt-6">
