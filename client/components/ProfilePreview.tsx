@@ -26,6 +26,8 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 
 	const audioRef = useRef<any>(null);
 
+	const premium = isPremium(me);
+
 	return (
 		<>
 			<div
@@ -114,13 +116,13 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 					<div className="grid grid-cols-5 gap-3">
 						<div className="hidden sm:flex col-span-1" />
 						<div className="col-span-3 sm:col-span-2">
-							{item?.voice && isPremium(me) ? (
+							{item?.voice && premium ? (
 								<>
 									<audio
-										className="hidden"
+										style={{ display: 'block', width: 0, height: 0, opacity: 0 }}
 										ref={audioRef}
 										src={`${config.MEDIA_URL}/${item.voice}` || ""}
-										// preload="auto"
+										preload="auto"
 										controls
 									>
 										<track kind="captions" />

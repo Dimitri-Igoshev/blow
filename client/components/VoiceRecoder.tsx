@@ -69,10 +69,10 @@ const VoiceRecorder = () => {
 		<div>
 			<div className="flex items-center gap-3">
 				<audio
-					className="hidden"
+					style={{ display: 'block', width: 0, height: 0, opacity: 0 }}
 					ref={audioRef}
 					src={`${config.MEDIA_URL}/${me?.voice}` || audioUrl || ""}
-					// preload="auto"
+					preload="auto"
 					controls
 				>
 					<track kind="captions" />
