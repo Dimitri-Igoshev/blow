@@ -120,7 +120,7 @@ export default function PanelLayout({
                 fullWidth
                 aria-label="Tabs"
                 className={cn("", {
-                  ["mb-9"]: isSearch,
+                  ["mb-9 sm:mb-0"]: isSearch,
                 })}
                 classNames={{
                   tabContent: "text-white",

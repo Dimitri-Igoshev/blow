@@ -69,48 +69,26 @@ const VoiceRecorder = () => {
 
 	const audioRef = useRef<any>(null);
 
-  const handlePlay = () => {
-    const audio = new Audio(`${config.MEDIA_URL}/${me?.voice}` || audioUrl || "");
-    audio.play().catch((err) => {
-      console.error("Ошибка воспроизведения:", err);
-    });
-  };
+	const handlePlay = () => {
+		const audio = new Audio(
+			`${config.MEDIA_URL}/${me?.voice}` || audioUrl || ""
+		);
+		audio.play().catch((err) => {
+			console.error("Ошибка воспроизведения:", err);
+		});
+	};
 
 	return (
 		<div>
 			<div className="flex items-center gap-3">
-				{/* <audio
-					ref={audioRef}
-					controls
-					preload="auto"
-					src={`${config.MEDIA_URL}/${me?.voice}` || audioUrl || ""}
-				>
-					<track kind="captions" />
-				</audio> */}
-				{/* {audioUrl && !recording ? (
-					<div>
-						<audio controls src={audioUrl}>
-							<track kind="captions" />
-						</audio>
-					</div>
-				) : null} */}
 				{(me?.voice || audioUrl) && !recording ? (
-					// <Button
-					// 	className="z-0 relative"
-					// 	color="primary"
-					// 	radius="full"
-					// 	startContent={<PiWaveform className="w-5 h-5" />}
-					// 	variant="solid"
-					// 	onPress={async () =>
-					// 		await audioRef.current
-					// 			?.play()
-					// 			.catch((err: any) => console.log(err))
-					// 	}
-					// >
-					// 	Прослушать
-					// </Button>
-
-          <button onClick={handlePlay}>прослушать</button>
+					<button
+						onClick={handlePlay}
+						className="bg-primary text-white rounded-full h-[38px] px-3.5 flex gap-1 items-center"
+					>
+						<PiWaveform className="w-5 h-5" />
+						<p>Прослушать</p>
+					</button>
 				) : null}
 				<Button
 					className="z-0 relative"
