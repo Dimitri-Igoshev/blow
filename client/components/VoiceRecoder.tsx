@@ -72,7 +72,7 @@ const VoiceRecorder = () => {
 					className="hidden"
 					ref={audioRef}
 					src={`${config.MEDIA_URL}/${me?.voice}` || audioUrl || ""}
-					preload="auto"
+					// preload="auto"
 					controls
 				>
 					<track kind="captions" />
@@ -91,7 +91,11 @@ const VoiceRecorder = () => {
 						radius="full"
 						startContent={<PiWaveform className="w-5 h-5" />}
 						variant="solid"
-						onPress={() => audioRef.current?.play()}
+						onPress={async () =>
+							await audioRef.current
+								?.play()
+								.catch((err: any) => console.log(err))
+						}
 					>
 						Прослушать
 					</Button>

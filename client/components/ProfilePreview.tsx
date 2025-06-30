@@ -112,15 +112,15 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 					</div>
 
 					<div className="grid grid-cols-5 gap-3">
-						<div className="col-span-1" />
-						<div className="col-span-2">
+						<div className="hidden sm:flex col-span-1" />
+						<div className="col-span-3 sm:col-span-2">
 							{item?.voice && isPremium(me) ? (
 								<>
 									<audio
 										className="hidden"
 										ref={audioRef}
 										src={`${config.MEDIA_URL}/${item.voice}` || ""}
-										preload="auto"
+										// preload="auto"
 										controls
 									>
 										<track kind="captions" />
@@ -131,7 +131,11 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 										radius="full"
 										startContent={<PiWaveform className="w-5 h-5" />}
 										variant="bordered"
-										onPress={() => audioRef.current?.play()}
+										onPress={async () =>
+											await audioRef.current
+												?.play()
+												.catch((err: any) => console.log(err))
+										}
 									>
 										Прослушать голос
 									</Button>

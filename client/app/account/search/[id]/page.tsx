@@ -236,7 +236,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 											className="hidden"
 											ref={audioRef}
 											src={`${config.MEDIA_URL}/${user.voice}` || ""}
-											preload="auto"
+											// preload="auto"
 											controls
 										>
 											<track kind="captions" />
@@ -247,7 +247,11 @@ const ProfileView: FC<ProfileViewProps> = ({
 											radius="full"
 											startContent={<PiWaveform className="w-5 h-5" />}
 											variant="bordered"
-											onPress={() => audioRef.current?.play()}
+											onPress={async () =>
+												await audioRef.current
+													?.play()
+													.catch((err: any) => console.log(err))
+											}
 										>
 											Прослушать голос
 										</Button>
