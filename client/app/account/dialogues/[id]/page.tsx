@@ -184,7 +184,7 @@ export default function AccountDialogues({
 	};
 
 	return (
-		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto">
+		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto relative">
 			<div className="flex w-full items-center justify-between">
 				{currentChat ? (
 					<Button
@@ -197,10 +197,10 @@ export default function AccountDialogues({
 				) : (
 					<h1 className="flex md:hidden font-semibold text-[36px]">Диалоги</h1>
 				)}
-				<h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1>
+				{/* <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1> */}
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%]">
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[250px] left-[40px] right-[40px]">
 				<div
 					className={cn(
 						"col-span-1 flex-col gap-1 w-full mt-8 overflow-y-scroll hide-scroll relative",
@@ -307,8 +307,8 @@ export default function AccountDialogues({
 						</div>
 					</div>
 
-					{currentChat ? (
-						<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-foreground-100 md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
+					{/* {currentChat?.length ? ( */}
+						<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
 							<Input
 								classNames={{
 									input: "bg-transparent dark:text-white",
@@ -331,7 +331,7 @@ export default function AccountDialogues({
 								Отправить
 							</Button>
 						</div>
-					) : null}
+					{/* ) : null} */}
 				</div>
 			</div>
 
