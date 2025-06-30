@@ -231,7 +231,7 @@ const AccountProfilePage = () => {
 						</p>
 					</div>
 
-					<div className="flex flex-wrap items-center justify-between">
+					<div className="flex flex-wrap items-center justify-between gap-3">
 						<div className="flex items-center gap-10 -ml-2">
 							<div className="flex items-center gap-1">
 								<MdOutlineHeight className="w-[22px] text-primary" size={22} />

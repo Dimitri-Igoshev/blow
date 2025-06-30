@@ -122,7 +122,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 
 					<div className="grid grid-cols-5 gap-3 w-full items-end">
 						<div className="col-span-3">
-							{me?.voice && premium ? (
+							{item?.voice && premium ? (
 								<button
 									onClick={handlePlay}
 									className="bg-primary text-white rounded-full h-[38px] px-3.5 flex gap-1 items-center"
