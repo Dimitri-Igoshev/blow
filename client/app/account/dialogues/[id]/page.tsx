@@ -82,28 +82,43 @@ export default function AccountDialogues({
 		onOpenChange: onPremiumRequiredChange,
 	} = useDisclosure();
 
-	const handleSubmit = async () => {
-		if (!text) return;
+       const scrollToTop = () => {
+               if (typeof window !== "undefined") {
+                       window.scrollTo({ top: 0 });
+               }
+       };
 
-		const body = {
-			chat: chat?._id,
-			sender: me._id,
-			recipient: getInterlocutor(currentChat)._id,
-			text,
-		};
+       const handleSubmit = async () => {
+               if (!text) return;
 
-		send(body)
-			.then((res) => setText(""))
-			.catch((err) => setText(""));
-	};
+               const body = {
+                       chat: chat?._id,
+                       sender: me._id,
+                       recipient: getInterlocutor(currentChat)._id,
+                       text,
+               };
 
-	useEffect(() => {
-		document.body.style.overflow = "hidden";
+               send(body)
+                       .then((res) => setText(""))
+                       .catch((err) => setText(""))
+                       .finally(() => scrollToTop());
+       };
 
-		return () => {
-			document.body.style.overflow = "auto";
-		};
-	}, []);
+       useEffect(() => {
+               scrollToTop();
+               const prevOverflow = document.body.style.overflow;
+               const prevPosition = document.body.style.position;
+
+               document.body.style.overflow = "hidden";
+               document.body.style.position = "fixed";
+               document.body.style.top = "0";
+
+               return () => {
+                       document.body.style.overflow = prevOverflow || "auto";
+                       document.body.style.position = prevPosition || "";
+                       document.body.style.top = "";
+               };
+       }, []);
 
 	const handleKeyDown = (event: any) => {
 		if (event.key === "Enter") {
@@ -183,8 +198,11 @@ export default function AccountDialogues({
 		});
 	};
 
-	return (
-		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto relative">
+       return (
+               <div
+                       className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto relative"
+                       style={{ height: "calc(var(--vh, 1vh) * 100)" }}
+               >
 			<div className="flex w-full items-center justify-between">
 				{currentChat ? (
 					<Button
@@ -309,18 +327,20 @@ export default function AccountDialogues({
 
 					{/* {currentChat?.length ? ( */}
 						<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
-							<Input
-								classNames={{
-									input: "bg-transparent dark:text-white",
-									inputWrapper: "dark:bg-foreground-200",
-								}}
-								placeholder="Текст сообщения"
-								radius="full"
-								type="text"
-								value={text}
-								onChange={(e) => setText(e.target.value)}
-								onKeyDown={handleKeyDown}
-							/>
+                                                       <Input
+                                                                classNames={{
+                                                                        input: "bg-transparent dark:text-white",
+                                                                        inputWrapper: "dark:bg-foreground-200",
+                                                                }}
+                                                                placeholder="Текст сообщения"
+                                                                radius="full"
+                                                                type="text"
+                                                                value={text}
+                                                                onChange={(e) => setText(e.target.value)}
+                                                                onKeyDown={handleKeyDown}
+                                                                onFocus={scrollToTop}
+                                                                onBlur={scrollToTop}
+                                                        />
 							<Button
 								className=""
 								color="primary"
