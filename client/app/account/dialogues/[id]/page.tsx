@@ -184,11 +184,11 @@ export default function AccountDialogues({
   };
 
   return (
-    <div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] h-screen">
+    <div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto">
       <div className="flex w-full items-center justify-between">
         {currentChat ? (
           <Button
-            className="flex md:hidden items-start h-[16px] ml-3"
+            className="flex md:hidden items-center ml-3"
             radius="full"
             onPress={() => setCurrentChat(null)}
           >
