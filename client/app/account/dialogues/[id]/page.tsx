@@ -209,7 +209,7 @@ export default function AccountDialogues({
 							flex: !currentChat,
 						}
 					)}
-					style={{ height: (window.innerHeight / 100) * 65 }}
+                                        style={{ height: "calc(var(--vh, 1vh) * 65)" }}
 				>
 					{sortedChats?.map((chat: any) => (
 						<button
@@ -285,7 +285,7 @@ export default function AccountDialogues({
 									"hidden md:flex": !currentChat,
 								}
 							)}
-							style={{ height: ((window.innerHeight - 210) / 100) * 70 }}
+                                                        style={{ height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.7)" }}
 						>
 							<div className="flex flex-col gap-4 w-full">
 								{chat ? (

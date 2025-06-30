@@ -9,6 +9,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import { Providers as ReduxProvider } from "@/redux/provider";
 import { SocketListener } from "@/components/SocketListener";
+import { useViewportHeight } from "@/hooks/useViewportHeight";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -25,6 +26,9 @@ declare module "@react-types/shared" {
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
+
+  // Update CSS variable for viewport height to improve mobile layout behavior
+  useViewportHeight();
 
   return (
     <ReduxProvider>
