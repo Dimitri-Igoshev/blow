@@ -34,16 +34,18 @@ export class UserService {
 
     const savedUser = await newUser.save();
 
-    if (!file) return data;
+    if (!file) return savedUser;
 
     const uploaded = await this.fileService.saveFile([file]);
 
     if (uploaded && uploaded[0]?.url) {
-      return this.userModel.findOneAndUpdate(
-        { _id: savedUser._id },
-        { photoUrl: uploaded[0].url },
-        { new: true },
-      );
+      return this.userModel
+        .findOneAndUpdate(
+          { _id: savedUser._id },
+          { photoUrl: uploaded[0].url },
+          { new: true },
+        )
+        .exec();
     } else {
       return savedUser;
     }
