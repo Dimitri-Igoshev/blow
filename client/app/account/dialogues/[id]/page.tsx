@@ -185,19 +185,20 @@ export default function AccountDialogues({
 
   return (
     <div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] h-screen">
-      {/* <div className="flex w-full items-center justify-between">
-				{currentChat ? (
-					<button
-						className="flex md:hidden items-start h-[16px] ml-3"
-						onClick={() => setCurrentChat(null)}
-					>
-						Назад
-					</button>
-				) : (
-					<h1 className="flex md:hidden font-semibold text-[36px]">Диалоги</h1>
-				)}
-				<h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1>
-			</div> */}
+      <div className="flex w-full items-center justify-between">
+        {currentChat ? (
+          <Button
+            className="flex md:hidden items-start h-[16px] ml-3"
+            radius="full"
+            onPress={() => setCurrentChat(null)}
+          >
+            Назад
+          </Button>
+        ) : (
+          <h1 className="flex md:hidden font-semibold text-[36px]">Диалоги</h1>
+        )}
+        <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%]">
         <div
@@ -274,12 +275,12 @@ export default function AccountDialogues({
           ))}
         </div>
 
-        <div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4">
+        <div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col h-full pb-[70px]">
           <div className="rounded-[24px] border-[7px] p-3 border-white dark:border-foreground-100">
             <div
               ref={containerRef}
               className={cn(
-                "col-span-1 md:col-span-2 p-3 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[24px] relative text-[14px] overflow-y-scroll scroll-transparent",
+                "col-span-1 md:col-span-2 p-3 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[24px] relative text-[14px] overflow-y-scroll scroll-transparent flex-1",
                 {
                   "hidden md:flex": !currentChat,
                 },
@@ -306,7 +307,9 @@ export default function AccountDialogues({
             </div>
           </div>
 
-          <div className="mt-3 flex items-center gap-3">
+          <div
+            className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-foreground-100 md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3"
+          >
             <Input
               classNames={{
                 input: "bg-transparent dark:text-white",
