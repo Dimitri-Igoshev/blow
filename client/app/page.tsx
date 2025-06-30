@@ -15,6 +15,7 @@ import { cities } from "@/data/cities";
 import { useGetUsersQuery } from "@/redux/services/userApi";
 import { setSearch } from "@/redux/features/searchSlice";
 import { AllCitiesModal } from "@/components/AllCitiesModal";
+import NextLink from "next/link";
 
 export default function Home() {
   const cities1 = cities.slice(0, 6);
@@ -424,9 +425,9 @@ export default function Home() {
                   <div className="underline cursor-pointer hover:text-primary text-nowrap">
                     Правила
                   </div>
-                  <div className="underline cursor-pointer hover:text-primary text-nowrap">
+                  <NextLink href={ROUTES.OFFER} className="underline cursor-pointer hover:text-primary text-nowrap">
                     Договор оферта
-                  </div>
+                  </NextLink>
                 </div>
               </div>
             </footer>

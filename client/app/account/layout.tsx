@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Image } from "@heroui/image";
 
 import { ROUTES } from "../routes";
+import NextLink from "next/link";
 
 import WrapperEmailConf from "./WrapperEmailConf";
 
@@ -225,9 +226,9 @@ export default function PanelLayout({
               <div className="underline cursor-pointer hover:text-primary text-nowrap">
                 Правила
               </div>
-              <div className="underline cursor-pointer hover:text-primary text-nowrap">
+              <NextLink href={ROUTES.OFFER} className="underline cursor-pointer hover:text-primary text-nowrap">
                 Договор оферта
-              </div>
+              </NextLink>
             </div>
           </div>
         </footer>
