@@ -23,6 +23,7 @@ export default function PanelLayout({
   const { data: me } = useGetMeQuery(null);
 
   const isSearch = pathname === ROUTES.ACCOUNT.SEARCH;
+	const isChat = pathname.includes(ROUTES.ACCOUNT.DIALOGUES);
 
   useEffect(() => {
     switch (pathname) {
@@ -83,7 +84,7 @@ export default function PanelLayout({
 
   return (
     // <Protected>
-    <>
+    <div className={cn("", {["max-h-screen sm:max-h-auto"]: isChat})}>
       <div className="relative">
         <img
           alt=""
@@ -231,7 +232,7 @@ export default function PanelLayout({
           </div>
         </footer>
       </div>
-    </>
+    </div>
     // </Protected>
   );
 }
