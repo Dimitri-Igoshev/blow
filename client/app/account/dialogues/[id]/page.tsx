@@ -82,43 +82,43 @@ export default function AccountDialogues({
 		onOpenChange: onPremiumRequiredChange,
 	} = useDisclosure();
 
-       const scrollToTop = () => {
-               if (typeof window !== "undefined") {
-                       window.scrollTo({ top: 0 });
-               }
-       };
+	const scrollToTop = () => {
+		if (typeof window !== "undefined") {
+			window.scrollTo({ top: 0 });
+		}
+	};
 
-       const handleSubmit = async () => {
-               if (!text) return;
+	const handleSubmit = async () => {
+		if (!text) return;
 
-               const body = {
-                       chat: chat?._id,
-                       sender: me._id,
-                       recipient: getInterlocutor(currentChat)._id,
-                       text,
-               };
+		const body = {
+			chat: chat?._id,
+			sender: me._id,
+			recipient: getInterlocutor(currentChat)._id,
+			text,
+		};
 
-               send(body)
-                       .then((res) => setText(""))
-                       .catch((err) => setText(""))
-                       .finally(() => scrollToTop());
-       };
+		send(body)
+			.then((res) => setText(""))
+			.catch((err) => setText(""))
+			.finally(() => scrollToTop());
+	};
 
-       useEffect(() => {
-               scrollToTop();
-               const prevOverflow = document.body.style.overflow;
-               const prevPosition = document.body.style.position;
+	useEffect(() => {
+		scrollToTop();
+		const prevOverflow = document.body.style.overflow;
+		const prevPosition = document.body.style.position;
 
-               document.body.style.overflow = "hidden";
-               document.body.style.position = "fixed";
-               document.body.style.top = "0";
+		document.body.style.overflow = "hidden";
+		document.body.style.position = "fixed";
+		document.body.style.top = "0";
 
-               return () => {
-                       document.body.style.overflow = prevOverflow || "auto";
-                       document.body.style.position = prevPosition || "";
-                       document.body.style.top = "";
-               };
-       }, []);
+		return () => {
+			document.body.style.overflow = prevOverflow || "auto";
+			document.body.style.position = prevPosition || "";
+			document.body.style.top = "";
+		};
+	}, []);
 
 	const handleKeyDown = (event: any) => {
 		if (event.key === "Enter") {
@@ -198,27 +198,47 @@ export default function AccountDialogues({
 		});
 	};
 
-       return (
-               <div
-                       className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto relative"
-                       style={{ height: "calc(var(--vh, 1vh) * 100)" }}
-               >
+	useEffect(() => {
+    const originalStyle = {
+      position: document.body.style.position,
+      left: document.body.style.left,
+      right: document.body.style.right,
+    };
+
+    // Применяем стили
+    document.body.style.position = "fixed";
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+
+    // Очистка: возвращаем как было
+    return () => {
+      document.body.style.position = originalStyle.position;
+      document.body.style.left = originalStyle.left;
+      document.body.style.right = originalStyle.right;
+    };
+  }, []);
+
+	return (
+		<div
+			className="flex flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto relative"
+			style={{ height: "calc(var(--vh, 1vh) * 100)" }}
+		>
 			<div className="flex w-full items-center justify-between">
 				{currentChat ? (
 					<Button
-						className="flex md:hidden items-center ml-3"
+						className="flex md:hidden items-center"
 						radius="full"
 						onPress={() => setCurrentChat(null)}
 					>
 						Назад
 					</Button>
 				) : (
-					<h1 className="flex md:hidden font-semibold text-[36px]">Диалоги</h1>
+					<h1 className="flex md:hidden font-semibold text-[36px] w-full justify-center">Диалоги</h1>
 				)}
 				{/* <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1> */}
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[260px] left-0 w-full">
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[260px] left-0 right-0 px-3 sm:px-9 w-full">
 				<div
 					className={cn(
 						"col-span-1 flex-col gap-1 w-full mt-8 overflow-y-scroll hide-scroll relative",
@@ -227,7 +247,7 @@ export default function AccountDialogues({
 							flex: !currentChat,
 						}
 					)}
-                                        style={{ height: "calc(var(--vh, 1vh) * 65)" }}
+					style={{ height: "calc(var(--vh, 1vh) * 65)" }}
 				>
 					{sortedChats?.map((chat: any) => (
 						<button
@@ -294,16 +314,16 @@ export default function AccountDialogues({
 				</div>
 
 				<div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col h-full pb-[70px] w-full">
-					<div className="rounded-[24px] border-0 sm:border-[7px] p-3 border-white dark:border-foreground-100">
+					<div className="rounded-[24px] border-[7px] p-3 border-white dark:border-foreground-100">
 						<div
 							ref={containerRef}
 							className={cn(
-								"col-span-1 md:col-span-2 p-3 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[24px] relative text-[14px] overflow-y-scroll scroll-transparent flex-1",
+								"col-span-1 md:col-span-2 p-0 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[12px] relative text-[14px] overflow-y-scroll scroll-transparent flex-1",
 								{
 									"hidden md:flex": !currentChat,
 								}
 							)}
-                                                        style={{ height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.7)" }}
+							style={{ height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.7)" }}
 						>
 							<div className="flex flex-col gap-4 w-full">
 								{chat ? (
@@ -315,7 +335,6 @@ export default function AccountDialogues({
 													chat?.[idx - 1]?.sender?._id === message?.sender?._id
 												}
 												key={message?._id}
-												// left={message?.sender?._id !== me?._id}
 												left
 											/>
 										))}
@@ -325,33 +344,32 @@ export default function AccountDialogues({
 						</div>
 					</div>
 
-					{/* {currentChat?.length ? ( */}
-						<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
-                                                       <Input
-                                                                classNames={{
-                                                                        input: "bg-transparent dark:text-white",
-                                                                        inputWrapper: "dark:bg-foreground-200",
-                                                                }}
-                                                                placeholder="Текст сообщения"
-                                                                radius="full"
-                                                                type="text"
-                                                                value={text}
-                                                                onChange={(e) => setText(e.target.value)}
-                                                                onKeyDown={handleKeyDown}
-                                                                onFocus={scrollToTop}
-                                                                onBlur={scrollToTop}
-                                                        />
-							<Button
-								className=""
-								color="primary"
-								radius="full"
-								variant="solid"
-								onPress={handleSubmit}
-							>
-								Отправить
-							</Button>
-						</div>
-					{/* ) : null} */}
+			
+					<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
+						<Input
+							classNames={{
+								input: "bg-transparent dark:text-white",
+								inputWrapper: "dark:bg-foreground-200",
+							}}
+							placeholder="Текст сообщения"
+							radius="full"
+							type="text"
+							value={text}
+							onChange={(e) => setText(e.target.value)}
+							onKeyDown={handleKeyDown}
+							onFocus={scrollToTop}
+							onBlur={scrollToTop}
+						/>
+						<Button
+							className=""
+							color="primary"
+							radius="full"
+							variant="solid"
+							onPress={handleSubmit}
+						>
+							Отправить
+						</Button>
+					</div>
 				</div>
 			</div>
 
