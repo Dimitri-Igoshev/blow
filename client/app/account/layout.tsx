@@ -223,9 +223,9 @@ export default function PanelLayout({
               <div className="underline cursor-pointer hover:text-primary text-nowrap">
                 Свяжись с нами
               </div>
-              <div className="underline cursor-pointer hover:text-primary text-nowrap">
-                Правила
-              </div>
+              <NextLink href={ROUTES.POLICY} className="underline cursor-pointer hover:text-primary text-nowrap">
+                Политики
+              </NextLink>
               <NextLink href={ROUTES.OFFER} className="underline cursor-pointer hover:text-primary text-nowrap">
                 Договор оферта
               </NextLink>
