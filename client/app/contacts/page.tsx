@@ -2,23 +2,42 @@
 
 import { Image } from "@heroui/image";
 import NextLink from "next/link";
+import { FaPhoneAlt, FaTelegramPlane } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 import { ROUTES } from "../routes";
-
-const contactsText = `
-Наименование организации: Freaks 4U Gaming GmbH
-Номер телефона: +79031016945
-Почта: admin@blow.ru
-Юридический адрес: An der Spreeschanze 10 , 13599 , Berlin , Germany
-Служба поддержки пользователей - Telegram - https://t.me/blowadmin`;
 
 export default function ContactsPage() {
 	return (
     <div className="min-h-screen flex flex-col justify-between">
 		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-6 pb-[50px]">
 			<h1 className="text-[36px] font-semibold mt-3 sm:mt-9">Контакты</h1>
-			<div className="whitespace-pre-wrap text-sm sm:text-base space-y-4">
-				{contactsText}
-			</div>
+                        <div className="text-sm sm:text-base space-y-4">
+                                <p>Наименование организации: Freaks 4U Gaming GmbH</p>
+                                <p className="flex items-center gap-2">
+                                        <FaPhoneAlt />
+                                        <a href="tel:+79031016945" className="underline hover:text-primary">
+                                                +79031016945
+                                        </a>
+                                </p>
+                                <p className="flex items-center gap-2">
+                                        <MdEmail />
+                                        <a href="mailto:admin@blow.ru" className="underline hover:text-primary">
+                                                admin@blow.ru
+                                        </a>
+                                </p>
+                                <p>Юридический адрес: An der Spreeschanze 10 , 13599 , Berlin , Germany</p>
+                                <p className="flex items-center gap-2">
+                                        <FaTelegramPlane />
+                                        <a
+                                                href="https://t.me/blowadmin"
+                                                className="underline hover:text-primary"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                        >
+                                                Telegram
+                                        </a>
+                                </p>
+                        </div>
 			
 		</div>
     <footer className="bg-gray dark:bg-black w-full">
