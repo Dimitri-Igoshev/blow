@@ -16,7 +16,9 @@ import {
 import { InfoModal } from "@/components/InfoModal";
 import { MAILING_ID } from "@/helper/checkIsActive";
 import { useCreatePaymentMutation } from "@/redux/services/paymentApi";
-import { FaTelegramPlane } from "react-icons/fa"
+import { FaTelegramPlane } from "react-icons/fa";
+import { ROUTES } from "@/app/routes";
+import { useRouter } from "next/navigation";
 
 export default function AccountServices() {
 	const { data: me } = useGetMeQuery(null);
@@ -121,6 +123,11 @@ export default function AccountServices() {
 	});
 
 	const buyService = (item: any, value: any) => {
+		if (item?._id === "6830b9a752bb4caefa0418a8" && me?.sex === "male") {
+			onPremiumRequired()
+			return
+		}
+
 		if (me?.balance < +value?.price) {
 			setInfo({
 				title: "Ошибка",
@@ -181,6 +188,14 @@ export default function AccountServices() {
 	// const menServices = services?.filter((item: any) => item?._id !== TOP_ID);
 
 	const genderServices = me?.sex === "male" ? services : womenServices;
+
+	const {
+		isOpen: isPremiumRequired,
+		onOpen: onPremiumRequired,
+		onOpenChange: onPremiumRequiredChange,
+	} = useDisclosure();
+
+	const router = useRouter();
 
 	return (
 		<div className="flex w-full flex-col px-9 pt-[84px] gap-[30px] min-h-screen">
@@ -261,6 +276,15 @@ export default function AccountServices() {
 				text={info.text}
 				title={info.title}
 				onOpenChange={onOpenChange}
+			/>
+
+			<InfoModal
+				// actionBtn="Купить"
+				isOpen={isPremiumRequired}
+				text={`Для закрепления анкеты в "ТОП" требуется активный премиум-аккаунт. Это необходимо, потому что без премиум-аккаунта вы не сможете отвечать на сообщения девушек, и вложенные средства не принесут желаемого результата.`}
+				title={"Нужен премиум"}
+				// onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
+				onOpenChange={onPremiumRequiredChange}
 			/>
 		</div>
 	);
