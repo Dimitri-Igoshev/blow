@@ -52,7 +52,7 @@ export default function ContactsPage() {
 							<FaTelegramPlane />
 						</a>
 						Telegram:{" "}
-						<a href="mailto:admin@blow.ru" className="hover:text-primary">
+						<a href="https://t.me/blowadmin" className="hover:text-primary">
 							@blowadmin
 						</a>
 					</p>
