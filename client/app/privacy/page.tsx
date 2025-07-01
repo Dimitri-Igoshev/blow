@@ -98,7 +98,7 @@ export default function PolicyPage() {
 	return (
 		<div className="min-h-screen flex flex-col justify-between">
 			<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-6 pb-[50px]">
-				<h1 className="text-[36px] font-semibold">Политики</h1>
+				<h1 className="text-[36px] font-semibold mt-3 sm:mt-9">Политики</h1>
 				<div className="whitespace-pre-wrap text-sm sm:text-base space-y-4">
 					{policyText}
 				</div>
