@@ -222,7 +222,7 @@ export default function PanelLayout({
             <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-6">
               <NextLink href={ROUTES.CONTACTS} className="underline cursor-pointer hover:text-primary text-nowrap">
                 Свяжись с нами
-              </div>
+              </NextLink>
               <NextLink href={ROUTES.POLICY} className="underline cursor-pointer hover:text-primary text-nowrap">
                 Политики
               </NextLink>
