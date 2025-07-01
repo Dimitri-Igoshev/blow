@@ -421,10 +421,10 @@ export default function Home() {
                 <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-6">
                   <NextLink href={ROUTES.CONTACTS} className="underline cursor-pointer hover:text-primary text-nowrap">
                     Свяжись с нами
-                  </NextLink>
-                  <div className="underline cursor-pointer hover:text-primary text-nowrap">
-                    Правила
                   </div>
+                  <NextLink href={ROUTES.POLICY} className="underline cursor-pointer hover:text-primary text-nowrap">
+                    Политики
+                  </NextLink>
                   <NextLink href={ROUTES.OFFER} className="underline cursor-pointer hover:text-primary text-nowrap">
                     Договор оферта
                   </NextLink>
