@@ -21,6 +21,7 @@ import { Message } from "@/components/Message";
 import { InfoModal } from "@/components/InfoModal";
 import { isPremium } from "@/helper/checkIsActive";
 import { ROUTES } from "@/app/routes";
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 
 interface ProfileViewProps {
 	params: any;
@@ -45,6 +46,7 @@ export default function AccountDialogues({
 		{ skip: !currentChat?._id }
 	);
 
+	const isMobile = useMediaQuery('(max-width: 620px)');
 	const [send] = useSendMessageMutation();
 
 	const getInterlocutor = (chat: any) => {
@@ -68,8 +70,13 @@ export default function AccountDialogues({
 		if (!chats || currentChat) return;
 
 		if (id === "1") {
-			setCurrentChat(chats[0]);
-			readMessages(chats[0]);
+			if (isMobile) {
+				setCurrentChat(null)
+				setSortedChats(sortChatsByLastMessage(chats))
+			} else {
+				setCurrentChat(chats[0]);
+				readMessages(chats[0]);
+			}
 		} else {
 			setCurrentChat(chats.find((item: any) => item._id === id));
 			readMessages(chats.find((item: any) => item._id === id));
@@ -245,7 +252,7 @@ export default function AccountDialogues({
 						"col-span-1 flex-col gap-1 w-full mt-8 overflow-y-scroll hide-scroll relative",
 						{
 							"hidden md:flex": currentChat,
-							flex: !currentChat,
+							"flex": !currentChat,
 						}
 					)}
 					style={{ height: "calc(var(--vh, 1vh) * 65)" }}

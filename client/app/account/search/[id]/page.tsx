@@ -116,14 +116,27 @@ const ProfileView: FC<ProfileViewProps> = ({
 		onNote();
 	};
 
+	const premium = isPremium(me);
+
 	const audioRef = useRef<any>(null);
 
 	const handlePlay = () => {
+		if (!premium && me?.sex === "male") {
+			onPremiumRequiredVoiceChange();
+			return;
+		}
+
 		const audio = new Audio(`${config.MEDIA_URL}/${user?.voice}`);
 		audio.play().catch((err) => {
 			console.error("Ошибка воспроизведения:", err);
 		});
 	};
+
+	const {
+		isOpen: isPremiumRequiredVoice,
+		onOpen: onPremiumRequiredVoice,
+		onOpenChange: onPremiumRequiredVoiceChange,
+	} = useDisclosure();
 
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[86px] gap-[30px]">
@@ -237,15 +250,15 @@ const ProfileView: FC<ProfileViewProps> = ({
 										<p>вес - {user?.weight} кг</p>
 									</div>
 								</div>
-								{user?.voice && isPremium(me) ? (
+								{user?.voice ? (
 									<div>
-									<button
-										onClick={handlePlay}
-										className="bg-primary text-white rounded-full h-[38px] px-3.5 flex gap-1 items-center"
-									>
-										<PiWaveform className="w-5 h-5" />
-										<p>Голос</p>
-									</button>
+										<button
+											onClick={handlePlay}
+											className="bg-primary text-white rounded-full h-[38px] px-3.5 flex gap-1 items-center"
+										>
+											<PiWaveform className="w-5 h-5" />
+											<p>Голос</p>
+										</button>
 									</div>
 								) : null}
 
@@ -326,6 +339,17 @@ const ProfileView: FC<ProfileViewProps> = ({
 				title={"Нужен премиум"}
 				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
 				onOpenChange={onPremiumRequiredChange}
+			/>
+
+			<InfoModal
+				actionBtn="Купить"
+				isOpen={isPremiumRequiredVoice}
+				text={
+					"Для того чтобы получить доступ к прослушиванию голоса, Вам нужно купить премиум подписку"
+				}
+				title={"Нужен премиум"}
+				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
+				onOpenChange={onPremiumRequiredVoiceChange}
 			/>
 		</div>
 	);

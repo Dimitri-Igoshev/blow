@@ -117,13 +117,11 @@ const AccountProfilePage = () => {
 	};
 
 	const handlePlay = () => {
-			const audio = new Audio(
-				`${config.MEDIA_URL}/${me?.voice}`
-			);
-			audio.play().catch((err) => {
-				console.error("Ошибка воспроизведения:", err);
-			});
-		};
+		const audio = new Audio(`${config.MEDIA_URL}/${me?.voice}`);
+		audio.play().catch((err) => {
+			console.error("Ошибка воспроизведения:", err);
+		});
+	};
 
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-4 px-3 sm:px-9 pt-[94px] sm:gap-[50px]">
@@ -160,12 +158,15 @@ const AccountProfilePage = () => {
 					</Link>
 
 					{me?.sex === "male" ? (
-						<div className="flex gap-2.5 cursor-pointer group transition-all">
+						<button
+							className="flex gap-2.5 cursor-pointer group transition-all"
+							onClick={() => router.push(ROUTES.ACCOUNT.SERVICES)}
+						>
 							<LuCrown className="text-primary min-w-4" size={16} />
 							<p className="-mt-[3px] group-hover:text-primary">
-								{me?.premium ? "Продлить премиум" : "Купить премиум"}
+								{me?.premium ? "Продлить премиум" : "Купить/продлить премиум"}
 							</p>
-						</div>
+						</button>
 					) : null}
 
 					<button

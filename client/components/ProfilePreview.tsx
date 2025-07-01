@@ -11,6 +11,8 @@ import { ROUTES } from "@/app/routes";
 import { getActivityString } from "@/helper/getActivityString";
 import { isPremium, isTop } from "@/helper/checkIsActive";
 import { useGetMeQuery } from "@/redux/services/userApi";
+import { InfoModal } from "./InfoModal";
+import { useDisclosure } from "@heroui/react";
 
 interface ProfilePreviewProps {
 	item: any;
@@ -29,11 +31,22 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 	const premium = isPremium(me);
 
 	const handlePlay = () => {
+		if (!premium && me?.sex === "male") {
+			onPremiumRequiredChange();
+			return
+		}
+
 		const audio = new Audio(`${config.MEDIA_URL}/${item?.voice}`);
 		audio.play().catch((err) => {
 			console.error("Ошибка воспроизведения:", err);
 		});
 	};
+
+	const {
+		isOpen: isPremiumRequired,
+		onOpen: onPremiumRequired,
+		onOpenChange: onPremiumRequiredChange,
+	} = useDisclosure();
 
 	return (
 		<>
@@ -122,7 +135,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 
 					<div className="grid grid-cols-5 gap-3 w-full items-end">
 						<div className="col-span-3">
-							{item?.voice && premium ? (
+							{item?.voice ? (
 								<button
 									onClick={handlePlay}
 									className="bg-primary text-white rounded-full h-[38px] px-3.5 flex gap-1 items-center"
@@ -146,6 +159,17 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 					</div>
 				</div>
 			</div>
+
+			<InfoModal
+				actionBtn="Купить"
+				isOpen={isPremiumRequired}
+				text={
+					"Для того чтобы получить доступ к прослушиванию голоса, Вам нужно купить премиум подписку"
+				}
+				title={"Нужен премиум"}
+				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
+				onOpenChange={onPremiumRequiredChange}
+			/>
 		</>
 	);
 };
