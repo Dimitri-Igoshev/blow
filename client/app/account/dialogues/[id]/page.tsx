@@ -234,7 +234,7 @@ export default function AccountDialogues({
 						Назад
 					</Button>
 				) : (
-					<h1 className="flex md:hidden font-semibold text-[36px] w-full justify-center">Диалоги</h1>
+					<h1 className="flex md:hidden font-semibold text-[36px] w-full justify-center !-mt-6">Диалоги</h1>
 				)}
 				{/* <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1> */}
 			</div>
@@ -248,7 +248,7 @@ export default function AccountDialogues({
 							flex: !currentChat,
 						}
 					)}
-					style={{ height: "calc(var(--vh, 1vh) * 70)" }}
+					style={{ height: "calc(var(--vh, 1vh) * 65)" }}
 				>
 					{sortedChats?.map((chat: any) => (
 						<button
@@ -324,7 +324,7 @@ export default function AccountDialogues({
 									"hidden md:flex": !currentChat,
 								}
 							)}
-							style={{ height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.80)" }}
+							style={{ height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.75)" }}
 						>
 							<div className="flex flex-col gap-4 w-full">
 								{chat ? (
