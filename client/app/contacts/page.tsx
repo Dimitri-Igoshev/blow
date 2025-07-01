@@ -8,39 +8,57 @@ import { ROUTES } from "../routes";
 
 export default function ContactsPage() {
 	return (
-    <div className="min-h-screen flex flex-col justify-between">
-		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-6 pb-[50px]">
-			<h1 className="text-[36px] font-semibold mt-3 sm:mt-9">Контакты</h1>
-                        <div className="text-sm sm:text-base space-y-4">
-                                <p>Наименование организации: Freaks 4U Gaming GmbH</p>
-                                <p className="flex items-center gap-2">
-                                        <FaPhoneAlt />
-                                        <a href="tel:+79031016945" className="underline hover:text-primary">
-                                                +79031016945
-                                        </a>
-                                </p>
-                                <p className="flex items-center gap-2">
-                                        <MdEmail />
-                                        <a href="mailto:admin@blow.ru" className="underline hover:text-primary">
-                                                admin@blow.ru
-                                        </a>
-                                </p>
-                                <p>Юридический адрес: An der Spreeschanze 10 , 13599 , Berlin , Germany</p>
-                                <p className="flex items-center gap-2">
-                                        <FaTelegramPlane />
-                                        <a
-                                                href="https://t.me/blowadmin"
-                                                className="underline hover:text-primary"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                        >
-                                                Telegram
-                                        </a>
-                                </p>
-                        </div>
-			
-		</div>
-    <footer className="bg-gray dark:bg-black w-full">
+		<div className="min-h-screen flex flex-col justify-between">
+			<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-6 pb-[50px]">
+				<h1 className="text-[36px] font-semibold mt-3 sm:mt-9">Контакты</h1>
+				<div className="text-sm sm:text-base space-y-4">
+					<p>
+						Наименование организации:{" "}
+						<span className="font-semibold">Freaks 4U Gaming GmbH</span>
+					</p>
+          <p>
+						Юридический адрес: <span className="font-semibold">An der Spreeschanze 10 , 13599 , Berlin , Germany</span>
+					</p>
+					<p className="flex items-center gap-2">
+						<a
+							href="tel:+79031016945"
+							className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
+						>
+							<FaPhoneAlt />
+						</a>
+						Номер телефона:{" "}
+						<a href="tel:+79031016945" className="hover:text-primary">
+							+7 (903) 101-69-45
+						</a>
+					</p>
+					<p className="flex items-center gap-2">
+						<a
+							href="mailto:admin@blow.ru"
+							className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
+						>
+							<MdEmail />
+						</a>
+						Почта:{" "}
+						<a href="mailto:admin@blow.ru" className="hover:text-primary">
+							admin@blow.ru
+						</a>
+					</p>
+					
+					<p className="flex items-center gap-2">
+            <a
+							href="https://t.me/blowadmin"
+							className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
+						>
+							<FaTelegramPlane />
+						</a>
+						Telegram:{" "}
+						<a href="mailto:admin@blow.ru" className="hover:text-primary">
+							@blowadmin
+						</a>
+					</p>
+				</div>
+			</div>
+			<footer className="bg-gray dark:bg-black w-full">
 				<div className="bg-dark rounded-t-[50px] px-3 sm:px-12 py-[28px] grid grid-cols-1 sm:grid-cols-3 text-white items-center text-xs sm:text-base">
 					<div className="sm:hidden flex justify-center">
 						<Image
@@ -85,6 +103,6 @@ export default function ContactsPage() {
 					</div>
 				</div>
 			</footer>
-    </div>
+		</div>
 	);
 }
