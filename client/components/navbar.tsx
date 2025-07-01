@@ -318,7 +318,7 @@ export const Navbar = () => {
               </button>
               <button
                 onClick={() => {
-                  router.push(ROUTES.ACCOUNT.DIALOGUES);
+                  router.push(ROUTES.ACCOUNT.DIALOGUES + "/1");
                   setMobileMenu(false);
                 }}
               >

@@ -226,7 +226,7 @@ export default function AccountDialogues({
 			<div className="flex w-full items-center justify-between">
 				{currentChat ? (
 					<Button
-						className="flex md:hidden items-center"
+						className="flex md:hidden items-center !-mt-6"
 						radius="full"
 						onPress={() => setCurrentChat(null)}
 					>
@@ -238,7 +238,7 @@ export default function AccountDialogues({
 				{/* <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1> */}
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[260px] left-0 right-0 px-3 sm:px-9 w-full">
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[220px] sm:top-[250px] left-0 right-0 px-3 sm:px-9 w-full">
 				<div
 					className={cn(
 						"col-span-1 flex-col gap-1 w-full mt-8 overflow-y-scroll hide-scroll relative",
@@ -247,7 +247,7 @@ export default function AccountDialogues({
 							flex: !currentChat,
 						}
 					)}
-					style={{ height: "calc(var(--vh, 1vh) * 65)" }}
+					style={{ height: "calc(var(--vh, 1vh) * 70)" }}
 				>
 					{sortedChats?.map((chat: any) => (
 						<button
@@ -313,7 +313,7 @@ export default function AccountDialogues({
 					))}
 				</div>
 
-				<div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col h-full pb-[70px] w-full">
+				<div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col h-full w-full">
 					<div className="rounded-[24px] border-[7px] p-3 border-white dark:border-foreground-100">
 						<div
 							ref={containerRef}
@@ -323,7 +323,7 @@ export default function AccountDialogues({
 									"hidden md:flex": !currentChat,
 								}
 							)}
-							style={{ height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.7)" }}
+							style={{ height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.80)" }}
 						>
 							<div className="flex flex-col gap-4 w-full">
 								{chat ? (
