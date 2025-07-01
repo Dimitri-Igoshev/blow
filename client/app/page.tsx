@@ -419,9 +419,9 @@ export default function Home() {
                   />
                 </div>
                 <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-6">
-                  <div className="underline cursor-pointer hover:text-primary text-nowrap">
+                  <NextLink href={ROUTES.CONTACTS} className="underline cursor-pointer hover:text-primary text-nowrap">
                     Свяжись с нами
-                  </div>
+                  </NextLink>
                   <div className="underline cursor-pointer hover:text-primary text-nowrap">
                     Правила
                   </div>
