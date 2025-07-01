@@ -215,6 +215,7 @@ export default function AccountDialogues({
       document.body.style.position = originalStyle.position;
       document.body.style.left = originalStyle.left;
       document.body.style.right = originalStyle.right;
+			document.body.style.overflow = 'auto';
     };
   }, []);
 
