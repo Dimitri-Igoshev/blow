@@ -106,7 +106,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 							>
 								<FaTelegramPlane />
 							</a>
-							<a href="mailto:admin@blow.ru" className="hover:text-primary">
+							<a href="https://t.me/blowadmin" className="hover:text-primary">
 								@blowadmin
 							</a>
 						</p>
