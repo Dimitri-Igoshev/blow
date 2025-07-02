@@ -296,7 +296,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										Все верно
 									</Button>
 
-                  <div className="flex items-center gap-1 mt-2">
+                  <div className="flex gap-1 mt-2 items-start">
 									<Checkbox
 										// defaultSelected
 										className="mt-1"
@@ -309,23 +309,26 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 									>
 										
 									</Checkbox>
+                  <div className="mt-[13px] text-[12px]">
                   <NextLink
 											href={ROUTES.OFFER}
                       target="_blank"
-											className="underline cursor-pointer hover:text-primary text-nowrap mt-2.5"
+											className="underline cursor-pointer hover:text-primary mt-2.5"
 										>
-											соглашаюсь с офертой
+											Cоглашаюсь с офертой
 										</NextLink>
-                    
-                    </div>
-
+                    {" "}и{" "}
                     <NextLink
 											href={ROUTES.POLICY}
                       target="_blank"
-											className="cursor-pointer hover:text-primary text-nowrap mt-2.5"
+											className="underline cursor-pointer hover:text-primary mt-2.5"
 										>
-											Политики конфиденциальности
+											Политикой в отношении обработки персональных данных
 										</NextLink>
+                    </div>
+                    </div>
+
+                    
 
 									<div className="flex items-center justify-between w-full gap-4 text-xs mt-2 -mb-3">
 										<Button
