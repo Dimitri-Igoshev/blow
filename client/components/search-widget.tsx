@@ -132,13 +132,14 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
     // 		})
     // 	);
 
-    if (!me) {
-      // window.open(`${ROUTES.HOME}?sex=${men && woman ? "" : men ? "male" : woman ? "female" : ""}&minage=${ageFrom ? ageFrom.toString() : ""}&maxage=${ageTo ? ageTo.toString() : ""}&city=${city || ""}`, "_self");
-      router.push(ROUTES.HOME);
-      refresh();
-    } else {
-      router.push(ROUTES.ACCOUNT.SEARCH);
-    }
+		router.push(ROUTES.ACCOUNT.SEARCH);
+    // if (!me) {
+    //   // window.open(`${ROUTES.HOME}?sex=${men && woman ? "" : men ? "male" : woman ? "female" : ""}&minage=${ageFrom ? ageFrom.toString() : ""}&maxage=${ageTo ? ageTo.toString() : ""}&city=${city || ""}`, "_self");
+    //   router.push(ROUTES.HOME);
+    //   refresh();
+    // } else {
+    //   router.push(ROUTES.ACCOUNT.SEARCH);
+    // }
   };
 
   return (
