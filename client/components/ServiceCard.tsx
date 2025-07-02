@@ -4,6 +4,9 @@ import { useState, type FC } from "react";
 import { ru } from "date-fns/locale";
 import { format } from "date-fns";
 import { FaTelegramPlane } from "react-icons/fa";
+import NextLink from "next/link";
+import { ROUTES } from "@/app/routes";
+import { MdEmail } from "react-icons/md";
 
 interface ServiceCardProps {
 	title: string;
@@ -94,18 +97,33 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 						))}
 					</ul>
 
-					<p className="flex items-center flex-wrap gap-3">
-						По вопросам оплаты обращаться в Telegram
-						<a
-							href="https://t.me/blowadmin"
-							className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
-						>
-							<FaTelegramPlane />
-						</a>
-						<a href="mailto:admin@blow.ru" className="hover:text-primary">
-							@blowadmin
-						</a>
-					</p>
+					<div className="flex flex-col gap-1">
+						<p className="flex items-center flex-wrap gap-3">
+							По вопросам оплаты обращаться в Telegram
+							<a
+								href="https://t.me/blowadmin"
+								className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
+							>
+								<FaTelegramPlane />
+							</a>
+							<a href="mailto:admin@blow.ru" className="hover:text-primary">
+								@blowadmin
+							</a>
+						</p>
+
+						<p className="flex items-center gap-2">
+							Почта
+							<a
+								href="mailto:admin@blow.ru"
+								className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
+							>
+								<MdEmail />
+							</a>
+							<a href="mailto:admin@blow.ru" className="hover:text-primary">
+								admin@blow.ru
+							</a>
+						</p>
+					</div>
 				</>
 			) : null}
 

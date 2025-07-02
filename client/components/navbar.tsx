@@ -182,10 +182,10 @@ export const Navbar = () => {
           className="hidden md:flex basis-1/5 md:basis-full"
           justify="end"
         >
-          <SearchIcon
+          {/* <SearchIcon
             className="text-white cursor-pointer"
             onClick={() => router.push(ROUTES.HOME)}
-          />
+          /> */}
           <ThemeSwitch className="mr-6" />
 
           {me?._id ? (
