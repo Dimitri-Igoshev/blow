@@ -123,10 +123,7 @@ export default function AccountServices() {
 	});
 
 	const buyService = (item: any, value: any) => {
-		if (item?._id === "6830b9a752bb4caefa0418a8" && me?.sex === "male") {
-			onPremiumRequired()
-			return
-		}
+		
 
 		if (me?.balance < +value?.price) {
 			setInfo({
@@ -136,6 +133,12 @@ export default function AccountServices() {
 
 			return onOpen();
 		}
+		
+		if (item?._id === "6830b9a752bb4caefa0418a8" && me?.sex === "male") {
+			onPremiumRequired()
+			return
+		}
+
 		if (!item?.services?.length) {
 			getService({
 				userId: me._id,
@@ -257,19 +260,6 @@ export default function AccountServices() {
         title="В топ"
         onClick={(value: any) => console.log(value)}
       /> */}
-
-			<p className="flex items-center flex-wrap gap-3">
-				По вопросам оплаты обращаться в Telegram
-				<a
-					href="https://t.me/blowadmin"
-					className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
-				>
-					<FaTelegramPlane />
-				</a>
-				<a href="mailto:admin@blow.ru" className="hover:text-primary">
-					@blowadmin
-				</a>
-			</p>
 
 			<InfoModal
 				isOpen={isOpen}

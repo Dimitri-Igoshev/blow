@@ -310,7 +310,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										
 									</Checkbox>
                   <NextLink
-											href={ROUTES.POLICY}
+											href={ROUTES.OFFER}
                       target="_blank"
 											className="underline cursor-pointer hover:text-primary text-nowrap mt-2.5"
 										>
