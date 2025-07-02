@@ -30,9 +30,26 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 
 	const premium = isPremium(me);
 
+	const {
+		isOpen: isPremiumRequired,
+		onOpen: onPremiumRequired,
+		onOpenChange: onPremiumRequiredChange,
+	} = useDisclosure();
+
+	const {
+		isOpen: isRegistrationRequired,
+		onOpen: onRegistrationRequired,
+		onOpenChange: onRegistrationRequiredChange,
+	} = useDisclosure();
+
 	const handlePlay = () => {
+		if (!me || me?.status !== "active") {
+			onRegistrationRequired();
+			return
+		}
+
 		if (!premium && me?.sex === "male") {
-			onPremiumRequiredChange();
+			onPremiumRequired();
 			return
 		}
 
@@ -41,12 +58,6 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 			console.error("Ошибка воспроизведения:", err);
 		});
 	};
-
-	const {
-		isOpen: isPremiumRequired,
-		onOpen: onPremiumRequired,
-		onOpenChange: onPremiumRequiredChange,
-	} = useDisclosure();
 
 	return (
 		<>
@@ -169,6 +180,15 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				title={"Нужен премиум"}
 				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
 				onOpenChange={onPremiumRequiredChange}
+			/>
+
+			<InfoModal
+				isOpen={isRegistrationRequired}
+				text={
+					"Для того чтобы получить доступ к прослушиванию голоса, Вам нужна регистрация и премиум подписка"
+				}
+				title={"Нужны регистрация и премиум"}
+				onOpenChange={onRegistrationRequiredChange}
 			/>
 		</>
 	);

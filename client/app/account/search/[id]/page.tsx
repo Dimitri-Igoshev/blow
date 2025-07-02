@@ -120,7 +120,18 @@ const ProfileView: FC<ProfileViewProps> = ({
 
 	const audioRef = useRef<any>(null);
 
+	const {
+		isOpen: isRegistrationRequired,
+		onOpen: onRegistrationRequired,
+		onOpenChange: onRegistrationRequiredChange,
+	} = useDisclosure();
+
 	const handlePlay = () => {
+		if (!me || me?.status !== "active") {
+			onRegistrationRequired();
+			return;
+		}
+
 		if (!premium && me?.sex === "male") {
 			onPremiumRequiredVoiceChange();
 			return;
@@ -350,6 +361,15 @@ const ProfileView: FC<ProfileViewProps> = ({
 				title={"Нужен премиум"}
 				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
 				onOpenChange={onPremiumRequiredVoiceChange}
+			/>
+
+			<InfoModal
+				isOpen={isRegistrationRequired}
+				text={
+					"Для того чтобы получить доступ к прослушиванию голоса, Вам нужна регистрация и премиум подписка"
+				}
+				title={"Нужны регистрация и премиум"}
+				onOpenChange={onRegistrationRequiredChange}
 			/>
 		</div>
 	);

@@ -24,7 +24,15 @@ export const uploadApi = createApi({
         formData: true,
       }),
     }),
+    heicToJpeg: builder.mutation({
+      query: (body) => ({
+        url: "/heic-to-jpeg",
+        method: "POST",
+        body,
+        formData: true,
+      }),
+    }),
   }),
 });
 
-export const { useUploadMutation } = uploadApi;
+export const { useUploadMutation, useHeicToJpegMutation } = uploadApi;
