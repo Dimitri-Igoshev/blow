@@ -153,6 +153,7 @@ const UploadImages: FC<UploadImagesProps> = ({
         placement="center"
         size="sm"
         onOpenChange={onOpenChange}
+        isDismissable={false}
       >
         <ModalContent>
           {(onClose) => (
