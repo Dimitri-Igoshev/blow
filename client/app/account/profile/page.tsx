@@ -20,6 +20,7 @@ import {
 	useGetMeQuery,
 	useReiseProfileMutation,
 	useRemoveUserMutation,
+	useUpdateUserMutation,
 } from "@/redux/services/userApi";
 import { config } from "@/common/env";
 import { RAISE_ID } from "@/helper/checkIsActive";
@@ -104,12 +105,13 @@ const AccountProfilePage = () => {
 			.catch((err) => console.log(err));
 	};
 
-	const [removeProfile] = useRemoveUserMutation();
+	// const [removeProfile] = useRemoveUserMutation();
+	const [updateProfile] = useUpdateUserMutation();
 
 	const remove = () => {
 		if (!me) return;
 
-		removeProfile(me?._id)
+		updateProfile({ id: me?._id, body: { status: "archive" }})
 			.unwrap()
 			.then(() => {
 				localStorage.setItem("access-token", "");
@@ -194,7 +196,7 @@ const AccountProfilePage = () => {
 									Пополнить кошелек
 								</p>
 							</button>
-
+ 
 							<button
 								className="flex gap-2.5 cursor-pointer group transition-all"
 								onClick={onOpenRemove}

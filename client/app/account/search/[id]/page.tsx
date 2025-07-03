@@ -89,8 +89,8 @@ const ProfileView: FC<ProfileViewProps> = ({
 			.unwrap()
 			.then(() => {
 				setClaim(true);
-				onComplainOpenChange(false)
-				onComplainInfoOpen(true);
+				onComplainOpenChange()
+				onComplainInfoOpen();
 			});
 	};
 
