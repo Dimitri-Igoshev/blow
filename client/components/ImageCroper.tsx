@@ -42,8 +42,6 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 	const blobUrlRef = useRef("");
 	const [isConvertation, setIsConvertation] = useState(false);
 
-	const [heicToJpeg] = useHeicToJpegMutation();
-
 	const [crop, setCrop] = useState<Crop>({
 		unit: "%", // Can be 'px' or '%'
 		x: 25,
@@ -96,49 +94,7 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 		const reader = new FileReader();
 		reader.onload = () => setImgSrc(reader.result?.toString() || "");
 		reader.readAsDataURL(currentFile);
-
-		console.log("Финальный файл:", currentFile);
 	}
-
-	// async function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
-	// 	if (e.target.files && e.target.files.length > 0) {
-	// 		let currentFile = e.target.files[0];
-
-	// 		if (e.target.files[0].type === "image/heic") {
-	// 			const formData = new FormData();
-	// 			formData.append('file', e.target.files[0]);
-
-	// 			await heicToJpeg(formData)
-	// 				.then((res: any) => {
-	// 					if (res) return;
-	// 					currentFile = res;
-
-	// 					// @ts-ignore
-	// 					setCrop(undefined); // Makes crop preview update between images.
-	// 					setFile(currentFile);
-	// 					const reader = new FileReader();
-
-	// 					reader.addEventListener("load", () =>
-	// 						setImgSrc(reader.result?.toString() || "")
-	// 					);
-	// 					reader.readAsDataURL(currentFile);
-	// 				})
-	// 				.catch((err: any) => console.log(err));
-	// 		} else {
-	// 			// @ts-ignore
-	// 			setCrop(undefined); // Makes crop preview update between images.
-	// 			setFile(currentFile);
-	// 			const reader = new FileReader();
-
-	// 			reader.addEventListener("load", () =>
-	// 				setImgSrc(reader.result?.toString() || "")
-	// 			);
-	// 			reader.readAsDataURL(currentFile);
-	// 		}
-
-	// 		console.log(currentFile)
-	// 	}
-	// }
 
 	useDebounceEffect(
 		async () => {
@@ -304,7 +260,7 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 							<Button
 								className="text-white"
 								color="primary"
-								isDisabled={!completedCrop}
+								// isDisabled={!completedCrop}
 								radius="full"
 								onPress={onDownloadCropClick}
 							>

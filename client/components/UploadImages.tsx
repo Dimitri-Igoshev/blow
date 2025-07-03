@@ -36,8 +36,7 @@ const UploadImages: FC<UploadImagesProps> = ({
   const addImage = (file: File) => {
     if (
       !file ||
-      !file?.type.toString().includes("image") ||
-      file.size > 10000000
+      !file?.type.toString().includes("image")
     ) {
       return;
     }
