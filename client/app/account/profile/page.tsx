@@ -280,7 +280,7 @@ const AccountProfilePage = () => {
 							<ul className="flex flex-wrap w-full gap-6 pl-4">
 								{!me?.sponsor ? null : (
 									<li className="list-disc mr-8">
-										{me?.sex.male ? "Стану спонсором" : "Ищу спонсора"}
+										{me?.sex === "male" ? "я спонсор" : "ищу спонсора"}
 									</li>
 								)}
 								{!me?.traveling ? null : (

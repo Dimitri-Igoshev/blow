@@ -87,6 +87,8 @@ export default function EditProfile() {
   const addImage = (image: IPhoto | any) => {
     const formData = new FormData();
 
+    console.log(444, image, image.file)
+
     formData.append("files", image.file);
 
     update({
@@ -94,7 +96,10 @@ export default function EditProfile() {
       body: formData,
     })
       .unwrap()
-      .then((res) => setFiles([...res.photos]))
+      .then((res) => {
+        console.log(445, res)
+        setFiles([...res.photos])
+      })
       .catch((error) => console.log(error));
   };
 
