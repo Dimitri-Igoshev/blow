@@ -80,10 +80,18 @@ const ProfileView: FC<ProfileViewProps> = ({
 		}
 	};
 
+	const [claim, setClaim] = useState(false);
+
 	const [createClaim] = useCreateClaimMutation();
 
 	const addClaim = async (text: string) => {
-		createClaim({ from: me?._id, text, about: id }).unwrap();
+		createClaim({ from: me?._id, text, about: id })
+			.unwrap()
+			.then(() => {
+				setClaim(true);
+				onComplainOpenChange(false)
+				onComplainInfoOpen(true);
+			});
 	};
 
 	const removeNote = async () => {
@@ -159,6 +167,12 @@ const ProfileView: FC<ProfileViewProps> = ({
 		isOpen: isComplainOpen,
 		onOpen: onComplainOpen,
 		onOpenChange: onComplainOpenChange,
+	} = useDisclosure();
+
+	const {
+		isOpen: isComplainInfoOpen,
+		onOpen: onComplainInfoOpen,
+		onOpenChange: onComplainInfoOpenChange,
 	} = useDisclosure();
 
 	return (
@@ -341,7 +355,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 									Написать сообщение
 								</Button>
 
-								{me && me?._id !== user?._id ? (
+								{!claim && me && me?._id !== user?._id ? (
 									<Button
 										className="z-0 relative"
 										color="secondary"
@@ -402,6 +416,13 @@ const ProfileView: FC<ProfileViewProps> = ({
 				}
 				title={"Нужны регистрация и премиум"}
 				onOpenChange={onRegistrationRequiredChange}
+			/>
+
+			<InfoModal
+				isOpen={isComplainInfoOpen}
+				text={"Ваша жалоба принята и будет рассмотрена в ближайшее время"}
+				title={"Жалоба"}
+				onOpenChange={onComplainInfoOpenChange}
 			/>
 		</div>
 	);
