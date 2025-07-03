@@ -14,6 +14,9 @@ import { canvasPreview } from "./canvasPreview";
 
 import { useDebounceEffect } from "@/hooks/useDebonceEffect";
 import { useHeicToJpegMutation } from "@/redux/services/uploadApi";
+import { config } from "@/common/env";
+import { BsFiletypeHeic } from "react-icons/bs";
+import { Spinner } from "@heroui/react";
 
 interface ImageCroperProps {
 	aspectRatios?: number;
@@ -37,6 +40,7 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 	const imgRef = useRef<any>(null);
 	const hiddenAnchorRef = useRef<HTMLAnchorElement>(null);
 	const blobUrlRef = useRef("");
+	const [isConvertation, setIsConvertation] = useState(false);
 
 	const [heicToJpeg] = useHeicToJpegMutation();
 
@@ -49,39 +53,92 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 	});
 
 	async function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
-		if (e.target.files && e.target.files.length > 0) {
-			let currentFile = e.target.files[0];
+		if (!e.target.files || e.target.files.length === 0) return;
 
-			if (e.target.files[0].type === "image/heic") {
-				await heicToJpeg(e.target.files[0])
-					.then((res: any) => {
-						if (res) return;
-						currentFile = res;
+		let currentFile = e.target.files[0];
 
-						// @ts-ignore
-						setCrop(undefined); // Makes crop preview update between images.
-						setFile(currentFile);
-						const reader = new FileReader();
+		// HEIC? ➜ конвертируем
+		if (
+			currentFile.type === "image/heic" ||
+			currentFile.name.toLowerCase().endsWith(".heic")
+		) {
+			setIsConvertation(true);
+			const formData = new FormData();
+			formData.append("file", currentFile);
 
-						reader.addEventListener("load", () =>
-							setImgSrc(reader.result?.toString() || "")
-						);
-						reader.readAsDataURL(currentFile);
-					})
-					.catch((err: any) => console.log(err));
-			} else {
-				// @ts-ignore
-				setCrop(undefined); // Makes crop preview update between images.
-				setFile(currentFile);
-				const reader = new FileReader();
+			try {
+				const res = await fetch(`${config.API_URL}/file/heic-to-jpeg`, {
+					method: "POST",
+					body: formData,
+				});
 
-				reader.addEventListener("load", () =>
-					setImgSrc(reader.result?.toString() || "")
+				if (!res.ok) throw new Error("Ошибка конвертации HEIC");
+
+				const jpegBlob = await res.blob(); // ⬅️ теперь это Blob
+
+				currentFile = new File(
+					[jpegBlob],
+					currentFile.name.replace(/\.heic$/i, ".jpeg"),
+					{ type: "image/jpeg" }
 				);
-				reader.readAsDataURL(currentFile);
+			} catch (err) {
+				console.error("Ошибка HEIC→JPEG:", err);
+				return;
+			} finally {
+				setIsConvertation(false);
 			}
 		}
+
+		// @ts-ignore
+		setCrop(undefined);
+		setFile(currentFile);
+
+		const reader = new FileReader();
+		reader.onload = () => setImgSrc(reader.result?.toString() || "");
+		reader.readAsDataURL(currentFile);
+
+		console.log("Финальный файл:", currentFile);
 	}
+
+	// async function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
+	// 	if (e.target.files && e.target.files.length > 0) {
+	// 		let currentFile = e.target.files[0];
+
+	// 		if (e.target.files[0].type === "image/heic") {
+	// 			const formData = new FormData();
+	// 			formData.append('file', e.target.files[0]);
+
+	// 			await heicToJpeg(formData)
+	// 				.then((res: any) => {
+	// 					if (res) return;
+	// 					currentFile = res;
+
+	// 					// @ts-ignore
+	// 					setCrop(undefined); // Makes crop preview update between images.
+	// 					setFile(currentFile);
+	// 					const reader = new FileReader();
+
+	// 					reader.addEventListener("load", () =>
+	// 						setImgSrc(reader.result?.toString() || "")
+	// 					);
+	// 					reader.readAsDataURL(currentFile);
+	// 				})
+	// 				.catch((err: any) => console.log(err));
+	// 		} else {
+	// 			// @ts-ignore
+	// 			setCrop(undefined); // Makes crop preview update between images.
+	// 			setFile(currentFile);
+	// 			const reader = new FileReader();
+
+	// 			reader.addEventListener("load", () =>
+	// 				setImgSrc(reader.result?.toString() || "")
+	// 			);
+	// 			reader.readAsDataURL(currentFile);
+	// 		}
+
+	// 		console.log(currentFile)
+	// 	}
+	// }
 
 	useDebounceEffect(
 		async () => {
@@ -187,7 +244,15 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 				<div className="text-lg font-[600] px-6 pt-4">Добавление фото</div>
 			</div>
 			<div className="flex flex-col gap-4 p-6 pt-5">
-				{imgSrc ? (
+				{isConvertation ? (
+					<div className="flex flex-col gap-3 items-center justify-center py-10">
+						<BsFiletypeHeic className="w-[100px] h-[100px]" />
+						<p>
+							Конвертация <span className="text-primary">HEIC → JPEG</span>
+						</p>
+						<Spinner color="primary" size="lg" />
+					</div>
+				) : imgSrc ? (
 					<div className="">
 						<ReactCrop
 							aspect={aspect}
@@ -219,32 +284,34 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 						)}
 					</div>
 
-					<div className="grid grid-cols-[3fr_2fr] w-full gap-3 mt-1">
-						<input
-							ref={inputRef}
-							className="hidden"
-							type="file"
-							onChange={onSelectFile}
-						/>
-						<Button
-							color="primary"
-							endContent={<LuCamera className="text-lg" />}
-							radius="full"
-							variant="ghost"
-							onPress={() => inputRef.current.click()}
-						>
-							{file ? "Другое фото" : "Выберите фото"}
-						</Button>
-						<Button
-							className="text-white"
-							color="primary"
-							isDisabled={!completedCrop}
-							radius="full"
-							onPress={onDownloadCropClick}
-						>
-							Cохранить
-						</Button>
-					</div>
+					{isConvertation ? null : (
+						<div className="grid grid-cols-[3fr_2fr] w-full gap-3 mt-1">
+							<input
+								ref={inputRef}
+								className="hidden"
+								type="file"
+								onChange={onSelectFile}
+							/>
+							<Button
+								color="primary"
+								endContent={<LuCamera className="text-lg" />}
+								radius="full"
+								variant="ghost"
+								onPress={() => inputRef.current.click()}
+							>
+								{file ? "Другое фото" : "Выберите фото"}
+							</Button>
+							<Button
+								className="text-white"
+								color="primary"
+								isDisabled={!completedCrop}
+								radius="full"
+								onPress={onDownloadCropClick}
+							>
+								Cохранить
+							</Button>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
