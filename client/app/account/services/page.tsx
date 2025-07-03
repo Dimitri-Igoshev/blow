@@ -16,8 +16,6 @@ import {
 import { InfoModal } from "@/components/InfoModal";
 import { MAILING_ID } from "@/helper/checkIsActive";
 import { useCreatePaymentMutation } from "@/redux/services/paymentApi";
-import { FaTelegramPlane } from "react-icons/fa";
-import { ROUTES } from "@/app/routes";
 import { useRouter } from "next/navigation";
 
 export default function AccountServices() {

@@ -27,6 +27,7 @@ import { useStartChatMutation } from "@/redux/services/chatApi";
 import { isPremium } from "@/helper/checkIsActive";
 import { ROUTES } from "@/app/routes";
 import { InfoModal } from "@/components/InfoModal";
+import { useCreateClaimMutation } from "@/redux/services/claimApi";
 
 interface ProfileViewProps {
 	params: any;
@@ -72,12 +73,17 @@ const ProfileView: FC<ProfileViewProps> = ({
 	const [deleteNote] = useDeleteNoteMutation();
 
 	const addNote = async (text: string) => {
-		console.log("add", text, id, me?._id);
 		if (note) {
 			editNote({ id: me?._id, body: { text, userId: id } }).unwrap();
 		} else {
 			createNote({ id: me?._id, body: { text, userId: id } }).unwrap();
 		}
+	};
+
+	const [createClaim] = useCreateClaimMutation();
+
+	const addClaim = async (text: string) => {
+		createClaim({ from: me?._id, text, about: id }).unwrap();
 	};
 
 	const removeNote = async () => {
@@ -147,6 +153,12 @@ const ProfileView: FC<ProfileViewProps> = ({
 		isOpen: isPremiumRequiredVoice,
 		onOpen: onPremiumRequiredVoice,
 		onOpenChange: onPremiumRequiredVoiceChange,
+	} = useDisclosure();
+
+	const {
+		isOpen: isComplainOpen,
+		onOpen: onComplainOpen,
+		onOpenChange: onComplainOpenChange,
 	} = useDisclosure();
 
 	return (
@@ -328,6 +340,18 @@ const ProfileView: FC<ProfileViewProps> = ({
 								>
 									Написать сообщение
 								</Button>
+
+								{me && me?._id !== user?._id ? (
+									<Button
+										className="z-0 relative"
+										color="secondary"
+										radius="full"
+										variant="solid"
+										onPress={onComplainOpen}
+									>
+										Пожаловаться
+									</Button>
+								) : null}
 							</div>
 						</div>
 					</div>
@@ -339,6 +363,14 @@ const ProfileView: FC<ProfileViewProps> = ({
 				note={note}
 				onOpenChange={onNoteChange}
 				onSave={(text: string) => addNote(text)}
+			/>
+
+			<NoteModal
+				isOpen={isComplainOpen}
+				onOpenChange={onComplainOpenChange}
+				isClaim
+				note=""
+				onSave={(text: string) => addClaim(text)}
 			/>
 
 			<InfoModal

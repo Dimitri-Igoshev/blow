@@ -9,6 +9,7 @@ import { serviceApi } from "./services/serviceApi";
 import { mailingApi } from "./services/mailingApi";
 import { chatApi } from "./services/chatApi";
 import { paymentApi } from "./services/paymentApi";
+import { claimApi } from "./services/claimApi"
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     [mailingApi.reducerPath]: mailingApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
     [paymentApi.reducerPath]: paymentApi.reducer,
+    [claimApi.reducerPath]: claimApi.reducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) => {
@@ -31,6 +33,7 @@ export const store = configureStore({
       mailingApi.middleware,
       chatApi.middleware,
       paymentApi.middleware,
+      claimApi.middleware,
     ]);
   },
 });

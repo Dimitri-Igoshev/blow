@@ -21,6 +21,7 @@ interface NoteModalProps {
   onSave: (text: string) => void;
   onOpenChange: () => void;
   note?: string;
+  isClaim?: boolean;
 }
 
 export const NoteModal: FC<NoteModalProps> = ({
@@ -28,11 +29,13 @@ export const NoteModal: FC<NoteModalProps> = ({
   onSave,
   onOpenChange,
   note = "",
+  isClaim = "false"
 }) => {
   const { register, handleSubmit, setValue } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     onSave(data.text);
+    setValue("text", "");
     onOpenChange();
   };
 
@@ -52,7 +55,7 @@ export const NoteModal: FC<NoteModalProps> = ({
         {(onClose) => (
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalHeader className="flex flex-col gap-1 text-[20px]">
-              Заметка
+              {isClaim ? "Жалоба" : "Заметка"}
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col gap-5">
@@ -62,7 +65,7 @@ export const NoteModal: FC<NoteModalProps> = ({
                     inputWrapper: "dark:bg-foreground-200",
                   }}
                   defaultValue={note}
-                  placeholder="Текст заметки"
+                  placeholder={isClaim ? "Причина жалобы" : "Текст заметки"}
                   radius="lg"
                   type="text"
                   {...register("text")}
@@ -77,7 +80,7 @@ export const NoteModal: FC<NoteModalProps> = ({
                   radius="full"
                   type="submit"
                 >
-                  Сохранить
+                  {isClaim ? "Отправить" : "Сохранить"}
                 </Button>
               </div>
             </ModalFooter>
