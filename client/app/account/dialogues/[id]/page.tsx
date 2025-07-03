@@ -21,7 +21,7 @@ import { Message } from "@/components/Message";
 import { InfoModal } from "@/components/InfoModal";
 import { isPremium } from "@/helper/checkIsActive";
 import { ROUTES } from "@/app/routes";
-import { useMediaQuery } from "@/hooks/useMediaQuery"
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 interface ProfileViewProps {
 	params: any;
@@ -46,7 +46,7 @@ export default function AccountDialogues({
 		{ skip: !currentChat?._id }
 	);
 
-	const isMobile = useMediaQuery('(max-width: 620px)');
+	const isMobile = useMediaQuery("(max-width: 620px)");
 	const [send] = useSendMessageMutation();
 
 	const getInterlocutor = (chat: any) => {
@@ -71,8 +71,8 @@ export default function AccountDialogues({
 
 		if (id === "1") {
 			if (isMobile) {
-				setCurrentChat(null)
-				setSortedChats(sortChatsByLastMessage(chats))
+				setCurrentChat(null);
+				setSortedChats(sortChatsByLastMessage(chats));
 			} else {
 				setCurrentChat(chats[0]);
 				readMessages(chats[0]);
@@ -206,25 +206,25 @@ export default function AccountDialogues({
 	};
 
 	useEffect(() => {
-    const originalStyle = {
-      position: document.body.style.position,
-      left: document.body.style.left,
-      right: document.body.style.right,
-    };
+		const originalStyle = {
+			position: document.body.style.position,
+			left: document.body.style.left,
+			right: document.body.style.right,
+		};
 
-    // Применяем стили
-    document.body.style.position = "fixed";
-    document.body.style.left = "0";
-    document.body.style.right = "0";
+		// Применяем стили
+		document.body.style.position = "fixed";
+		document.body.style.left = "0";
+		document.body.style.right = "0";
 
-    // Очистка: возвращаем как было
-    return () => {
-      document.body.style.position = originalStyle.position;
-      document.body.style.left = originalStyle.left;
-      document.body.style.right = originalStyle.right;
-			document.body.style.overflow = 'auto';
-    };
-  }, []);
+		// Очистка: возвращаем как было
+		return () => {
+			document.body.style.position = originalStyle.position;
+			document.body.style.left = originalStyle.left;
+			document.body.style.right = originalStyle.right;
+			document.body.style.overflow = "auto";
+		};
+	}, []);
 
 	return (
 		<div
@@ -241,7 +241,9 @@ export default function AccountDialogues({
 						Назад
 					</Button>
 				) : (
-					<h1 className="flex md:hidden font-semibold text-[36px] w-full justify-center !-mt-6">Диалоги</h1>
+					<h1 className="flex md:hidden font-semibold text-[36px] w-full justify-center !-mt-6">
+						Диалоги
+					</h1>
 				)}
 				{/* <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1> */}
 			</div>
@@ -252,7 +254,7 @@ export default function AccountDialogues({
 						"col-span-1 flex-col gap-1 w-full mt-8 overflow-y-scroll hide-scroll relative",
 						{
 							"hidden md:flex": currentChat,
-							"flex": !currentChat,
+							flex: !currentChat,
 						}
 					)}
 					style={{ height: "calc(var(--vh, 1vh) * 65)" }}
@@ -291,9 +293,10 @@ export default function AccountDialogues({
 								width={50}
 								onClick={(e) => {
 									e.stopPropagation();
-									router.push(
-										ROUTES.ACCOUNT.SEARCH + "/" + getInterlocutor(chat)?._id
-									);
+									window.open(`${ROUTES.ACCOUNT.SEARCH}/${getInterlocutor(chat)?._id}`)
+									// router.push(
+									// 	ROUTES.ACCOUNT.SEARCH + "/" + getInterlocutor(chat)?._id
+									// );
 								}}
 							/>
 
@@ -352,7 +355,6 @@ export default function AccountDialogues({
 						</div>
 					</div>
 
-			
 					<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
 						<Input
 							classNames={{
