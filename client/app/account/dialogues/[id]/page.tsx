@@ -253,6 +253,7 @@ export default function AccountDialogues({
 			.unwrap()
 			.then(() => {
 				onOpenChangeRemove()
+				refetch()
 				onRemoveSuccess()
 			})
 			.catch((err) => {
