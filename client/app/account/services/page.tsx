@@ -30,46 +30,55 @@ export default function AccountServices() {
 
 		const win = window.open("", "_blank");
 
+		// const body = {
+		// 	payerId: me._id,
+		// 	checkout: {
+		// 		test: false,
+		// 		transaction_type: "payment",
+		// 		attempts: 3,
+		// 		iframe: true,
+		// 		order: {
+		// 			currency: "RUB",
+		// 			amount: price * 100,
+		// 			description: "Пополнение счета на сайте blow.ru",
+		// 			tracking_id: uuidv4().toString(), //идентификатор транзакции на стороне торговца
+		// 			additional_data: {
+		// 				contract: ["recurring", "card_on_flie"],
+		// 			}, //заполнить при необходимости получить в ответе токен.
+		// 		},
+		// 		settings: {
+		// 			return_url: "https://blow.ru/account/services", //URL, на который будет перенаправлен покупатель после завершения оплаты.
+		// 			success_url: "https://blow.ru/account/services",
+		// 			decline_url: "https://blow.ru/account/services",
+		// 			fail_url: "https://blow.ru/account/services",
+		// 			cancel_url: "https://blow.ru/account/services",
+		// 			notification_url: "https://blow.ru/api/notification", //адрес сервера торговца, на который система отправит автоматическое уведомление с финальным статусом транзакции.
+		// 			button_next_text: "Вернуться в магазин",
+		// 			auto_pay: false,
+		// 			language: "ru",
+		// 			customer_fields: {
+		// 				// visible: [
+		// 				// 	me?.firstName || "",
+		// 				// 	me?.lastName || "", //массив дополнительных полей на виджете
+		// 				// ],
+		// 			},
+		// 			payment_method: {
+		// 				types: ["credit_card"], //массив доступных платежных методов
+		// 				/*"credit_card": {
+		//                 "token": "13dded21-ed69-4590-8bcb-db522a89735c"
+		//             }*/ //токен необходимо отправить при использовании auto_pay
+		// 			},
+		// 		},
+		// 	},
+		// };
+
 		const body = {
 			payerId: me._id,
-			checkout: {
-				test: false,
-				transaction_type: "payment",
-				attempts: 3,
-				iframe: true,
-				order: {
-					currency: "RUB",
-					amount: price * 100,
-					description: "Пополнение счета на сайте blow.ru",
-					tracking_id: uuidv4().toString(), //идентификатор транзакции на стороне торговца
-					additional_data: {
-						contract: ["recurring", "card_on_flie"],
-					}, //заполнить при необходимости получить в ответе токен.
-				},
-				settings: {
-					return_url: "https://blow.ru/account/services", //URL, на который будет перенаправлен покупатель после завершения оплаты.
-					success_url: "https://blow.ru/account/services",
-					decline_url: "https://blow.ru/account/services",
-					fail_url: "https://blow.ru/account/services",
-					cancel_url: "https://blow.ru/account/services",
-					notification_url: "https://blow.ru/api/notification", //адрес сервера торговца, на который система отправит автоматическое уведомление с финальным статусом транзакции.
-					button_next_text: "Вернуться в магазин",
-					auto_pay: false,
-					language: "ru",
-					customer_fields: {
-						// visible: [
-						// 	me?.firstName || "",
-						// 	me?.lastName || "", //массив дополнительных полей на виджете
-						// ],
-					},
-					payment_method: {
-						types: ["credit_card"], //массив доступных платежных методов
-						/*"credit_card": {
-                    "token": "13dded21-ed69-4590-8bcb-db522a89735c"
-                }*/ //токен необходимо отправить при использовании auto_pay
-					},
-				},
-			},
+			token: "c35920a427827ce7643b5ba1",
+			amount: price,
+			description: "Пополнение счета на сайте blow.ru",
+			method: "card",
+			order_id: uuidv4().toString(),
 		};
 
 		try {
@@ -84,7 +93,7 @@ export default function AccountServices() {
 			const result = await response.json();
 
 			if (win) {
-				win.location.href = result.checkout.redirect_url;
+				win.location.href = result.response.url;
 			}
 		} catch (error) {
 			if (win) {
@@ -121,8 +130,6 @@ export default function AccountServices() {
 	});
 
 	const buyService = (item: any, value: any) => {
-		
-
 		if (me?.balance < +value?.price) {
 			setInfo({
 				title: "Ошибка",
@@ -131,10 +138,10 @@ export default function AccountServices() {
 
 			return onOpen();
 		}
-		
+
 		if (item?._id === "6830b9a752bb4caefa0418a8" && me?.sex === "male") {
-			onPremiumRequired()
-			return
+			onPremiumRequired();
+			return;
 		}
 
 		if (!item?.services?.length) {
