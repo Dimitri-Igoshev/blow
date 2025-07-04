@@ -243,7 +243,6 @@ export default function AccountDialogues({
 		onOpenChange: onRemoveSuccessChange,
 	} = useDisclosure();
 
-
 	const [deleteChat] = useDeleteChatMutation();
 
 	const remove = () => {
@@ -252,13 +251,13 @@ export default function AccountDialogues({
 		deleteChat({ id: selectedChat, userId: me._id })
 			.unwrap()
 			.then(() => {
-				onOpenChangeRemove()
-				onRemoveSuccess()
-				router.refresh()
+				onOpenChangeRemove();
+				onRemoveSuccess();
+				router.refresh();
 			})
 			.catch((err) => {
-				onOpenChangeRemove()
-				console.log(err)
+				onOpenChangeRemove();
+				console.log(err);
 			});
 	};
 
@@ -269,13 +268,29 @@ export default function AccountDialogues({
 		>
 			<div className="flex w-full items-center justify-between">
 				{currentChat ? (
-					<Button
-						className="flex md:hidden items-center !-mt-6"
-						radius="full"
-						onPress={() => setCurrentChat(null)}
-					>
-						Назад
-					</Button>
+					<div className="flex items-center justify-between gap-3 w-full">
+						<Button
+							className="flex md:hidden items-center !-mt-6"
+							radius="full"
+							onPress={() => setCurrentChat(null)}
+						>
+							Назад
+						</Button>
+
+						{canChatDelete(me) ? (
+							<Button
+								className="flex md:hidden items-center !-mt-6"
+								radius="full"
+								color="primary"
+								onPress={() => {
+									setSelectedChat(currentChat?._id);
+									onOpenRemove();
+								}}
+							>
+								Удалить
+							</Button>
+						) : null}
+					</div>
 				) : (
 					<h1 className="flex md:hidden font-semibold text-[36px] w-full justify-center !-mt-6">
 						Диалоги
@@ -453,9 +468,7 @@ export default function AccountDialogues({
 
 			<InfoModal
 				isOpen={isRemoveSuccess}
-				text={
-					"Переписка успешно удалена!"
-				}
+				text={"Переписка успешно удалена!"}
 				title={"Удаление преписки"}
 				onOpenChange={onRemoveSuccessChange}
 			/>
