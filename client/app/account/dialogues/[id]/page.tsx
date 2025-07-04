@@ -9,6 +9,7 @@ import { useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import {
+	useDeleteChatMutation,
 	useGetChatMessagesQuery,
 	useGetChatsQuery,
 	useSendMessageMutation,
@@ -19,9 +20,11 @@ import { config } from "@/common/env";
 import { getCityString } from "@/helper/getCityString";
 import { Message } from "@/components/Message";
 import { InfoModal } from "@/components/InfoModal";
-import { isPremium } from "@/helper/checkIsActive";
+import { canChatDelete, isPremium } from "@/helper/checkIsActive";
 import { ROUTES } from "@/app/routes";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { MdDeleteOutline } from "react-icons/md";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 interface ProfileViewProps {
 	params: any;
@@ -226,6 +229,38 @@ export default function AccountDialogues({
 		};
 	}, []);
 
+	const [selectedChat, setSelectedChat] = useState(null);
+
+	const {
+		isOpen: isOpenRemove,
+		onOpen: onOpenRemove,
+		onOpenChange: onOpenChangeRemove,
+	} = useDisclosure();
+
+	const {
+		isOpen: isRemoveSuccess,
+		onOpen: onRemoveSuccess,
+		onOpenChange: onRemoveSuccessChange,
+	} = useDisclosure();
+
+
+	const [deleteChat] = useDeleteChatMutation();
+
+	const remove = () => {
+		if (!selectedChat) return;
+
+		deleteChat({ id: selectedChat, userId: me._id })
+			.unwrap()
+			.then(() => {
+				onOpenChangeRemove()
+				onRemoveSuccess()
+			})
+			.catch((err) => {
+				onOpenChangeRemove()
+				console.log(err)
+			});
+	};
+
 	return (
 		<div
 			className="flex flex-col px-3 md:px-9 pt-[84px] gap-[30px] min-h-screen max-h-screen sm:max-h-auto relative"
@@ -263,7 +298,7 @@ export default function AccountDialogues({
 						<button
 							key={chat._id}
 							className={cn(
-								"h-[60px] flex gap-2.5 bg-white dark:bg-foreground-100 p-[5px] justify-between items-center transition-all",
+								"h-[60px] flex gap-2.5 bg-white dark:bg-foreground-100 p-[5px] justify-between items-center transition-all group",
 								{
 									["md:mr-6 rounded-[24px]"]: currentChat?._id !== chat._id,
 									["md:mr-0 rounded-[24px] rounded-r-none"]:
@@ -293,7 +328,9 @@ export default function AccountDialogues({
 								width={50}
 								onClick={(e) => {
 									e.stopPropagation();
-									window.open(`${ROUTES.ACCOUNT.SEARCH}/${getInterlocutor(chat)?._id}`)
+									window.open(
+										`${ROUTES.ACCOUNT.SEARCH}/${getInterlocutor(chat)?._id}`
+									);
 									// router.push(
 									// 	ROUTES.ACCOUNT.SEARCH + "/" + getInterlocutor(chat)?._id
 									// );
@@ -314,9 +351,19 @@ export default function AccountDialogues({
 								</p>
 							</div>
 
+							{canChatDelete(me) ? (
+								<MdDeleteOutline
+									className="min-w-4 min-h-4 opacity-0 group-hover:opacity-100 hover:text-primary mr-3"
+									onClick={() => {
+										setSelectedChat(chat._id);
+										onOpenRemove();
+									}}
+								/>
+							) : null}
+
 							{currentChat?._id !== chat?._id &&
 							hasUnreadedMesages(chat) > 0 ? (
-								<div className="w-4 min-w-4 h-4 rounded-full bg-primary text-white text-[8px] flex font-semibold justify-center items-center -mt-[24px] mr-1">
+								<div className="w-4 min-w-4 h-4 rounded-full bg-primary text-white text-[8px] flex font-semibold justify-center items-center mr-3">
 									{hasUnreadedMesages(chat)}
 								</div>
 							) : null}
@@ -392,6 +439,24 @@ export default function AccountDialogues({
 				title={"Нужен премиум"}
 				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
 				onOpenChange={() => router.back()}
+			/>
+
+			<ConfirmModal
+				actionBtn="Удалить"
+				isOpen={isOpenRemove}
+				text="Вы уверены что хотите удалить переписку?"
+				title="Удаление переписки"
+				onAction={remove}
+				onOpenChange={onOpenChangeRemove}
+			/>
+
+			<InfoModal
+				isOpen={isRemoveSuccess}
+				text={
+					"Переписка успешно удалена!"
+				}
+				title={"Удаление преписки"}
+				onOpenChange={onRemoveSuccessChange}
 			/>
 		</div>
 	);
