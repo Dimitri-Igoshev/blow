@@ -3,37 +3,40 @@ import type { ForwardResponse, IncomingPayload } from "../types";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  try {
-    const data: IncomingPayload = await req.json();
+	try {
+		const data: IncomingPayload = await req.json();
 
-    const res = await fetch("https://lk.cactuspay.pro/api/?method=create", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+		const { order_id, payerId, ...rest } = data;
 
-    const result: ForwardResponse = await res.json();
+		const res = await fetch("https://lk.cactuspay.pro/api/?method=create", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(rest),
+		});
 
-    console.log("[FORWARD RESPONSE]", result);
+		const result: ForwardResponse = await res.json();
 
-    const transaction = fetch("https://blow.igoshev.de/api/payment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+		const transaction = fetch("https://blow.igoshev.de/api/payment", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
 
-    console.log("[TRANSACTION RESPONSE]", transaction);
+		console.log("[TRANSACTION RESPONSE]", transaction);
 
-    return Response.json(result);
-  } catch (error) {
-    console.error("[FORWARD ERROR]", error);
+		return Response.json(result);
+	} catch (error) {
+		console.error("[FORWARD ERROR]", error);
 
-    return new Response(
-      JSON.stringify({ message: "Ошибка при отправке данных" }),
-      { status: 500 },
-    );
-  }
+		return new Response(
+			JSON.stringify({ message: "Ошибка при отправке данных" }),
+			{ status: 500 }
+		);
+	}
 }
 
 // export async function POST(req: NextRequest) {
@@ -79,5 +82,3 @@ export async function POST(req: NextRequest) {
 //     );
 //   }
 // }
-
-
