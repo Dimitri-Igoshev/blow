@@ -92,8 +92,10 @@ export default function AccountServices() {
 
 			const result = await response.json();
 
+			console.log(123, result)
+
 			if (win) {
-				win.location.href = result.response.url;
+				win.location.href = result?.response?.url;
 			}
 		} catch (error) {
 			if (win) {
