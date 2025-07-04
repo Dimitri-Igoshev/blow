@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
 	try {
 		const data: IncomingPayload = await req.json();
 
-		const { order_id, payerId, ...rest } = data;
+		const { payerId, ...rest } = data;
 
 		const res = await fetch("https://lk.cactuspay.pro/api/?method=create", {
 			method: "POST",
