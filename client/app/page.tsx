@@ -62,15 +62,16 @@ export default function Home() {
 					<div className="flex justify-center md:justify-start items-center gap-[5%] md:px-[40px] relative z-10">
 						<SearchWidget refresh={() => setSearched(true)} />
 
-						<div className="hidden md:flex flex-col md:w-[750px] gap-8">
+						<div className="hidden md:flex flex-col md:w-[1100px] gap-8">
 							<h1 className="text-[26px] lg:text-[36px] font-semibold text-white lg:leading-[56px]">
-								Поиск лучших содержанок и самых успешных мужчин
+								Премиальное знакомство: успех встречает красоту. Поиск лучших
+								содержанок и самых успешных мужчин:
 							</h1>
 							<ul className="hidden md:block text-white uppercase list-disc leading-7 ml-4">
-								<li>Бесплатная регистрация</li>
-								<li>Реальные анкеты</li>
-								<li>Качественные фото</li>
-								<li>Голоса девушек</li>
+								<li>Реальные анкеты и качественные фото</li>
+								<li>Бесплатный Premium на 24 часа</li>
+								<li>Уникальные голосовые сообщения</li>
+								<li>Защита личных данных 24/7</li>
 							</ul>
 						</div>
 					</div>
