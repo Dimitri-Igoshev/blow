@@ -1,14 +1,17 @@
 import { cn } from "@heroui/theme";
 import { FunctionComponent } from "react";
+import { AnimatedLogo } from "./AnimatedLogo"
 
 interface LoaderProps {
   modal?: boolean;
   save?: boolean;
+  text?: string;
 }
 
 const Loader: FunctionComponent<LoaderProps> = ({
   modal = false,
   save = false,
+  text = save ? "Сохранение..." : "Загрузка...",
 }) => {
   return (
     <div
@@ -18,17 +21,9 @@ const Loader: FunctionComponent<LoaderProps> = ({
       })}
     >
       <div className="flex gap-6 items-center flex-col">
-        {/* <Image
-					alt="BLOW"
-					height={50}
-					radius="none"
-					src="/logo2.png"
-					width={127}
-				/> */}
-        {/* <div> */}
-        {/* <Spinner /> */}
+        <AnimatedLogo />
         <p className="text-[20px] loading">
-          {save ? "Сохранение..." : "Загрузка..."}
+          {text}
         </p>
         {/* </div> */}
       </div>

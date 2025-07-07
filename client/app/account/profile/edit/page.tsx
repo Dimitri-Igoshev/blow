@@ -17,6 +17,7 @@ import { ROUTES } from "@/app/routes";
 import UploadImages from "@/components/UploadImages";
 import { IPhoto } from "@/common/interface/photo.interface";
 import { truncateString } from "@/helper/truncateStr";
+import { BlowLoader } from "@/components/BlowLoader"
 
 const VoiceRecorder = dynamic(() => import("@/components/VoiceRecoder"), {
 	ssr: false,
@@ -68,9 +69,12 @@ export default function EditProfile() {
 			.unwrap()
 			.then(() => {
 				router.push(ROUTES.ACCOUNT.PROFILE);
+				setLoading(false)
 			})
-			.catch((error) => console.log(error))
-			.finally(() => setLoading(false));
+			.catch((error) => {
+				console.log(error)
+				setLoading(false)
+			})
 	};
 
 	const removeImage = (image: IPhoto) => {
@@ -87,9 +91,9 @@ export default function EditProfile() {
 	};
 
 	const addImage = (image: IPhoto | any) => {
-		const formData = new FormData();
+		setLoading(true);
 
-		console.log(444, image, image.file);
+		const formData = new FormData();
 
 		formData.append("files", image.file);
 
@@ -99,13 +103,20 @@ export default function EditProfile() {
 		})
 			.unwrap()
 			.then((res) => {
-				console.log(445, res);
 				setFiles([...res.photos]);
+				setLoading(false);
+
 			})
-			.catch((error) => console.log(error));
+			.catch((error) => {
+				console.log(error)
+				setLoading(true);
+
+			});
 	};
 
 	const setMainImage = (photos: IPhoto[]) => {
+		setLoading(true);
+
 		update({
 			id: me._id,
 			body: {
@@ -114,8 +125,14 @@ export default function EditProfile() {
 			},
 		})
 			.unwrap()
-			.then((res) => setFiles([...res.photos]))
-			.catch((error) => console.log(error));
+			.then((res) => {
+				setFiles([...res.photos])
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.log(error)
+				setLoading(false);
+			});
 	};
 
 	return (
@@ -281,6 +298,8 @@ export default function EditProfile() {
 					Сохранить
 				</Button>
 			</div>
+
+			{loading ? <BlowLoader text="Сохранение..." /> : null}
 		</div>
 	);
 }
