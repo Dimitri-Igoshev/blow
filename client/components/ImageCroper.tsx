@@ -16,7 +16,7 @@ import { useDebounceEffect } from "@/hooks/useDebonceEffect";
 import { useHeicToJpegMutation } from "@/redux/services/uploadApi";
 import { config } from "@/common/env";
 import { BsFiletypeHeic } from "react-icons/bs";
-import { Spinner } from "@heroui/react";
+import { AnimatedLogo } from "./AnimatedLogo";
 
 interface ImageCroperProps {
 	aspectRatios?: number;
@@ -202,11 +202,11 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 			<div className="flex flex-col gap-4 p-6 pt-5">
 				{isConvertation ? (
 					<div className="flex flex-col gap-3 items-center justify-center py-10">
-						<BsFiletypeHeic className="w-[100px] h-[100px]" />
+						{/* <BsFiletypeHeic className="w-[100px] h-[100px]" /> */}
+						<AnimatedLogo />
 						<p>
 							Конвертация <span className="text-primary">HEIC → JPEG</span>
 						</p>
-						<Spinner color="primary" size="lg" />
 					</div>
 				) : imgSrc ? (
 					<div className="">
