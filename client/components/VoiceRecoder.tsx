@@ -110,7 +110,7 @@ const VoiceRecorder = () => {
 						<p>Прослушать</p>
 					</button>
 				) : null}
-				{isPlaying ? null : (
+				{isPlaying || loading ? null : (
 					<Button
 					className="z-0 relative"
 					color="secondary"

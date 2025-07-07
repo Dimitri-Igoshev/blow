@@ -57,9 +57,17 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 
 		// HEIC? ➜ конвертируем
 		if (
-			currentFile.type === "image/heic" ||
+			currentFile.type !== "image/heic" ||
 			currentFile.name.toLowerCase().endsWith(".heic")
 		) {
+			// @ts-ignore
+			setCrop(undefined);
+			setFile(currentFile);
+
+			const reader = new FileReader();
+			reader.onload = () => setImgSrc(reader.result?.toString() || "");
+			reader.readAsDataURL(currentFile);
+		} else {
 			setIsConvertation(true);
 			const formData = new FormData();
 			formData.append("file", currentFile);
@@ -79,6 +87,15 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 					currentFile.name.replace(/\.heic$/i, ".jpeg"),
 					{ type: "image/jpeg" }
 				);
+
+				// @ts-ignore
+				setCrop(undefined);
+				setFile(currentFile);
+
+				const reader = new FileReader();
+				reader.onload = () => setImgSrc(reader.result?.toString() || "");
+				reader.readAsDataURL(currentFile);
+				setIsConvertation(false);
 			} catch (err) {
 				console.error("Ошибка HEIC→JPEG:", err);
 				return;
@@ -86,14 +103,6 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 				setIsConvertation(false);
 			}
 		}
-
-		// @ts-ignore
-		setCrop(undefined);
-		setFile(currentFile);
-
-		const reader = new FileReader();
-		reader.onload = () => setImgSrc(reader.result?.toString() || "");
-		reader.readAsDataURL(currentFile);
 	}
 
 	useDebounceEffect(
