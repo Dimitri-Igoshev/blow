@@ -130,17 +130,28 @@ const UploadImages: FC<UploadImagesProps> = ({
 		}
 	};
 
+	  const ref = useRef<any>(null);
+
+  const [width, setWidth] = useState<number | null>();
+
+  useEffect(() => {
+    if (ref?.current?.offsetWidth) {
+      setWidth(ref.current.offsetWidth);
+    }
+  }, [ref?.current?.offsetWidth]);
+
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-5 gap-5 w-full">
 			{images.map(({ file, url, main }: IPhoto, idx: number) => (
 				<div
+				ref={ref}
 					key={url}
 					className="col-span-1 rounded-[27px] overflow-hidden relative group"
 				>
 					<Image
 						alt=""
 						className="z-0 relative"
-						height={"100%"}
+						height={width ? width * 1.5 : 0}
 						radius="none"
 						src={`${config.MEDIA_URL}/${url}` || ""}
 						width={"100%"}
