@@ -6,12 +6,15 @@ import { PiWaveform, PiRecordFill, PiStopFill } from "react-icons/pi";
 
 import { useGetMeQuery, useUpdateUserMutation } from "@/redux/services/userApi";
 import { config } from "@/common/env";
+import { BlowLoader } from "./BlowLoader";
 
 const VoiceRecorder = () => {
 	const [recording, setRecording] = useState(false);
 	const [audioUrl, setAudioUrl] = useState<string | null>(null);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const chunksRef = useRef<Blob[]>([]);
+	const [loading, setLoading] = useState(false);
+	const [isPlaying, setIsPlaying] = useState(false);
 
 	const { data: me } = useGetMeQuery(null);
 	const [update] = useUpdateUserMutation();
@@ -36,6 +39,8 @@ const VoiceRecorder = () => {
 		};
 
 		mediaRecorder.onstop = () => {
+			setLoading(true);
+
 			const blob = new Blob(chunksRef.current, {
 				type: mediaRecorder.mimeType,
 			});
@@ -53,8 +58,14 @@ const VoiceRecorder = () => {
 				body: formData,
 			})
 				.unwrap()
-				.then((res) => console.log(res))
-				.catch((err) => console.error(err));
+				.then((res) => {
+					console.log(res);
+					setLoading(false);
+				})
+				.catch((err) => {
+					console.error(err);
+					setLoading(false);
+				});
 		};
 
 		mediaRecorder.start();
@@ -70,13 +81,22 @@ const VoiceRecorder = () => {
 	const audioRef = useRef<any>(null);
 
 	const handlePlay = () => {
-		const audio = new Audio(
-			`${config.MEDIA_URL}/${me?.voice}` || audioUrl || ""
-		);
-		audio.play().catch((err) => {
-			console.error("Ошибка воспроизведения:", err);
-		});
-	};
+  setIsPlaying(true);
+
+  const audio = new Audio(
+    me?.voice ? `${config.MEDIA_URL}/${me.voice}` : audioUrl || ""
+  );
+
+  // Сбросить isPlaying, когда проигрывание закончится
+  audio.addEventListener('ended', () => {
+    setIsPlaying(false);
+  });
+
+  audio.play().catch((err) => {
+    console.error("Ошибка воспроизведения:", err);
+    setIsPlaying(false); // сброс на случай ошибки
+  });
+};
 
 	return (
 		<div>
@@ -90,7 +110,8 @@ const VoiceRecorder = () => {
 						<p>Прослушать</p>
 					</button>
 				) : null}
-				<Button
+				{isPlaying ? null : (
+					<Button
 					className="z-0 relative"
 					color="secondary"
 					radius="full"
@@ -110,7 +131,11 @@ const VoiceRecorder = () => {
 							? "Изменить запись"
 							: "Записать голос"}
 				</Button>
+				)}
+				
 			</div>
+
+			{loading ? <BlowLoader text="Сохранение ..." /> : null}
 		</div>
 	);
 };
