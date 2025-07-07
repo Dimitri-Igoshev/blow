@@ -20,83 +20,94 @@ const VoiceRecorder = () => {
 	const [update] = useUpdateUserMutation();
 
 	const startRecording = async () => {
-		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+		if (isPlaying) {
+			setIsPlaying(false);
+		}
 
-		const options = MediaRecorder.isTypeSupported("audio/mp4")
-			? { mimeType: "audio/mp4" }
-			: MediaRecorder.isTypeSupported("audio/webm")
+		try {
+			// Очищаем перед новой записью
+			setAudioUrl(null);
+			chunksRef.current = [];
+
+			// Подстраховка: остановить предыдущую запись (если вдруг она осталась)
+			if (mediaRecorderRef.current) {
+				stopRecording();
+				await new Promise((resolve) => setTimeout(resolve, 300)); // Пауза
+			}
+
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+			const options = MediaRecorder.isTypeSupported("audio/webm")
 				? { mimeType: "audio/webm" }
 				: {};
 
-		const mediaRecorder = new MediaRecorder(stream, options);
+			const mediaRecorder = new MediaRecorder(stream, options);
 
-		chunksRef.current = [];
+			mediaRecorder.ondataavailable = (e) => {
+				if (e.data.size > 0) {
+					chunksRef.current.push(e.data);
+				}
+			};
 
-		mediaRecorder.ondataavailable = (e) => {
-			if (e.data.size > 0) {
-				chunksRef.current.push(e.data);
-			}
-		};
+			mediaRecorder.onstop = async () => {
+				setLoading(true);
 
-		mediaRecorder.onstop = () => {
-			setLoading(true);
-
-			const blob = new Blob(chunksRef.current, {
-				type: mediaRecorder.mimeType,
-			});
-			const url = URL.createObjectURL(blob);
-
-			setAudioUrl(url);
-
-			// Пример отправки на сервер:
-			const formData = new FormData();
-
-			formData.append("files", blob, `recording.${blob.type.split("/")[1]}`); // Используем имя файла как 'audio.webm'
-
-			update({
-				id: me._id,
-				body: formData,
-			})
-				.unwrap()
-				.then((res) => {
-					console.log(res);
-					setLoading(false);
-				})
-				.catch((err) => {
-					console.error(err);
-					setLoading(false);
+				const blob = new Blob(chunksRef.current, {
+					type: mediaRecorder.mimeType,
 				});
-		};
+				const url = URL.createObjectURL(blob);
+				setAudioUrl(url);
 
-		mediaRecorder.start();
-		mediaRecorderRef.current = mediaRecorder;
-		setRecording(true);
+				const formData = new FormData();
+				formData.append("files", blob, `recording.${blob.type.split("/")[1]}`);
+
+				try {
+					await update({ id: me._id, body: formData }).unwrap();
+				} catch (err) {
+					console.error(err);
+				} finally {
+					setLoading(false);
+				}
+			};
+
+			mediaRecorderRef.current = mediaRecorder;
+			mediaRecorder.start();
+			setRecording(true);
+		} catch (err) {
+			console.error("Ошибка доступа к микрофону:", err);
+		}
 	};
 
 	const stopRecording = () => {
-		mediaRecorderRef.current?.stop();
+		if (mediaRecorderRef.current) {
+			mediaRecorderRef.current.stream.getTracks().forEach((track) => {
+				track.stop(); // Остановить каждый трек
+			});
+			mediaRecorderRef.current.stop();
+			mediaRecorderRef.current = null;
+		}
 		setRecording(false);
 	};
 
 	const audioRef = useRef<any>(null);
 
 	const handlePlay = () => {
-  setIsPlaying(true);
+		setIsPlaying(true);
 
-  const audio = new Audio(
-    me?.voice ? `${config.MEDIA_URL}/${me.voice}` : audioUrl || ""
-  );
+		const audio = new Audio(
+			me?.voice ? `${config.MEDIA_URL}/${me.voice}` : audioUrl || ""
+		);
 
-  // Сбросить isPlaying, когда проигрывание закончится
-  audio.addEventListener('ended', () => {
-    setIsPlaying(false);
-  });
+		// Сбросить isPlaying, когда проигрывание закончится
+		audio.addEventListener("ended", () => {
+			setIsPlaying(false);
+		});
 
-  audio.play().catch((err) => {
-    console.error("Ошибка воспроизведения:", err);
-    setIsPlaying(false); // сброс на случай ошибки
-  });
-};
+		audio.play().catch((err) => {
+			console.error("Ошибка воспроизведения:", err);
+			setIsPlaying(false); // сброс на случай ошибки
+		});
+	};
 
 	return (
 		<div>
@@ -112,27 +123,26 @@ const VoiceRecorder = () => {
 				) : null}
 				{isPlaying || loading ? null : (
 					<Button
-					className="z-0 relative"
-					color="secondary"
-					radius="full"
-					startContent={
-						recording ? (
-							<PiStopFill className="w-5 h-5" />
-						) : (
-							<PiRecordFill className="w-5 h-5" />
-						)
-					}
-					variant="solid"
-					onPress={recording ? stopRecording : startRecording}
-				>
-					{recording
-						? "Остановить запись"
-						: me?.voice
-							? "Изменить запись"
-							: "Записать голос"}
-				</Button>
+						className="z-0 relative"
+						color="secondary"
+						radius="full"
+						startContent={
+							recording ? (
+								<PiStopFill className="w-5 h-5" />
+							) : (
+								<PiRecordFill className="w-5 h-5" />
+							)
+						}
+						variant="solid"
+						onPress={recording ? stopRecording : startRecording}
+					>
+						{recording
+							? "Остановить запись"
+							: me?.voice
+								? "Изменить запись"
+								: "Записать голос"}
+					</Button>
 				)}
-				
 			</div>
 
 			{loading ? <BlowLoader text="Сохранение ..." /> : null}
