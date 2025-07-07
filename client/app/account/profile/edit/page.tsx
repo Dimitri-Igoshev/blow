@@ -93,8 +93,6 @@ export default function EditProfile() {
 	const addImage = async (image: IPhoto | any) => {
 		setLoading(true);
 
-		console.log(0, image, image?.file)
-
 		const formData = new FormData();
 
 		await formData.set("files", image?.file);

@@ -27,6 +27,7 @@ import { RAISE_ID } from "@/helper/checkIsActive";
 import { InfoModal } from "@/components/InfoModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import Loader from "@/components/Loader"
+import { autocomplete } from "@nextui-org/react"
 
 const AccountProfilePage = () => {
 	const router = useRouter();
@@ -136,7 +137,6 @@ const AccountProfilePage = () => {
 							<Image
 								alt=""
 								className="border-[7px] border-white dark:border-foreground-100 z-0 relative"
-								height={width ? width : "100%"}
 								radius="full"
 								src={
 									me?.photos[0]?.url
