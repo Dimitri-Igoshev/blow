@@ -26,6 +26,7 @@ import { RAISE_ID } from "@/helper/checkIsActive";
 import { InfoModal } from "@/components/InfoModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import Loader from "@/components/Loader"
+import { BlowLoader } from "@/components/BlowLoader"
 
 const AccountProfilePage = () => {
 	const router = useRouter();
@@ -125,7 +126,7 @@ useEffect(() => {
 	};
 
 	return (
-		<>
+		<div className="min-h-screen">
 			{me ? (
 				<div className="grid grid-cols-1 sm:grid-cols-4 px-3 sm:px-9 pt-[94px] sm:gap-[50px]">
 					<div  className="sm:col-span-1 flex flex-col gap-[50px] w-full">
@@ -323,9 +324,9 @@ useEffect(() => {
 					/>
 				</div>
 			) : (
-				<Loader />
+				<BlowLoader />
 			)}
-		</>
+		</div>
 	);
 };
 
