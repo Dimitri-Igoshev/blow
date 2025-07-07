@@ -19,7 +19,6 @@ import { getCityString } from "@/helper/getCityString";
 import {
 	useGetMeQuery,
 	useReiseProfileMutation,
-	useRemoveUserMutation,
 	useUpdateUserMutation,
 } from "@/redux/services/userApi";
 import { config } from "@/common/env";
@@ -27,7 +26,6 @@ import { RAISE_ID } from "@/helper/checkIsActive";
 import { InfoModal } from "@/components/InfoModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import Loader from "@/components/Loader"
-import { autocomplete } from "@nextui-org/react"
 
 const AccountProfilePage = () => {
 	const router = useRouter();
@@ -44,20 +42,18 @@ const AccountProfilePage = () => {
 	const [width, setWidth] = useState();
 	const ref = useRef<any>(null);
 
-	useEffect(() => {
-		if (!ref?.current) return
-		setWidth(ref?.current?.offsetWidth);
+useEffect(() => {
+  if (!ref.current) return;
 
-		window.addEventListener("resize", () => {
-			setWidth(ref?.current.offsetWidth);
-		});
+  const observer = new ResizeObserver(() => {
+    if (ref.current) {
+      setWidth(ref.current.offsetWidth);
+    }
+  });
 
-		return () => {
-			window.removeEventListener("resize", () => {
-				setWidth(ref.current.offsetWidth);
-			});
-		};
-	}, [ref]);
+  observer.observe(ref.current);
+  return () => observer.disconnect();
+}, []);
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const {
@@ -132,12 +128,13 @@ const AccountProfilePage = () => {
 		<>
 			{me ? (
 				<div className="grid grid-cols-1 sm:grid-cols-4 px-3 sm:px-9 pt-[94px] sm:gap-[50px]">
-					<div className="sm:col-span-1 flex flex-col gap-[50px] w-full">
-						<div ref={ref} className="relative">
+					<div  className="sm:col-span-1 flex flex-col gap-[50px] w-full">
+						<div ref={ref} className="relative border-[7px] border-white dark:border-foreground-100  rounded-[32px] overflow-hidden">
 							<Image
 								alt=""
-								className="border-[7px] border-white dark:border-foreground-100 z-0 relative"
-								radius="full"
+								className="relative"
+								width={"100%"}
+								height={width ? width : "100%"}
 								src={
 									me?.photos[0]?.url
 										? `${config.MEDIA_URL}/${me?.photos[0]?.url}`
@@ -146,7 +143,6 @@ const AccountProfilePage = () => {
 											: "/woman.jpg"
 								}
 								style={{ objectFit: "cover" }}
-								width={"100%"}
 							/>
 							{/* <div className="absolute rounded-full w-10 h-10 bg-primary cursor-pointer flex justify-center items-center right-[40px] bottom-[40px] border-[2px] border-white z-20">
 					<IoCameraOutline className="text-white mb-px" />
