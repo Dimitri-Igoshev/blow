@@ -130,12 +130,13 @@ useEffect(() => {
 			{me ? (
 				<div className="grid grid-cols-1 sm:grid-cols-4 px-3 sm:px-9 pt-[94px] sm:gap-[50px]">
 					<div  className="sm:col-span-1 flex flex-col gap-[50px] w-full">
-						<div ref={ref} className="relative border-[7px] border-white dark:border-foreground-100  rounded-[32px] overflow-hidden">
+						<div ref={ref} className="relative">
 							<Image
 								alt=""
-								className="relative"
+								className="relative border-[7px] border-white dark:border-foreground-100"
 								width={"100%"}
 								height={width ? width : "100%"}
+								radius="full"
 								src={
 									me?.photos[0]?.url
 										? `${config.MEDIA_URL}/${me?.photos[0]?.url}`
