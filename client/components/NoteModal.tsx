@@ -29,7 +29,7 @@ export const NoteModal: FC<NoteModalProps> = ({
   onSave,
   onOpenChange,
   note = "",
-  isClaim = "false"
+  isClaim = false
 }) => {
   const { register, handleSubmit, setValue } = useForm<Inputs>();
 

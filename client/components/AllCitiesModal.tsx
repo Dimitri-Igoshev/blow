@@ -41,7 +41,7 @@ export const AllCitiesModal: FC<AllCitiesModalProps> = ({
               Все города
             </ModalHeader>
             <ModalBody>
-              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-3">
+              <div className="grid grid-flow-col gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-3">
                 {cities.map((city: any) => (
                   <button
                     key={city.value}

@@ -141,7 +141,7 @@ export default function Home() {
 									Результаты поиска
 								</h2>
 
-								<div className="w-full grid grid-cols-2 lg:grid-cols-4 mt-[30px] gap-3 sm:gap-[50px] z-20 relative px-3 sm:px-[40px]">
+								<div className="w-full grid grid-flow-col grid-cols-2 lg:grid-cols-4 mt-[30px] gap-3 sm:gap-[50px] z-20 relative px-3 sm:px-[40px]">
 									{users?.map((item: any, idx: number) => (
 										<div key={item._id} className="flex justify-center">
 											<PreviewWidget
@@ -169,7 +169,7 @@ export default function Home() {
 								alt="BLOW"
 								className="object-cover float-left mr-8 mb-5 sm:mb-3"
 								height={510}
-								src={`/info.png`}
+								src={`/couple.png`}
 								width={570}
 							/>
 							<p className="">
