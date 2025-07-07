@@ -336,7 +336,7 @@ export default function AccountDialogues({
 								src={
 									getInterlocutor(chat)?.photos[0]?.url
 										? `${config.MEDIA_URL}/${getInterlocutor(chat)?.photos[0]?.url}`
-										: me?.sex === "male"
+										: getInterlocutor(chat)?.sex === "male"
 											? "/men.jpg"
 											: "/woman.jpg"
 								}
