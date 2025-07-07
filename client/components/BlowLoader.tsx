@@ -1,7 +1,7 @@
 import { Modal, ModalContent } from "@heroui/react";
 import { AnimatedLogo } from "./AnimatedLogo";
 
-export const BlowLoader = ({ text = "Загрузка..." }: { text?: string }) => {
+export const BlowLoader = ({ text = "Загрузка ..." }: { text?: string }) => {
 	return (
 		<Modal
 			closeButton

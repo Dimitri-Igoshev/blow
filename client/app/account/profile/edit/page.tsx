@@ -299,7 +299,7 @@ export default function EditProfile() {
 				</Button>
 			</div>
 
-			{loading ? <BlowLoader text="Сохранение..." /> : null}
+			{loading ? <BlowLoader text="Сохранение ..." /> : null}
 		</div>
 	);
 }
