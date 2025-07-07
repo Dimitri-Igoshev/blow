@@ -190,17 +190,17 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 		const scaleX = image.naturalWidth / image.width;
 		const scaleY = image.naturalHeight / image.height;
 
-		const offscreen = new OffscreenCanvas(
-			completedCrop.width * scaleX,
-			completedCrop.height * scaleY
-		);
-		const ctx = offscreen.getContext("2d");
+		// Исходный кроп — полное качество
+		const fullCropWidth = completedCrop.width * scaleX;
+		const fullCropHeight = completedCrop.height * scaleY;
 
-		if (!ctx) {
-			throw new Error("No 2d context");
-		}
+		// 1. Канвас под оригинальный кроп
+		const cropCanvas = new OffscreenCanvas(fullCropWidth, fullCropHeight);
+		const cropCtx = cropCanvas.getContext("2d");
 
-		ctx.drawImage(
+		if (!cropCtx) throw new Error("No 2d context");
+
+		cropCtx.drawImage(
 			previewCanvas,
 			0,
 			0,
@@ -208,17 +208,46 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 			previewCanvas.height,
 			0,
 			0,
-			offscreen.width,
-			offscreen.height
+			cropCanvas.width,
+			cropCanvas.height
 		);
-		const blob = await offscreen.convertToBlob();
 
+		// 2. Ресайз до ширины 1080 (если ширина больше)
+		const maxWidth = 1080;
+		const resizeScale = Math.min(1, maxWidth / fullCropWidth);
+		const targetWidth = fullCropWidth * resizeScale;
+		const targetHeight = fullCropHeight * resizeScale;
+
+		const resizeCanvas = new OffscreenCanvas(targetWidth, targetHeight);
+		const resizeCtx = resizeCanvas.getContext("2d");
+		if (!resizeCtx) throw new Error("No resize context");
+
+		resizeCtx.drawImage(
+			cropCanvas,
+			0,
+			0,
+			cropCanvas.width,
+			cropCanvas.height,
+			0,
+			0,
+			resizeCanvas.width,
+			resizeCanvas.height
+		);
+
+		// 3. Сжимаем и получаем blob
+		const blob = await resizeCanvas.convertToBlob({
+			type: "image/jpeg",
+			quality: 0.75, // меньше — меньше вес
+		});
+
+		// 4. Сохраняем
 		onSave({ name: file?.name || "", blob });
 		onClose();
 
 		if (blobUrlRef.current) {
 			URL.revokeObjectURL(blobUrlRef.current);
 		}
+
 		blobUrlRef.current = URL.createObjectURL(blob);
 
 		if (hiddenAnchorRef.current) {
