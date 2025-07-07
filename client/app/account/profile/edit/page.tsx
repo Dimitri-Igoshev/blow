@@ -93,9 +93,11 @@ export default function EditProfile() {
 	const addImage = async (image: IPhoto | any) => {
 		setLoading(true);
 
+		console.log(0, image, image?.file)
+
 		const formData = new FormData();
 
-		await formData.set("files", image.file);
+		await formData.set("files", image?.file);
 
 		update({
 			id: me._id,
@@ -105,7 +107,7 @@ export default function EditProfile() {
 			.then((res) => {
 				setFiles([...res.photos]);
 				setLoading(false);
-
+				console.log(1, res)
 			})
 			.catch((error) => {
 				console.log(error)

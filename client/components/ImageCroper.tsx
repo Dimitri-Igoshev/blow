@@ -65,20 +65,20 @@ const ImageCroper: FunctionComponent<ImageCroperProps> = ({
 			setFile(currentFile);
 
 			const reader = new FileReader();
-reader.onload = () => {
-  const src = reader.result?.toString() || "";
+			reader.onload = () => {
+				const src = reader.result?.toString() || "";
 
-  const img = new Image();
-  img.onload = () => {
-    // только после полной загрузки изображения мы его отображаем
-    setImgSrc(src);
-  };
-  img.onerror = (e) => {
-    console.error('Ошибка загрузки изображения:', e);
-  };
-  img.src = src;
-};
-reader.readAsDataURL(currentFile);
+				const img = new Image();
+				img.onload = () => {
+					// только после полной загрузки изображения мы его отображаем
+					setImgSrc(src);
+				};
+				img.onerror = (e) => {
+					console.error("Ошибка загрузки изображения:", e);
+				};
+				img.src = src;
+			};
+			reader.readAsDataURL(currentFile);
 		} else {
 			setIsConvertation(true);
 			const formData = new FormData();
@@ -105,20 +105,20 @@ reader.readAsDataURL(currentFile);
 				setFile(currentFile);
 
 				const reader = new FileReader();
-reader.onload = () => {
-  const src = reader.result?.toString() || "";
+				reader.onload = () => {
+					const src = reader.result?.toString() || "";
 
-  const img = new Image();
-  img.onload = () => {
-    // только после полной загрузки изображения мы его отображаем
-    setImgSrc(src);
-  };
-  img.onerror = (e) => {
-    console.error('Ошибка загрузки изображения:', e);
-  };
-  img.src = src;
-};
-reader.readAsDataURL(currentFile);
+					const img = new Image();
+					img.onload = () => {
+						// только после полной загрузки изображения мы его отображаем
+						setImgSrc(src);
+					};
+					img.onerror = (e) => {
+						console.error("Ошибка загрузки изображения:", e);
+					};
+					img.src = src;
+				};
+				reader.readAsDataURL(currentFile);
 				setIsConvertation(false);
 			} catch (err) {
 				console.error("Ошибка HEIC→JPEG:", err);
