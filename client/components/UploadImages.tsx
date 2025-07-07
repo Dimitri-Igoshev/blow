@@ -144,6 +144,7 @@ const UploadImages: FC<UploadImagesProps> = ({
 						radius="none"
 						src={`${config.MEDIA_URL}/${url}` || ""}
 						width={"100%"}
+            style={{ objectFit: "cover" }}
 					/>
 
 					{idx > 0 && (
