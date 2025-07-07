@@ -90,12 +90,12 @@ export default function EditProfile() {
 			.catch((error) => console.log(error));
 	};
 
-	const addImage = (image: IPhoto | any) => {
+	const addImage = async (image: IPhoto | any) => {
 		setLoading(true);
 
 		const formData = new FormData();
 
-		formData.append("files", image.file);
+		await formData.set("files", image.file);
 
 		update({
 			id: me._id,
