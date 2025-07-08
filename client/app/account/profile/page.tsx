@@ -133,7 +133,7 @@ useEffect(() => {
 						<div ref={ref} className="relative">
 							<Image
 								alt=""
-								className="relative border-[7px] border-white dark:border-foreground-100"
+								className="relative border-[7px] border-white dark:border-foreground-100 z-0"
 								width={"100%"}
 								height={width ? width : "100%"}
 								radius="full"
