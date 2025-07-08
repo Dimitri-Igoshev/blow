@@ -14,7 +14,7 @@ import {
 	useGetMeQuery,
 } from "@/redux/services/userApi";
 import { InfoModal } from "@/components/InfoModal";
-import { MAILING_ID } from "@/helper/checkIsActive";
+import { isPremium, MAILING_ID } from "@/helper/checkIsActive";
 import { useCreatePaymentMutation } from "@/redux/services/paymentApi";
 import { useRouter } from "next/navigation";
 
@@ -92,7 +92,7 @@ export default function AccountServices() {
 
 			const result = await response.json();
 
-			console.log(123, result)
+			console.log(123, result);
 
 			if (win) {
 				win.location.href = result?.response?.url;
@@ -141,7 +141,10 @@ export default function AccountServices() {
 			return onOpen();
 		}
 
-		if (item?._id === "6830b9a752bb4caefa0418a8" && me?.sex === "male") {
+		if (
+			item?._id === "6830b9a752bb4caefa0418a8" &&
+			me?.sex === "male" && !isPremium(me)
+		) {
 			onPremiumRequired();
 			return;
 		}
