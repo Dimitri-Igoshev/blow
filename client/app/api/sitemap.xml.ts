@@ -2,7 +2,7 @@
 import { config } from "@/common/env"
 import { NextApiRequest, NextApiResponse } from "next";
 
-const staticRoutes = ["/", "/login", "/dashboard", "/about"]; // ✏️ добавь свои страницы
+const staticRoutes = ["/", "/search", "/offer", "/contacts", "/privacy"]; // ✏️ добавь свои страницы
 
 export default async function handler(
 	req: NextApiRequest,
