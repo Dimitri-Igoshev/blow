@@ -14,10 +14,18 @@ export default function ContactsPage() {
 				<div className="text-sm sm:text-base space-y-4">
 					<p>
 						Наименование организации:{" "}
-						<span className="font-semibold">Freaks 4U Gaming GmbH</span>
+						<span className="font-semibold">
+							ИП Смагулова Алёна Владиславовна
+						</span>
 					</p>
-          <p>
+					{/* <p>
 						Юридический адрес: <span className="font-semibold">An der Spreeschanze 10 , 13599 , Berlin , Germany</span>
+					</p> */}
+					<p>
+						ИНН: <span className="font-semibold">290136806418</span>
+					</p>
+					<p>
+						ОГРНИП: <span className="font-semibold">324508100613082</span>
 					</p>
 					<p className="flex items-center gap-2">
 						<a
@@ -43,9 +51,9 @@ export default function ContactsPage() {
 							admin@blow.ru
 						</a>
 					</p>
-					
+
 					<p className="flex items-center gap-2">
-            <a
+						<a
 							href="https://t.me/blowadmin"
 							className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
 						>
