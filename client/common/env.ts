@@ -7,5 +7,5 @@ export const config = {
 
   API_URL: "https://blow.igoshev.de/api",
   MEDIA_URL: "https://blow.igoshev.de",
-  NEXT_PUBLIC_SITE_URL: https://blow.ru
+  NEXT_PUBLIC_SITE_URL: "https://blow.ru",
 };
