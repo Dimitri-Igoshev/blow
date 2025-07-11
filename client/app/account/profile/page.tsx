@@ -11,7 +11,7 @@ import { IoArrowUp } from "react-icons/io5";
 import { LuTrash } from "react-icons/lu";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useDisclosure } from "@heroui/react";
+import { Textarea, useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import { ROUTES } from "@/app/routes";
@@ -25,8 +25,8 @@ import { config } from "@/common/env";
 import { RAISE_ID } from "@/helper/checkIsActive";
 import { InfoModal } from "@/components/InfoModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
-import Loader from "@/components/Loader"
-import { BlowLoader } from "@/components/BlowLoader"
+import Loader from "@/components/Loader";
+import { BlowLoader } from "@/components/BlowLoader";
 
 const AccountProfilePage = () => {
 	const router = useRouter();
@@ -43,18 +43,18 @@ const AccountProfilePage = () => {
 	const [width, setWidth] = useState();
 	const ref = useRef<any>(null);
 
-useEffect(() => {
-  if (!ref.current) return;
+	useEffect(() => {
+		if (!ref.current) return;
 
-  const observer = new ResizeObserver(() => {
-    if (ref.current) {
-      setWidth(ref.current.offsetWidth);
-    }
-  });
+		const observer = new ResizeObserver(() => {
+			if (ref.current) {
+				setWidth(ref.current.offsetWidth);
+			}
+		});
 
-  observer.observe(ref.current);
-  return () => observer.disconnect();
-}, []);
+		observer.observe(ref.current);
+		return () => observer.disconnect();
+	}, []);
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const {
@@ -109,7 +109,7 @@ useEffect(() => {
 	const remove = () => {
 		if (!me) return;
 
-		updateProfile({ id: me?._id, body: { status: "archive" }})
+		updateProfile({ id: me?._id, body: { status: "archive" } })
 			.unwrap()
 			.then(() => {
 				localStorage.setItem("access-token", "");
@@ -129,7 +129,7 @@ useEffect(() => {
 		<div className="min-h-screen">
 			{me ? (
 				<div className="grid grid-cols-1 sm:grid-cols-4 px-3 sm:px-9 pt-[94px] sm:gap-[50px]">
-					<div  className="sm:col-span-1 flex flex-col gap-[50px] w-full">
+					<div className="sm:col-span-1 flex flex-col gap-[50px] w-full">
 						<div ref={ref} className="relative">
 							<Image
 								alt=""
@@ -194,7 +194,7 @@ useEffect(() => {
 									Пополнить кошелек
 								</p>
 							</button>
- 
+
 							<button
 								className="flex gap-2.5 cursor-pointer group transition-all"
 								onClick={onOpenRemove}
@@ -216,7 +216,7 @@ useEffect(() => {
 					</div>
 
 					<div className="mt-9 sm:mt-0 sm:col-span-3 flex flex-col">
-						<div className="bg-white dark:bg-foreground-100 p-9 rounded-[32px] flex flex-col gap-5">
+						<div className="bg-white dark:bg-foreground-100 p-9 rounded-[32px] flex flex-col gap-5 h-full">
 							<div className="flex  flex-wrap items-center justify-between w-full">
 								<div className="flex sm:hidden  items-center gap-2 w-full sm:w-auto">
 									<div className="w-2.5 h-2.5 rounded-full bg-green-400" />
@@ -296,11 +296,18 @@ useEffect(() => {
 
 							<div className="text-[20px] font-semibold mt-6">О себе</div>
 
-							<p>
-								{me?.about
-									? me.about
-									: "Пользователь предпочел не указывать информацию о себе."}
-							</p>
+							<Textarea
+								className="w-full min-h-full"
+								classNames={{ input: "p-3 min-h-full resize-none" }}
+								placeholder="Пользователь предпочёл не указывать информацию о себе"
+								radius="lg"
+								isReadOnly
+								maxRows={20}
+								value={
+									me?.about ||
+									"Пользователь предпочёл не указывать информацию о себе"
+								}
+							/>
 						</div>
 					</div>
 
