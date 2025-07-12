@@ -105,10 +105,10 @@ export async function POST(req: NextRequest) {
 
 		const res = await fetch("https://rest-api-test.tinkoff.ru/v2/Init", {
 			method: "POST",
-			// headers: {
-			//   Authorization: authHeader,
-			//   "Content-Type": "application/json",
-			// },
+			headers: {
+			  // Authorization: authHeader,
+			  "Content-Type": "application/json",
+			},
 			body: JSON.stringify(paymentData),
 		});
 
