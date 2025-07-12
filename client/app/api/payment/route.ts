@@ -52,7 +52,8 @@ type PaymentData = {
 	PayerId?: string;
 	TerminalKey: string;
 	Amount: number;
-	OrderId: string;
+	OrderId?: string;
+	PaymentId?: string;
 	Description: string;
 	Password: string;
 	Token?: string;
@@ -104,7 +105,8 @@ export async function POST(req: NextRequest) {
 			const body = {
 				payerId: data.PayerId,
 				amount: data.Amount,
-				order_id: data.OrderId,
+				// @ts-ignore
+				order_id: res.OrderId,
 			};
 
 			const transaction = fetch("https://blow.igoshev.de/api/payment", {
