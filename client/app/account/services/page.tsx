@@ -18,6 +18,7 @@ import { isPremium, MAILING_ID } from "@/helper/checkIsActive";
 import { useCreatePaymentMutation } from "@/redux/services/paymentApi";
 import { useRouter } from "next/navigation";
 import { config } from "@/common/env";
+import { generateSignature } from "@/app/api/payment/route";
 
 export default function AccountServices() {
 	const { data: me } = useGetMeQuery(null);
@@ -93,18 +94,23 @@ export default function AccountServices() {
 			},
 		};
 
+		const token = generateSignature({
+			...paymentData,
+			Password: config.TBANK_PASSWORD,
+		});
+
 		try {
 			const response = await fetch("/api/payment", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(paymentData), // передаем данные в body
+				body: JSON.stringify({ ...paymentData, Token: token }), // передаем данные в body
 			});
 
 			const result = await response.json();
 
-			console.log('from t-bank', result)
+			console.log("from t-bank", result);
 
 			if (win) {
 				win.location.href = result?.PaymentURL;

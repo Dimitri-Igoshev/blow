@@ -53,13 +53,12 @@ type PaymentData = {
 	TerminalKey: string;
 	Amount: number;
 	OrderId?: string;
-	PaymentId?: string;
 	Description: string;
 	Password: string;
 	Token?: string;
 };
 
-function generateSignature(data: PaymentData): string {
+export function generateSignature(data: PaymentData): string {
 	const concatenated = `${data.Amount}${data.Description}${data.OrderId}${data.Password}${data.TerminalKey}`;
 
 	const hash = crypto
@@ -75,10 +74,6 @@ export async function POST(req: NextRequest) {
 		const data: PaymentData = await req.json();
 
 		const { PayerId, ...rest } = data;
-		rest.Token = generateSignature({
-			...rest,
-			Password: config.TBANK_PASSWORD,
-		});
 
 		// const password =
 		//   "c2e08d259f7c5754c425c58ad89c97e3552fcb2407840aef23aa44379d2edc8e";
@@ -97,8 +92,8 @@ export async function POST(req: NextRequest) {
 		if (!res.ok) {
 			console.error("Ошибка при запросе:", res.status);
 
-			// вот здесь ты получаешь нужный URL:
-			console.log("URL ответа:", res.url);
+			// @ts-ignore
+			console.log("URL ответа:", res.PaymentURL);
 
 			console.log("[FORWARD RESPONSE]", res);
 
