@@ -104,6 +104,8 @@ export default function AccountServices() {
 
 			const result = await response.json();
 
+			console.log('from t-bank', result)
+
 			if (win) {
 				win.location.href = result?.PaymentURL;
 			}
