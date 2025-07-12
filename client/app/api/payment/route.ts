@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
 			body: JSON.stringify(rest),
 		});
 
-		console.log("[FORWARD RESPONSE]", res);
+		const resTBank = await res.json()
 
 		if (!res) throw new Error("Ошибка при отправке данных");
 
@@ -92,14 +92,12 @@ export async function POST(req: NextRequest) {
 			body: JSON.stringify(body),
 		});
 
-		console.log("[TRANSACTION RESPONSE]", transaction);
-
 		// const html = await res.text(); // HTML-ответ вместо JSON
 		// console.error("Ответ сервера (HTML):", html);
 
 		// throw new Error(`Запрос не удался: ${res.status}`);
 
-		return Response.json(res.url);
+		return Response.json(resTBank);
 
 		// const result = await res.json(); // теперь безопасно
 		// console.log("Успешный ответ:", result);
