@@ -103,7 +103,7 @@ export default function AccountServices() {
 			console.log(123, result);
 
 			if (win) {
-				win.location.href = result?.response?.url;
+				win.location.href = result?.PaymentURL;
 			}
 		} catch (error) {
 			if (win) {
