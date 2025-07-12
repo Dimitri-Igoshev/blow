@@ -18,7 +18,17 @@ import { isPremium, MAILING_ID } from "@/helper/checkIsActive";
 import { useCreatePaymentMutation } from "@/redux/services/paymentApi";
 import { useRouter } from "next/navigation";
 import { config } from "@/common/env";
-import { generateSignature } from "@/app/api/payment/route";
+import crypto from "crypto";
+
+type PaymentData = {
+	PayerId?: string;
+	TerminalKey: string;
+	Amount: number;
+	OrderId?: string;
+	Description: string;
+	Password: string;
+	Token?: string;
+};
 
 export default function AccountServices() {
 	const { data: me } = useGetMeQuery(null);
@@ -26,6 +36,17 @@ export default function AccountServices() {
 
 	// const [addBalance] = useAddBalanceMutation();
 	const [createPayment] = useCreatePaymentMutation();
+
+	function generateSignature(data: PaymentData): string {
+		const concatenated = `${data.Amount}${data.Description}${data.OrderId}${data.Password}${data.TerminalKey}`;
+	
+		const hash = crypto
+			.createHash("sha256")
+			.update(concatenated, "utf8")
+			.digest("hex");
+	
+		return hash;
+	}
 
 	const addMoney = async (price: number) => {
 		if (!me?._id) return;

@@ -58,17 +58,6 @@ type PaymentData = {
 	Token?: string;
 };
 
-export function generateSignature(data: PaymentData): string {
-	const concatenated = `${data.Amount}${data.Description}${data.OrderId}${data.Password}${data.TerminalKey}`;
-
-	const hash = crypto
-		.createHash("sha256")
-		.update(concatenated, "utf8")
-		.digest("hex");
-
-	return hash;
-}
-
 export async function POST(req: NextRequest) {
 	try {
 		const data: PaymentData = await req.json();
@@ -99,7 +88,7 @@ export async function POST(req: NextRequest) {
 
 			const body = {
 				payerId: data.PayerId,
-				amount: data.Amount,
+				amount: +data.Amount / 100,
 				// @ts-ignore
 				order_id: res.OrderId,
 			};
