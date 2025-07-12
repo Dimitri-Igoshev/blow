@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
 
 		console.log("[TRANSACTION RESPONSE]", transaction);
 
-		return Response.json(res.url);
+		return Response.json(res);
 
 			// const html = await res.text(); // HTML-ответ вместо JSON
 			// console.error("Ответ сервера (HTML):", html);
