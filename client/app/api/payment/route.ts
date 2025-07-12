@@ -1,4 +1,6 @@
+import { config } from "@/common/env";
 import type { ForwardResponse, IncomingPayload } from "../types";
+import crypto from "crypto";
 
 import { NextRequest } from "next/server";
 
@@ -46,70 +48,49 @@ import { NextRequest } from "next/server";
 //   }
 // }
 
+type PaymentData = {
+	PayerId?: string;
+	TerminalKey: string;
+	Amount: number;
+	OrderId: string;
+	Description: string;
+	Password: string;
+	Token?: string;
+};
+
+function generateSignature(data: PaymentData): string {
+	const concatenated = `${data.Amount}${data.Description}${data.OrderId}${data.Password}${data.TerminalKey}`;
+
+	const hash = crypto
+		.createHash("sha256")
+		.update(concatenated, "utf8")
+		.digest("hex");
+
+	return hash;
+}
+
 export async function POST(req: NextRequest) {
 	try {
-		const data: IncomingPayload = await req.json();
+		const data: PaymentData = await req.json();
 
-		data.TerminalKey = "1752254920336DEMO";
-
-		console.log(333, data)
-
-		const { payerId, ...rest } = data;
+		const { PayerId, ...rest } = data;
+		rest.Token = generateSignature({
+			...rest,
+			Password: config.TBANK_PASSWORD,
+		});
 
 		// const password =
 		//   "c2e08d259f7c5754c425c58ad89c97e3552fcb2407840aef23aa44379d2edc8e";
 		// const authHeader =
 		//   "Basic " + Buffer.from(`${username}:${password}`).toString("base64");
 
-		const paymentData = {
-  TerminalKey: "1752254920336DEMO",
-  Amount: 19200,
-  OrderId: "21090",
-  Description: "Подарочная карта на 1000 рублей",
-  Token: "a202c5ac3dca5b52ef8fbee86fc44254dd39e78f2553863ffac9c7efe0f3c9e5",
-  DATA: {
-    Phone: "+71234567890",
-    Email: "a@test.com",
-  },
-  Receipt: {
-    Email: "a@test.ru",
-    Phone: "+79031234567",
-    Taxation: "osn",
-    Items: [
-      {
-        Name: "Наименование товара 1",
-        Price: 10000,
-        Quantity: 1,
-        Amount: 10000,
-        Tax: "vat10",
-        Ean13: "303130323930303030630333435",
-      },
-      {
-        Name: "Наименование товара 2",
-        Price: 3500,
-        Quantity: 2,
-        Amount: 7000,
-        Tax: "vat20",
-      },
-      {
-        Name: "Наименование товара 3",
-        Price: 550,
-        Quantity: 4,
-        Amount: 2200, // 550 * 4, было 4200 — ошибка, если не опечатка
-        Tax: "vat10",
-      },
-    ],
-  },
-};
-
-
 		const res = await fetch("https://rest-api-test.tinkoff.ru/v2/Init", {
 			method: "POST",
 			headers: {
-			  // Authorization: authHeader,
-			  "Content-Type": "application/json",
+				// Authorization: authHeader,
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(paymentData),
+			body: JSON.stringify(rest),
 		});
 
 		if (!res.ok) {
@@ -120,17 +101,23 @@ export async function POST(req: NextRequest) {
 
 			console.log("[FORWARD RESPONSE]", res);
 
-				const transaction = fetch("https://blow.igoshev.de/api/payment", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		});
+			const body = {
+				payerId: data.PayerId,
+				amount: data.Amount,
+				order_id: data.OrderId,
+			};
 
-		console.log("[TRANSACTION RESPONSE]", transaction);
+			const transaction = fetch("https://blow.igoshev.de/api/payment", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(body),
+			});
 
-		return Response.json(res);
+			console.log("[TRANSACTION RESPONSE]", transaction);
+
+			return Response.json(res);
 
 			// const html = await res.text(); // HTML-ответ вместо JSON
 			// console.error("Ответ сервера (HTML):", html);

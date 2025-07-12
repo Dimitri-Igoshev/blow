@@ -17,6 +17,7 @@ import { InfoModal } from "@/components/InfoModal";
 import { isPremium, MAILING_ID } from "@/helper/checkIsActive";
 import { useCreatePaymentMutation } from "@/redux/services/paymentApi";
 import { useRouter } from "next/navigation";
+import { config } from "@/common/env";
 
 export default function AccountServices() {
 	const { data: me } = useGetMeQuery(null);
@@ -81,12 +82,15 @@ export default function AccountServices() {
 		// 	order_id: uuidv4().toString(),
 		// };
 
-		const body = {
-			payerId: me._id,
-			Token: uuidv4().toString(),
+		const paymentData = {
+			PayerId: me._id,
+			TerminalKey: config.TBANK_TERMINAL_KEY,
 			Amount: price * 100,
-			Description: "Пополнение счета на сайте blow.ru",
 			OrderId: uuidv4().toString(),
+			Description: "Пополнение счета на сайте blow.ru",
+			DATA: {
+				Email: me?.email || "",
+			},
 		};
 
 		try {
@@ -95,12 +99,10 @@ export default function AccountServices() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(body), // передаем данные в body
+				body: JSON.stringify(paymentData), // передаем данные в body
 			});
 
 			const result = await response.json();
-
-			console.log(123, result);
 
 			if (win) {
 				win.location.href = result?.PaymentURL;

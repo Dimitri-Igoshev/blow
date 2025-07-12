@@ -7,4 +7,7 @@ export const config = {
 
 	API_URL: "https://blow.igoshev.de/api",
 	MEDIA_URL: "https://blow.igoshev.de",
+
+  TBANK_TERMINAL_KEY: "1752254920336DEMO",
+  TBANK_PASSWORD: "eZEetA623adB!Pss",
 };
