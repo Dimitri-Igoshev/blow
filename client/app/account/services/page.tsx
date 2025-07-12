@@ -72,13 +72,21 @@ export default function AccountServices() {
 		// 	},
 		// };
 
+		// const body = {
+		// 	payerId: me._id,
+		// 	token: "c35920a427827ce7643b5ba1",
+		// 	amount: price,
+		// 	description: "Пополнение счета на сайте blow.ru",
+		// 	method: "card",
+		// 	order_id: uuidv4().toString(),
+		// };
+
 		const body = {
 			payerId: me._id,
-			token: "c35920a427827ce7643b5ba1",
-			amount: price,
-			description: "Пополнение счета на сайте blow.ru",
-			method: "card",
-			order_id: uuidv4().toString(),
+			Token: uuidv4().toString(),
+			Amount: price * 100,
+			Description: "Пополнение счета на сайте blow.ru",
+			OrderId: uuidv4().toString(),
 		};
 
 		try {
@@ -143,7 +151,8 @@ export default function AccountServices() {
 
 		if (
 			item?._id === "6830b9a752bb4caefa0418a8" &&
-			me?.sex === "male" && !isPremium(me)
+			me?.sex === "male" &&
+			!isPremium(me)
 		) {
 			onPremiumRequired();
 			return;
