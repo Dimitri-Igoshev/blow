@@ -64,12 +64,7 @@ export async function POST(req: NextRequest) {
 
 		const { PayerId, ...rest } = data;
 
-		// const password =
-		//   "c2e08d259f7c5754c425c58ad89c97e3552fcb2407840aef23aa44379d2edc8e";
-		// const authHeader =
-		//   "Basic " + Buffer.from(`${username}:${password}`).toString("base64");
-
-		const res = await fetch("https://rest-api-test.tinkoff.ru/v2/Init", {
+		const res = await fetch("https://securepay.tinkoff.ru/v2/Init", {
 			method: "POST",
 			headers: {
 				// Authorization: authHeader,
@@ -78,38 +73,33 @@ export async function POST(req: NextRequest) {
 			body: JSON.stringify(rest),
 		});
 
-		if (!res.ok) {
-			console.error("Ошибка при запросе:", res.status);
+		console.log("[FORWARD RESPONSE]", res);
 
+		if (!res) throw new Error("Ошибка при отправке данных");
+
+		const body = {
+			payerId: data.PayerId,
+			amount: +data.Amount / 100,
 			// @ts-ignore
-			console.log("URL ответа:", res.PaymentURL);
+			order_id: res.OrderId,
+		};
 
-			console.log("[FORWARD RESPONSE]", res);
+		const transaction = await fetch("https://blow.igoshev.de/api/payment", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(body),
+		});
 
-			const body = {
-				payerId: data.PayerId,
-				amount: +data.Amount / 100,
-				// @ts-ignore
-				order_id: res.OrderId,
-			};
+		console.log("[TRANSACTION RESPONSE]", transaction);
 
-			const transaction = fetch("https://blow.igoshev.de/api/payment", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(body),
-			});
+		// const html = await res.text(); // HTML-ответ вместо JSON
+		// console.error("Ответ сервера (HTML):", html);
 
-			console.log("[TRANSACTION RESPONSE]", transaction);
+		// throw new Error(`Запрос не удался: ${res.status}`);
 
-			return Response.json(res);
-
-			// const html = await res.text(); // HTML-ответ вместо JSON
-			// console.error("Ответ сервера (HTML):", html);
-
-			// throw new Error(`Запрос не удался: ${res.status}`);
-		}
+		return Response.json(res.url);
 
 		// const result = await res.json(); // теперь безопасно
 		// console.log("Успешный ответ:", result);

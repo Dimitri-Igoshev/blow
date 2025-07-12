@@ -134,7 +134,7 @@ export default function AccountServices() {
 			console.log("from t-bank", result);
 
 			if (win) {
-				win.location.href = result?.PaymentURL;
+				win.location.href = result;
 			}
 		} catch (error) {
 			if (win) {
