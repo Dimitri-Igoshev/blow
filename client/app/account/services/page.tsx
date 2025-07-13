@@ -121,7 +121,7 @@ export default function AccountServices() {
 						Name: "Пополнение счета",
 						Price: price * 100,
 						Quantity: 1,
-						Amount: 10000,
+						Amount: price * 100,
 						Tax: "none",
 					},
 				],
@@ -132,7 +132,7 @@ export default function AccountServices() {
 			...paymentData,
 			Password: config.TBANK_PASSWORD,
 		});
-
+		
 		try {
 			const response = await fetch("/api/payment", {
 				method: "POST",
