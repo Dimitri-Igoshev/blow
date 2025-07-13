@@ -115,13 +115,15 @@ export default function AccountServices() {
 			},
 			Receipt: {
 				Email: me?.email || "",
-				Taxation: "usn_income",
+				Taxation: "osn",
 				Items: [
 					{
 						Name: "Пополнение счета",
 						Price: price * 100,
 						Quantity: 1,
 						Amount: 10000,
+						Tax: "vat10",
+						Ean13: "303130323930303030630333435",
 					},
 				],
 			},
