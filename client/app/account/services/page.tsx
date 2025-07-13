@@ -122,7 +122,7 @@ export default function AccountServices() {
 						Price: price * 100,
 						Quantity: 1,
 						Amount: 10000,
-						Tax: "vat10",
+						Tax: "none",
 					},
 				],
 			},
