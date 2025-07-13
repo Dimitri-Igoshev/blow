@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     return Response.json({
       message: "Данные получены и пересланы",
-      notificationResponse: result,
+      notificationResponse: data,
     });
   } catch (error) {
     console.error("[WEBHOOK ERROR]", error);
