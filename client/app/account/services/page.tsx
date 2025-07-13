@@ -39,12 +39,12 @@ export default function AccountServices() {
 
 	function generateSignature(data: PaymentData): string {
 		const concatenated = `${data.Amount}${data.Description}${data.OrderId}${data.Password}${data.TerminalKey}`;
-	
+
 		const hash = crypto
 			.createHash("sha256")
 			.update(concatenated, "utf8")
 			.digest("hex");
-	
+
 		return hash;
 	}
 
@@ -109,9 +109,23 @@ export default function AccountServices() {
 			TerminalKey: config.TBANK_TERMINAL_KEY,
 			Amount: price * 100,
 			OrderId: uuidv4().toString(),
-			Description: "Пополнение счета на сайте blow.ru",
+			Description: "Пополнение счета",
 			DATA: {
 				Email: me?.email || "",
+			},
+			Receipt: {
+				Email: me?.email || "",
+				Taxation: "osn",
+				Items: [
+					{
+						Name: "Пополнение счета",
+						Price: price * 100,
+						Quantity: 1,
+						Amount: 10000,
+						Tax: "vat10",
+						Ean13: "303130323930303030630333435",
+					},
+				],
 			},
 		};
 
