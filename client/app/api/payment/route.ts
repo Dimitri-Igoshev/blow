@@ -80,8 +80,7 @@ export async function POST(req: NextRequest) {
 		const body = {
 			payerId: data.PayerId,
 			amount: +data.Amount / 100,
-			// @ts-ignore
-			order_id: res.OrderId,
+			order_id: data.OrderId,
 		};
 
 		const transaction = await fetch("https://blow.igoshev.de/api/payment", {
