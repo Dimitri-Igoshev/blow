@@ -24,7 +24,7 @@ export default function PanelLayout({
   const { data: me } = useGetMeQuery(null);
 
   const isSearch = pathname === ROUTES.ACCOUNT.SEARCH;
-	const isChat = pathname.includes(ROUTES.ACCOUNT.DIALOGUES);
+  const isChat = pathname.includes(ROUTES.ACCOUNT.DIALOGUES);
 
   useEffect(() => {
     switch (pathname) {
@@ -85,7 +85,7 @@ export default function PanelLayout({
 
   return (
     // <Protected>
-    <div className={cn("", {["max-h-screen sm:max-h-auto"]: isChat})}>
+    <div className={cn("", { ["max-h-screen sm:max-h-auto"]: isChat })}>
       <div className="relative">
         <img
           alt=""
@@ -94,7 +94,7 @@ export default function PanelLayout({
             {
               "h-[430px] xl:h-[350px]": isSearch,
               "sm:h-[210px]": !isSearch,
-            },
+            }
           )}
           src={isSearch ? "/bg.png" : "/bg-min.png"}
         />
@@ -106,14 +106,14 @@ export default function PanelLayout({
             {
               "min-h-[434px]": isSearch,
               hidden: !isSearch,
-            },
+            }
           )}
           src={isSearch ? "/bg-m.png" : "/bg-min.png"}
         />
 
         <div
           className={cn(
-            "absolute sm:fixed z-10 px-3 sm:px-9 top-[96px] mt-0 sm:mt-[30px] w-full",
+            "absolute sm:fixed z-10 px-3 sm:px-9 top-[96px] mt-0 sm:mt-[30px] w-full"
           )}
         >
           {me ? (
@@ -220,14 +220,29 @@ export default function PanelLayout({
               />
             </div>
             <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-6">
-              <NextLink href={ROUTES.CONTACTS} className="underline cursor-pointer hover:text-primary text-nowrap">
+              <NextLink
+                href={ROUTES.CONTACTS}
+                className="underline cursor-pointer hover:text-primary text-nowrap"
+              >
                 Свяжись с нами
               </NextLink>
-              <NextLink href={ROUTES.POLICY} className="underline cursor-pointer hover:text-primary text-nowrap">
+              <NextLink
+                href={ROUTES.POLICY}
+                className="underline cursor-pointer hover:text-primary text-nowrap"
+              >
                 Политики
               </NextLink>
-              <NextLink href={ROUTES.OFFER} className="underline cursor-pointer hover:text-primary text-nowrap">
+              <NextLink
+                href={ROUTES.OFFER}
+                className="underline cursor-pointer hover:text-primary text-nowrap"
+              >
                 Договор оферта
+              </NextLink>
+              <NextLink
+                href={ROUTES.RULES}
+                className="underline cursor-pointer hover:text-primary text-nowrap"
+              >
+                Правила
               </NextLink>
             </div>
           </div>
