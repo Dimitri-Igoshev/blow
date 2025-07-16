@@ -108,12 +108,12 @@ export default function ContactsPage() {
 						>
 							Договор оферта
 						</NextLink>
-						<NextLink
+						{/* <NextLink
               href={ROUTES.RULES}
               className="underline cursor-pointer hover:text-primary text-nowrap"
             >
               Правила
-            </NextLink>
+            </NextLink> */}
 					</div>
 				</div>
 			</footer>
