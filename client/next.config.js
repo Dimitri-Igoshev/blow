@@ -21,14 +21,6 @@ const nextConfig = {
         pathname: '**',
       },
     ],
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'blow.igoshev.de',
-        port: '',
-        pathname: '**',
-      },
-    ],
   },
 };
 
