@@ -3,7 +3,7 @@
 import { cn } from "@heroui/theme";
 import { Image } from "@heroui/image";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDisclosure } from "@heroui/react";
 
@@ -16,6 +16,7 @@ import { useGetUsersQuery } from "@/redux/services/userApi";
 import { setSearch } from "@/redux/features/searchSlice";
 import { AllCitiesModal } from "@/components/AllCitiesModal";
 import NextLink from "next/link";
+import { BlowLoader } from "@/components/BlowLoader";
 
 export default function Home() {
   const cities1 = cities.slice(0, 6);
@@ -25,8 +26,8 @@ export default function Home() {
   const cities5 = cities.slice(24, 30);
   const cities6 = cities.slice(30, 34);
 
-  const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true });
   const { data: womans } = useGetUsersQuery({ sex: "female", withPhoto: true });
+  const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true });
 
   const state = useSelector((state: any) => state);
   const search = state?.search?.search ? state.search.search : null;
@@ -43,8 +44,21 @@ export default function Home() {
     onOpenChange: onAllCitiesChange,
   } = useDisclosure();
 
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!womans || !mens) return;
+
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 750);
+
+    return () => clearTimeout(timer);
+  }, [womans, mens]);
+
   return (
     <>
+      {!loaded ? <BlowLoader noBlur /> : null}
       <div className="relative">
         <img
           alt=""
@@ -163,20 +177,21 @@ export default function Home() {
               </>
             ) : null}
 
-            <div className="bg-white dark:bg-foreground-200 p-6 m-3 sm:m-9 mb-0 mt-[70px] sm:mt-[120px] rounded-[36px] relative z-10">
-              <Image
-                alt="BLOW"
-                className="object-cover float-left mr-8 mb-5 sm:mb-3"
-                height={510}
-                src={`/couple.png`}
-                width={570}
-              />
-              <p className="">
-                <span className="text-[24px] text-primary font-semibold">
-                  BLOW
-                </span>
-              </p>
-              {/* <p className="mt-4">
+            {loaded ? (
+              <div className="bg-white dark:bg-foreground-200 p-6 m-3 sm:m-9 mb-0 mt-[70px] sm:mt-[120px] rounded-[36px] relative z-10">
+                <Image
+                  alt="BLOW"
+                  className="object-cover float-left mr-8 mb-5 sm:mb-3"
+                  height={510}
+                  src={`/couple.png`}
+                  width={570}
+                />
+                <p className="">
+                  <span className="text-[24px] text-primary font-semibold">
+                    BLOW
+                  </span>
+                </p>
+                {/* <p className="mt-4">
                 BLOW — это изысканное пространство для успешных людей, где
                 встречаются мужчины и женщины, стремящиеся к гармоничным
                 отношениям. Наша миссия — создание комфортной среды для
@@ -201,59 +216,60 @@ export default function Home() {
                 Здесь вы найдёте единомышленников, готовых разделить ваши
                 интересы и стремления.
               </p> */}
-              {/* <p className="mt-4">
+                {/* <p className="mt-4">
                 Для женщин BLOW открывает двери в мир новых возможностей, где
                 можно встретить щедрого покровителя. Для мужчин платформа — шанс
                 найти заботливую спутницу. Это путь к ярким эмоциям и
                 гармоничным отношениям.
               </p> */}
-              {/* <p className="mt-4">
+                {/* <p className="mt-4">
                 Присоединяйтесь к BLOW и откройте мир, где взаимное уважение,
                 комфорт и элегантность стоят превыше всего. Мы создали всё
                 необходимое для начала прекрасного путешествия в мир успешных
                 отношений. BLOW — ваш проводник в мир изысканных знакомств и
                 незабываемых впечатлений.
               </p> */}
-              <p className="mt-4">
-                BLOW — это изысканное пространство для успешных людей, где
-                встречаются мужчины и женщины, стремящиеся к гармоничным
-                отношениям. Наша миссия — создание комфортной среды для
-                построения взаимовыгодных связей на основе взаимного уважения.
-              </p>
-              <p className="mt-4">
-                Платформа объединяет простоту использования с эффективностью
-                поиска. Здесь ценятся комфорт, элегантность и искренность
-                намерений. BLOW — это не просто сайт знакомств, а сообщество,
-                где женщины находят достойных мужчин, а мужчины — утончённых
-                спутниц.
-              </p>
-              <p className="mt-4">
-                Наши пользователи — деловые люди, ценящие время и качество. Они
-                выбирают отдых в компании интересных собеседников.
-              </p>
+                <p className="mt-4">
+                  BLOW — это изысканное пространство для успешных людей, где
+                  встречаются мужчины и женщины, стремящиеся к гармоничным
+                  отношениям. Наша миссия — создание комфортной среды для
+                  построения взаимовыгодных связей на основе взаимного уважения.
+                </p>
+                <p className="mt-4">
+                  Платформа объединяет простоту использования с эффективностью
+                  поиска. Здесь ценятся комфорт, элегантность и искренность
+                  намерений. BLOW — это не просто сайт знакомств, а сообщество,
+                  где женщины находят достойных мужчин, а мужчины — утончённых
+                  спутниц.
+                </p>
+                <p className="mt-4">
+                  Наши пользователи — деловые люди, ценящие время и качество.
+                  Они выбирают отдых в компании интересных собеседников.
+                </p>
 
-              <p className="mt-4">
-                База платформы ежедневно пополняется новыми анкетами. Мы
-                гарантируем подлинность профилей и безопасность участников.
-                Здесь вы найдёте единомышленников, готовых разделить ваши
-                интересы и стремления.
-              </p>
+                <p className="mt-4">
+                  База платформы ежедневно пополняется новыми анкетами. Мы
+                  гарантируем подлинность профилей и безопасность участников.
+                  Здесь вы найдёте единомышленников, готовых разделить ваши
+                  интересы и стремления.
+                </p>
 
-              <p className="mt-4">
-                Для женщин BLOW открывает двери в мир новых возможностей, где
-                можно встретить интересного мужчину. Для мужчин платформа — шанс
-                найти заботливую спутницу. Это путь к ярким эмоциям и
-                гармоничным отношениям.
-              </p>
+                <p className="mt-4">
+                  Для женщин BLOW открывает двери в мир новых возможностей, где
+                  можно встретить интересного мужчину. Для мужчин платформа —
+                  шанс найти заботливую спутницу. Это путь к ярким эмоциям и
+                  гармоничным отношениям.
+                </p>
 
-              <p className="mt-4">
-                Присоединяйтесь к BLOW и откройте мир, где взаимное уважение,
-                комфорт и элегантность стоят превыше всего. Мы создали всё
-                необходимое для начала прекрасного путешествия в мир успешных
-                отношений. BLOW — ваш проводник в мир изысканных знакомств и
-                незабываемых впечатлений.
-              </p>
-            </div>
+                <p className="mt-4">
+                  Присоединяйтесь к BLOW и откройте мир, где взаимное уважение,
+                  комфорт и элегантность стоят превыше всего. Мы создали всё
+                  необходимое для начала прекрасного путешествия в мир успешных
+                  отношений. BLOW — ваш проводник в мир изысканных знакомств и
+                  незабываемых впечатлений.
+                </p>
+              </div>
+            ) : null}
 
             <div className="pt-[60px] sm:pt-[70px] bg-gray text-black/50 dark:text-white/50 leading-6 dark:bg-black px-6 sm:px-12">
               <h2 className="text-[20px] sm:text-[24px] font-semibold">
@@ -411,13 +427,15 @@ export default function Home() {
                   лет.
                 </p>
                 <div className="hidden sm:flex justify-center">
-                  <Image
-                    alt="BLOW"
-                    height={40}
-                    radius="none"
-                    src="/logo.png"
-                    width={101}
-                  />
+                  {loaded ? (
+                    <Image
+                      alt="BLOW"
+                      height={40}
+                      radius="none"
+                      src="/logo.png"
+                      width={101}
+                    />
+                  ) : null}
                 </div>
                 <div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-6">
                   <NextLink

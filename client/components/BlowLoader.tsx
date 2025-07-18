@@ -1,8 +1,12 @@
-import { Modal, ModalContent } from "@heroui/react";
+import { cn, Modal, ModalContent } from "@heroui/react";
 import { AnimatedLogo } from "./AnimatedLogo";
 
-export const BlowLoader = ({ text = "Загрузка ..." }: { text?: string }) => {
+export const BlowLoader = ({ text = "Загрузка ...", noBlur = false }: { text?: string, noBlur?:boolean }) => {
 	return (
+		<div className={cn("fixed top-0 left-0 right-0 bottom-0 w-screen h-screen z-[50] flex justify-center items-center", {
+			['bg-foreground-50']: noBlur,
+			['bg-transparent']: !noBlur
+		})}>
 		<Modal
 			closeButton
 			backdrop="blur"
@@ -22,5 +26,7 @@ export const BlowLoader = ({ text = "Загрузка ..." }: { text?: string })
 				</div>
 			</ModalContent>
 		</Modal>
+		</div>
 	);
+	
 };
