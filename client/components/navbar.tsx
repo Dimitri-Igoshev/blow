@@ -42,10 +42,11 @@ export const Navbar = () => {
 	const pathname = usePathname();
 
 	const isConfirmPage = pathname.includes("confirm");
+	const isServicesPage = pathname.includes("services");
 
 	const [newUser, setNewUser] = useState(null);
 
-	const { data: me } = useGetMeQuery(null);
+	const { data: me, isFetching } = useGetMeQuery(null);
 
 	const [setActivity] = useSetActivityMutation();
 
@@ -129,6 +130,12 @@ export const Navbar = () => {
 
 		onEmail();
 	};
+
+	useEffect(() => {
+		if (isServicesPage && !isFetching && !me) {
+			onLogin();
+		}
+	}, [isFetching]);
 
 	const [error, setError] = useState("");
 

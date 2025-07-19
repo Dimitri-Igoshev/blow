@@ -158,7 +158,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 										item?.type === "credit" && item.status === "paid",
 								})}
 							>
-								{item.sum}₽
+								{item.sum} ₽
 							</div>
 						</div>
 					))}
