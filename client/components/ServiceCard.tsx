@@ -204,7 +204,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 						</Select>
 					) : null}
 
-					<Input
+					{!oneTime ? (<Input
 						className="z-0 relative w-full sm:w-[150px]"
 						classNames={{ input: "font-semibold" }}
 						disabled={!oneTime}
@@ -213,7 +213,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 						radius="full"
 						value={value.value || oneTime ? value.price : ""}
 						onChange={(e) => setValue({ ...value, price: e.target.value })}
-					/>
+					/>) : null}
 
 					<Button
 						className="z-0 relative w-full sm:w-auto"

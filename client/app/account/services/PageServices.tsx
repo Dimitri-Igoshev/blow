@@ -342,7 +342,7 @@ export default function AccountServices() {
         subtile={`${me?.balance || 0} ₽`}
         title="Кошелек"
         transactions={me?.transactions || []}
-        onClick={({ price }) => addMoney(price)}
+        onClick={() => router.push('https://digital.wildberries.ru/author/53091011', '_blank')}
       />
 
       {genderServices?.map((item: any) => (
