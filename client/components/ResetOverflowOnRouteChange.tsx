@@ -8,6 +8,7 @@ export default function ResetOverflowOnRouteChange() {
 
   useEffect(() => {
     document.body.style.overflow = '';
+    document.body.style.position = ''
   }, [pathname]);
 
   return null;
