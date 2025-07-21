@@ -222,7 +222,7 @@ export default function AccountDialogues({
 
 		// Очистка: возвращаем как было
 		return () => {
-			document.body.style.position = originalStyle.position;
+			document.body.style.position = "";
 			document.body.style.left = originalStyle.left;
 			document.body.style.right = originalStyle.right;
 			document.body.style.overflow = "auto";
