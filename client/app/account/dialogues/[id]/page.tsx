@@ -418,31 +418,33 @@ export default function AccountDialogues({
 						</div>
 					</div>
 
-					<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
-						<Input
-							classNames={{
-								input: "bg-transparent dark:text-white",
-								inputWrapper: "dark:bg-foreground-200",
-							}}
-							placeholder="Текст сообщения"
-							radius="full"
-							type="text"
-							value={text}
-							onChange={(e) => setText(e.target.value)}
-							onKeyDown={handleKeyDown}
-							onFocus={scrollToTop}
-							onBlur={scrollToTop}
-						/>
-						<Button
-							className=""
-							color="primary"
-							radius="full"
-							variant="solid"
-							onPress={handleSubmit}
-						>
-							Отправить
-						</Button>
-					</div>
+					{currentChat ? (
+						<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
+							<Input
+								classNames={{
+									input: "bg-transparent dark:text-white",
+									inputWrapper: "dark:bg-foreground-200",
+								}}
+								placeholder="Текст сообщения"
+								radius="full"
+								type="text"
+								value={text}
+								onChange={(e) => setText(e.target.value)}
+								onKeyDown={handleKeyDown}
+								onFocus={scrollToTop}
+								onBlur={scrollToTop}
+							/>
+							<Button
+								className=""
+								color="primary"
+								radius="full"
+								variant="solid"
+								onPress={handleSubmit}
+							>
+								Отправить
+							</Button>
+						</div>
+					) : null}
 				</div>
 			</div>
 

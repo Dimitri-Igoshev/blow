@@ -190,13 +190,15 @@ export const Navbar = () => {
 						<NextLink
 							className="flex justify-start items-center gap-1"
 							href="/"
+							onClick={() => {
+								document.body.style.overflow = ""; // сброс overflow
+							}}
 						>
 							<Image
 								alt="BLOW"
 								className="w-[102px] md:w-[127px] h-[40px] md:h-[50px]"
 								radius="none"
 								src="/logo.png"
-								onClick={() => router.push(ROUTES.HOME)}
 							/>
 						</NextLink>
 					</NavbarBrand>
