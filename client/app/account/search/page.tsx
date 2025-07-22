@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 
 import { ProfilePreview } from "@/components/ProfilePreview";
 import { useGetUsersQuery } from "@/redux/services/userApi";
-import { cities } from "@/data/cities";
+import { useGetCitiesQuery } from "@/redux/services/cityApi"
+// import { cities } from "@/data/cities";
 
 const AccountSearch = () => {
   const state = useSelector((state: any) => state);
@@ -18,6 +19,7 @@ const AccountSearch = () => {
   const { data: users, isFetching } = useGetUsersQuery(
     search ? { ...search, limit } : { limit },
   );
+  const { data: cities } = useGetCitiesQuery(null)
 
   useEffect(() => {
     if (inView && !isFetching) {

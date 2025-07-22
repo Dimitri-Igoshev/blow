@@ -19,12 +19,13 @@ import { GiWeight } from "react-icons/gi";
 
 import { HeartIcon, MenIcon, WomenIcon } from "./icons";
 
-import { cities } from "@/data/cities";
+// import { cities } from "@/data/cities";
 import { ages } from "@/data/ages";
 import { heights } from "@/data/heights";
 import { weights } from "@/data/weights";
 import NextLink from "next/link";
 import { ROUTES } from "@/app/routes";
+import { useGetCitiesQuery } from "@/redux/services/cityApi"
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -41,6 +42,8 @@ export const RegisterModal: FC<RegisterModalProps> = ({
   onOpenChange,
   onRecovery,
 }) => {
+  const { data: cities } = useGetCitiesQuery(null)
+  
   const [men, setMen] = useState(true);
   const [woman, setWoman] = useState(false);
   const [city, setCity] = useState("");
@@ -210,7 +213,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
                     selectedKeys={[city]}
                     onChange={(el: any) => setCity(el.target.value)}
                   >
-                    {cities.map((city) => (
+                    {cities?.map((city: any) => (
                       <SelectItem key={city.value}>{city.label}</SelectItem>
                     ))}
                   </Select>

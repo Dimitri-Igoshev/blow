@@ -15,7 +15,7 @@ import { Textarea, useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import { ROUTES } from "@/app/routes";
-import { getCityString } from "@/helper/getCityString";
+import { useCityLabel } from "@/helper/getCityString";
 import {
 	useGetMeQuery,
 	useReiseProfileMutation,
@@ -124,6 +124,8 @@ const AccountProfilePage = () => {
 			console.error("Ошибка воспроизведения:", err);
 		});
 	};
+
+	const { getCityLabel} = useCityLabel()
 
 	return (
 		<div className="min-h-screen">
@@ -238,7 +240,7 @@ const AccountProfilePage = () => {
 
 								<p className="text-[24px]">
 									{me?.age ? me.age + ", " : ""}
-									{getCityString(me?.city)}
+									{getCityLabel(me?.city)}
 								</p>
 							</div>
 

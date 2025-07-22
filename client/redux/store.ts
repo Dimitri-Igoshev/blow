@@ -11,6 +11,7 @@ import { chatApi } from "./services/chatApi";
 import { paymentApi } from "./services/paymentApi";
 import { claimApi } from "./services/claimApi"
 import { topupApi } from "./services/topupApi";
+import { cityApi } from "./services/cityApi"
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     [paymentApi.reducerPath]: paymentApi.reducer,
     [claimApi.reducerPath]: claimApi.reducer,
     [topupApi.reducerPath]: topupApi.reducer,
+    [cityApi.reducerPath]: cityApi.reducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) => {
@@ -37,6 +39,7 @@ export const store = configureStore({
       paymentApi.middleware,
       claimApi.middleware,
       topupApi.middleware,
+      cityApi.middleware,
     ]);
   },
 });

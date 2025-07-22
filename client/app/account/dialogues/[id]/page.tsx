@@ -17,7 +17,6 @@ import {
 } from "@/redux/services/chatApi";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { config } from "@/common/env";
-import { getCityString } from "@/helper/getCityString";
 import { Message } from "@/components/Message";
 import { InfoModal } from "@/components/InfoModal";
 import { canChatDelete, isPremium } from "@/helper/checkIsActive";
@@ -25,6 +24,7 @@ import { ROUTES } from "@/app/routes";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MdDeleteOutline } from "react-icons/md";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { useCityLabel } from "@/helper/getCityString"
 
 interface ProfileViewProps {
 	params: any;
@@ -38,6 +38,8 @@ export default function AccountDialogues({
 	const { id } = use(params);
 	const [currentChat, setCurrentChat] = useState<any>();
 	const [text, setText] = useState("");
+
+	const { getCityLabel } = useCityLabel()
 
 	const { data: me } = useGetMeQuery(null);
 	const { data: chats, refetch } = useGetChatsQuery(me?._id, {
@@ -363,7 +365,7 @@ export default function AccountDialogues({
 								</p>
 								<p className="-mt-[2px]">
 									{getInterlocutor(chat)?.age},{" "}
-									{getCityString(getInterlocutor(chat)?.city)}
+									{getCityLabel(getInterlocutor(chat)?.city)}
 								</p>
 							</div>
 

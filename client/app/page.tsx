@@ -11,23 +11,25 @@ import { ROUTES } from "./routes";
 
 import { PreviewWidget } from "@/components/preview-widget";
 import { SearchWidget } from "@/components/search-widget";
-import { cities } from "@/data/cities";
+// import { cities } from "@/data/cities";
 import { useGetUsersQuery } from "@/redux/services/userApi";
 import { setSearch } from "@/redux/features/searchSlice";
 import { AllCitiesModal } from "@/components/AllCitiesModal";
 import NextLink from "next/link";
 import { BlowLoader } from "@/components/BlowLoader";
+import { useGetCitiesQuery } from "@/redux/services/cityApi"
 
 export default function Home() {
-  const cities1 = cities.slice(0, 6);
-  const cities2 = cities.slice(6, 12);
-  const cities3 = cities.slice(12, 18);
-  const cities4 = cities.slice(18, 24);
-  const cities5 = cities.slice(24, 30);
-  const cities6 = cities.slice(30, 34);
-
   const { data: womans } = useGetUsersQuery({ sex: "female", withPhoto: true });
   const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true });
+  const { data: cities } = useGetCitiesQuery(null)
+
+  const cities1 = cities?.slice(0, 6);
+  const cities2 = cities?.slice(6, 12);
+  const cities3 = cities?.slice(12, 18);
+  const cities4 = cities?.slice(18, 24);
+  const cities5 = cities?.slice(24, 30);
+  const cities6 = cities?.slice(30, 34);
 
   const state = useSelector((state: any) => state);
   const search = state?.search?.search ? state.search.search : null;

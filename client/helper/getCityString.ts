@@ -1,7 +1,12 @@
-import { cities } from "@/data/cities";
+import { useGetCitiesQuery } from "@/redux/services/cityApi"
 
-export const getCityString = (city: string) => {
-  if (!city) return "не указан";
+export const useCityLabel = () => {
+  const { data: cities } = useGetCitiesQuery(null)
 
-  return cities.find((c) => c.value === city)?.label || "не указан";
+  const getCityLabel = (cityValue: string | null | undefined): string => {
+    if (!cityValue) return 'не указан';
+    return cities?.find((c: any) => c.value === cityValue)?.label || 'не указан';
+  };
+
+  return { getCityLabel };
 };

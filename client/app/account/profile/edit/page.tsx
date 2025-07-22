@@ -7,7 +7,7 @@ import { Checkbox, Select, SelectItem } from "@heroui/react";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-import { cities } from "@/data/cities";
+// import { cities } from "@/data/cities";
 import { ages } from "@/data/ages";
 import { heights } from "@/data/heights";
 import { weights } from "@/data/weights";
@@ -18,6 +18,7 @@ import UploadImages from "@/components/UploadImages";
 import { IPhoto } from "@/common/interface/photo.interface";
 import { truncateString } from "@/helper/truncateStr";
 import { BlowLoader } from "@/components/BlowLoader"
+import { useGetCitiesQuery } from "@/redux/services/cityApi"
 
 const VoiceRecorder = dynamic(() => import("@/components/VoiceRecoder"), {
 	ssr: false,
@@ -29,6 +30,7 @@ export default function EditProfile() {
 	const [loading, setLoading] = useState(false);
   
 	const { data: me } = useGetMeQuery(null);
+	const { data: cities} = useGetCitiesQuery(null);
   
 	const [files, setFiles] = useState<any[]>(me?.photos ? [...me.photos] : []);
 
@@ -167,7 +169,7 @@ export default function EditProfile() {
 					selectedKeys={[user?.city]}
 					onChange={(el) => setUser({ ...user, city: el.target.value })}
 				>
-					{cities.map((city: any) => (
+					{cities?.map((city: any) => (
 						<SelectItem key={city.value}>{city.label}</SelectItem>
 					))}
 				</Select>

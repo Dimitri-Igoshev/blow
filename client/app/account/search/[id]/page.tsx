@@ -11,7 +11,7 @@ import { useDisclosure } from "@heroui/react";
 
 import { Note } from "./Note";
 
-import { getCityString } from "@/helper/getCityString";
+// import { getCityString } from "@/helper/getCityString";
 import { config } from "@/common/env";
 import {
 	useCreateNoteMutation,
@@ -28,6 +28,7 @@ import { isPremium } from "@/helper/checkIsActive";
 import { ROUTES } from "@/app/routes";
 import { InfoModal } from "@/components/InfoModal";
 import { useCreateClaimMutation } from "@/redux/services/claimApi";
+import { useCityLabel } from "@/helper/getCityString"
 
 interface ProfileViewProps {
 	params: any;
@@ -45,6 +46,8 @@ const ProfileView: FC<ProfileViewProps> = ({
 	const { data: user } = useGetUserQuery(id, { skip: !id });
 
 	const [newVisit] = useNewVisitMutation();
+
+  const { getCityLabel } = useCityLabel();
 
 	useEffect(() => {
 		if (!me?._id || !id) return;
@@ -256,7 +259,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 										</p>
 										<p className="text-[24px]">
 											{user?.age ? user.age + ", " : ""}
-											{getCityString(user?.city)}
+											{getCityLabel(user?.city)}
 										</p>
 									</div>
 

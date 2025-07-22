@@ -6,13 +6,14 @@ import { PiWaveform } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 
 import { config } from "@/common/env";
-import { getCityString } from "@/helper/getCityString";
+// import { getCityString } from "@/helper/getCityString";
 import { ROUTES } from "@/app/routes";
 import { getActivityString } from "@/helper/getActivityString";
 import { isPremium, isTop } from "@/helper/checkIsActive";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { InfoModal } from "./InfoModal";
 import { useDisclosure } from "@heroui/react";
+import { useCityLabel } from "@/helper/getCityString"
 
 interface ProfilePreviewProps {
 	item: any;
@@ -58,6 +59,8 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 			console.error("Ошибка воспроизведения:", err);
 		});
 	};
+
+	const { getCityLabel } = useCityLabel()
 
 	return (
 		<>
@@ -117,7 +120,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 							</p>
 							<p>
 								{item?.age ? item.age + ", " : ""}
-								{getCityString(item?.city)}
+								{getCityLabel(item?.city)}
 							</p>
 						</div>
 					</div>

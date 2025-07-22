@@ -17,12 +17,13 @@ import { ErrorModal } from "./ErrorModal";
 import { RecoveryPasswordModal } from "./RecoveryPasswordModal";
 import { RecoverySuccessModal } from "./RecoverySuccesModal";
 
-import { cities } from "@/data/cities";
+// import { cities } from "@/data/cities";
 import { ages } from "@/data/ages";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { ROUTES } from "@/app/routes";
 import { setSearch } from "@/redux/features/searchSlice";
 import { isPremium } from "@/helper/checkIsActive";
+import { useGetCitiesQuery } from "@/redux/services/cityApi"
 
 interface SearchWidgetProps {
   horizontal?: boolean;
@@ -40,6 +41,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
   const dispatch = useDispatch();
 
   const { data: me } = useGetMeQuery(null);
+  const { data: cities } = useGetCitiesQuery(null)
 
   const [ageFromOptions, setAgeFromOptions] = useState([...ages]);
   const [ageToOptions, setAgeToOptions] = useState([...ages]);
@@ -268,7 +270,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
             );
           }}
         >
-          {cities.map((city) => (
+          {cities?.map((city: any) => (
             <SelectItem key={city.value}>{city.label}</SelectItem>
           ))}
         </Select>
