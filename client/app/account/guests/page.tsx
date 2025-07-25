@@ -4,11 +4,12 @@ import { differenceInHours, differenceInDays } from "date-fns";
 import { useEffect, useState } from "react";
 
 import { PreviewWidget } from "@/components/preview-widget";
-import { useGetMeQuery, useGetUsersQuery } from "@/redux/services/userApi";
+import { useGetMeQuery } from "@/redux/services/userApi";
+import { useGetGuestsQuery } from "@/redux/services/guestApi"
 
 export default function AccountGuests() {
   const { data: me } = useGetMeQuery(null);
-  const { data: guests } = useGetUsersQuery(me?._id);
+  const { data: guests } = useGetGuestsQuery(me?._id);
 
   const [lastDay, setLastDay] = useState<any[]>([]);
   const [lastWeek, setLastWeek] = useState<any[]>([]);
