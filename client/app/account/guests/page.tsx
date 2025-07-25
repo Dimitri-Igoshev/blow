@@ -8,64 +8,47 @@ import { useGetMeQuery, useGetUsersQuery } from "@/redux/services/userApi";
 
 export default function AccountGuests() {
   const { data: me } = useGetMeQuery(null);
-  const { data: users } = useGetUsersQuery({ limit: 1000000 });
+  const { data: guests } = useGetUsersQuery(me?._id);
 
   const [lastDay, setLastDay] = useState<any[]>([]);
   const [lastWeek, setLastWeek] = useState<any[]>([]);
   const [lastMonth, setLastMonth] = useState<any[]>([]);
   const [lastYear, setLastYear] = useState<any[]>([]);
 
-  const getGuests = () => {
-    if (!me?.visits?.length || !users?.length) return [];
-
-    const guests: any[] = [];
-
-    me.visits.forEach((visit: any) => {
-      const res = users.find((item: any) => item._id === visit._id);
-
-      if (res) guests.push({ ...res, date: visit.date });
-    });
-
-    return guests;
-  };
-
   useEffect(() => {
-    if (!users || !me?.visits?.length) return;
+    if (!guests) return;
 
     const now = new Date();
-    const guests = getGuests();
-
-    if (!guests?.length) return;
 
     setLastDay(
       guests.filter(
-        (item: any) => differenceInHours(now, new Date(item.date)) <= 24,
+        (item: any) => differenceInHours(now, new Date(item.createdAt)) <= 24,
       ) || [],
     );
     setLastWeek(
       guests.filter(
         (item: any) =>
-          differenceInHours(now, new Date(item.date)) > 24 &&
-          differenceInDays(now, new Date(item.date)) <= 7,
+          differenceInHours(now, new Date(item.createdAt)) > 24 &&
+          differenceInDays(now, new Date(item.createdAt)) <= 7,
       ) || [],
     );
     setLastMonth(
       guests.filter(
         (item: any) =>
-          differenceInHours(now, new Date(item.date)) > 24 &&
-          differenceInDays(now, new Date(item.date)) > 7 &&
-          differenceInDays(now, new Date(item.date)) <= 30,
+          differenceInHours(now, new Date(item.createdAt)) > 24 &&
+          differenceInDays(now, new Date(item.createdAt)) > 7 &&
+          differenceInDays(now, new Date(item.createdAt)) <= 30,
       ) || [],
     );
     setLastYear(
       guests.filter(
         (item: any) =>
-          differenceInHours(now, new Date(item.date)) > 24 &&
-          differenceInDays(now, new Date(item.date)) > 30 &&
-          differenceInDays(now, new Date(item.date)) <= 365,
+          differenceInHours(now, new Date(item.createdAt)) > 24 &&
+          differenceInDays(now, new Date(item.createdAt)) > 30 &&
+          differenceInDays(now, new Date(item.createdAt)) <= 365,
       ),
     );
-  }, [users]);
+  }, [guests]);
 
   return (
     <div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] mb-[50px] min-h-screen h-full">
