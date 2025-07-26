@@ -50,7 +50,7 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
         className="object-cover"
         height={width ? width * 1.4 : 0}
         src={
-          item?.photos[0]?.url
+          item?.photos?.[0]?.url
             ? `${config.MEDIA_URL}/${item?.photos[0]?.url}`
             : item?.sex === "male"
               ? "/men2.png"

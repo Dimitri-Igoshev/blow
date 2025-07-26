@@ -9,7 +9,7 @@ import { useGetGuestsQuery } from "@/redux/services/guestApi";
 
 export default function AccountGuests() {
 	const { data: me } = useGetMeQuery(null);
-	const { data: guests } = useGetGuestsQuery(me?._id, { skip: me?._id });
+	const { data: guests } = useGetGuestsQuery(me?._id, { skip: !me?._id });
 
 	const [lastDay, setLastDay] = useState<any[]>([]);
 	const [lastWeek, setLastWeek] = useState<any[]>([]);
@@ -22,32 +22,41 @@ export default function AccountGuests() {
 		const now = new Date();
 
 		setLastDay(
-			guests?.filter(
-				(item: any) => differenceInHours(now, new Date(item.createdAt)) <= 24
-			) || []
+			guests
+				?.filter(
+					(item: any) => differenceInHours(now, new Date(item.createdAt)) <= 24
+				)
+				.map((item: any) => item.guest)
 		);
+
 		setLastWeek(
-			guests?.filter(
-				(item: any) =>
-					differenceInHours(now, new Date(item.createdAt)) > 24 &&
-					differenceInDays(now, new Date(item.createdAt)) <= 7
-			) || []
+			guests
+				?.filter(
+					(item: any) =>
+						differenceInHours(now, new Date(item.createdAt)) > 24 &&
+						differenceInDays(now, new Date(item.createdAt)) <= 7
+				)
+				.map((item: any) => item.guest)
 		);
 		setLastMonth(
-			guests?.filter(
-				(item: any) =>
-					differenceInHours(now, new Date(item.createdAt)) > 24 &&
-					differenceInDays(now, new Date(item.createdAt)) > 7 &&
-					differenceInDays(now, new Date(item.createdAt)) <= 30
-			) || []
+			guests
+				?.filter(
+					(item: any) =>
+						differenceInHours(now, new Date(item.createdAt)) > 24 &&
+						differenceInDays(now, new Date(item.createdAt)) > 7 &&
+						differenceInDays(now, new Date(item.createdAt)) <= 30
+				)
+				.map((item: any) => item.guest)
 		);
 		setLastYear(
-			guests?.filter(
-				(item: any) =>
-					differenceInHours(now, new Date(item.createdAt)) > 24 &&
-					differenceInDays(now, new Date(item.createdAt)) > 30 &&
-					differenceInDays(now, new Date(item.createdAt)) <= 365
-			)
+			guests
+				?.filter(
+					(item: any) =>
+						differenceInHours(now, new Date(item.createdAt)) > 24 &&
+						differenceInDays(now, new Date(item.createdAt)) > 30 &&
+						differenceInDays(now, new Date(item.createdAt)) <= 365
+				)
+				.map((item: any) => item.guest)
 		);
 	}, [guests]);
 
