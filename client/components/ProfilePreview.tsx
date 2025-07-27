@@ -66,7 +66,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 		<>
 			<div
 				className={cn(
-					"relative bg-white dark:bg-foreground-100 p-3 sm:p-6 flex flex-col xl:flex-row gap-3 sm:gap-6 rounded-[32px] col-span-1 w-full pb-[60px] sm:pb-0",
+					"relative bg-white dark:bg-foreground-100 p-3 sm:p-6 flex flex-col xl:flex-row gap-3 sm:gap-6 rounded-[32px] col-span-1 w-full pb-[60px] sm:pb-6",
 					className
 				)}
 			>
