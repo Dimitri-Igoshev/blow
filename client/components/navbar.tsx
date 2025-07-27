@@ -181,7 +181,7 @@ export const Navbar = () => {
 		)}`;
 	};
 
-	const { data: chats } = useGetChatsQuery(me?._id, {
+	const { data: chats, refetch } = useGetChatsQuery(me?._id, {
 		skip: !me?._id,
 	});
 	const { data: mailings } = useGetMailingsQuery(null, {
@@ -205,6 +205,16 @@ export const Navbar = () => {
 
 		setUnreaded(quantity);
 	}, [chats]);
+
+	useEffect(() => {
+			const interval = setInterval(() => {
+				refetch();
+			}, 60000);
+	
+			return () => {
+				clearInterval(interval);
+			};
+		}, []);
 
 	return (
 		<>
