@@ -7,7 +7,7 @@ import { MdOutlineHeight } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
 import { Button } from "@heroui/button";
 import { PiWaveform } from "react-icons/pi";
-import { useDisclosure } from "@heroui/react";
+import { cn, useDisclosure } from "@heroui/react";
 
 import { Note } from "./Note";
 
@@ -180,7 +180,13 @@ const ProfileView: FC<ProfileViewProps> = ({
 	} = useDisclosure();
 
 	return (
-		<div className="flex w-full flex-col px-3 sm:px-9 pt-[86px] gap-[30px] min-h-screen">
+		<div
+			className={cn(
+				"flex w-full flex-col px-3 sm:px-9 gap-[30px] min-h-screen", {
+				"pt-[70px]": me,
+				"sm:pt-[80px]": !me
+			})}
+		>
 			{user ? (
 				<>
 					<div className="flex w-full items-center justify-between">
@@ -380,7 +386,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 						<BlowLoader />
 					) : (
 						<div>
-							<div className="flex w-full items-center justify-between">
+							<div className="flex w-full items-center justify-between sm:mt-20">
 								<div>
 									<Button
 										className="w-full z-0 relative"

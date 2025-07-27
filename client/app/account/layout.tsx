@@ -90,10 +90,11 @@ export default function PanelLayout({
         <img
           alt=""
           className={cn(
-            "hidden sm:flex rounded-b-[50px] flex-col fixed z-10 w-full object-cover",
+            "hidden sm:flex rounded-b-[50px] flex-col z-10 w-full object-cover",
             {
-              "h-[430px] xl:h-[350px]": isSearch,
-              "sm:h-[210px]": !isSearch,
+              "h-[300px] sm:h-[440px] xl:h-[350px]": isSearch && me,
+              "h-[300px] sm:h-[440px] xl:h-[262px]": isSearch && !me,
+              "sm:h-[210px] fixed": !isSearch,
             }
           )}
           src={isSearch ? "/bg.png" : "/bg-min.png"}
@@ -104,7 +105,7 @@ export default function PanelLayout({
           className={cn(
             "flex sm:hidden rounded-b-[50px] flex-col absolute z-20 w-full object-cover z-10",
             {
-              "min-h-[434px]": isSearch,
+              "h-[434px]": isSearch,
               hidden: !isSearch,
             }
           )}
@@ -113,7 +114,9 @@ export default function PanelLayout({
 
         <div
           className={cn(
-            "absolute sm:fixed z-10 px-3 sm:px-9 top-[96px] mt-0 sm:mt-[30px] w-full"
+            "absolute z-10 px-3 sm:px-9 top-[96px] mt-0 sm:mt-[30px] w-full", {
+              ['sm:fixed']: !isSearch
+            }
           )}
         >
           {me ? (
