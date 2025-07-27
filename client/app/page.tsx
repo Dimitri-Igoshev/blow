@@ -53,7 +53,7 @@ export default function Home() {
 
     const timer = setTimeout(() => {
       setLoaded(true);
-    }, 750);
+    }, 250);
 
     return () => clearTimeout(timer);
   }, [womans, mens]);

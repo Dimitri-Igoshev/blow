@@ -24,7 +24,7 @@ import { ROUTES } from "@/app/routes";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MdDeleteOutline } from "react-icons/md";
 import { ConfirmModal } from "@/components/ConfirmModal";
-import { useCityLabel } from "@/helper/getCityString"
+import { useCityLabel } from "@/helper/getCityString";
 
 interface ProfileViewProps {
 	params: any;
@@ -39,7 +39,7 @@ export default function AccountDialogues({
 	const [currentChat, setCurrentChat] = useState<any>();
 	const [text, setText] = useState("");
 
-	const { getCityLabel } = useCityLabel()
+	const { getCityLabel } = useCityLabel();
 
 	const { data: me } = useGetMeQuery(null);
 	const { data: chats, refetch } = useGetChatsQuery(me?._id, {
