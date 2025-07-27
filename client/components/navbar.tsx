@@ -207,14 +207,14 @@ export const Navbar = () => {
 	}, [chats]);
 
 	useEffect(() => {
-			const interval = setInterval(() => {
-				refetch();
-			}, 60000);
-	
-			return () => {
-				clearInterval(interval);
-			};
-		}, []);
+		const interval = setInterval(() => {
+			refetch();
+		}, 60000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, []);
 
 	return (
 		<>
@@ -262,15 +262,17 @@ export const Navbar = () => {
 							<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary"></div>
 						) : null}
 					</button>
-					<button
-						className="relative mr-10"
-						onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
-					>
-						<FiMessageCircle color="white" size={22} />
-						{unreaded ? (
-							<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary" />
-						) : null}
-					</button>
+					{me ? (
+						<button
+							className="relative mr-10"
+							onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+						>
+							<FiMessageCircle color="white" size={22} />
+							{unreaded ? (
+								<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary" />
+							) : null}
+						</button>
+					) : null}
 
 					<ThemeSwitch className="mr-6" />
 
@@ -356,15 +358,17 @@ export const Navbar = () => {
 							<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary"></div>
 						) : null}
 					</button>
-					<button
-						className="relative mr-10"
-						onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
-					>
-						<FiMessageCircle color="white" size={32} />
-						{unreaded ? (
-							<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary" />
-						) : null}
-					</button>
+					{me ? (
+						<button
+							className="relative mr-10"
+							onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+						>
+							<FiMessageCircle color="white" size={32} />
+							{unreaded ? (
+								<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary" />
+							) : null}
+						</button>
+					) : null}
 					<button onClick={() => setMobileMenu(true)}>
 						<RiMenu4Fill color="white" size={32} />
 					</button>
