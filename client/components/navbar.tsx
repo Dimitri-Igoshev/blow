@@ -252,26 +252,29 @@ export const Navbar = () => {
             onClick={() => router.push(ROUTES.HOME)}
           /> */}
 
-					<button
-						className="relative"
-						onClick={() => router.push(ROUTES.ACCOUNT.MAILINGS)}
-					>
-						<RiMegaphoneLine color="white" size={22} />
-						{mailings?.[0]?._id &&
-						(!me?.lastMailing || me?.lastMailing !== mailings?.[0]?._id) ? (
-							<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary"></div>
-						) : null}
-					</button>
 					{me ? (
-						<button
-							className="relative mr-10"
-							onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
-						>
-							<FiMessageCircle color="white" size={22} />
-							{unreaded ? (
-								<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary" />
-							) : null}
-						</button>
+						<>
+							<button
+								className="relative"
+								onClick={() => router.push(ROUTES.ACCOUNT.MAILINGS)}
+							>
+								<RiMegaphoneLine color="white" size={22} />
+								{mailings?.[0]?._id &&
+								(!me?.lastMailing || me?.lastMailing !== mailings?.[0]?._id) ? (
+									<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary"></div>
+								) : null}
+							</button>
+
+							<button
+								className="relative mr-10"
+								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+							>
+								<FiMessageCircle color="white" size={22} />
+								{unreaded ? (
+									<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary" />
+								) : null}
+							</button>
+						</>
 					) : null}
 
 					<ThemeSwitch className="mr-6" />
@@ -348,26 +351,29 @@ export const Navbar = () => {
 				</NavbarContent>
 
 				<NavbarContent className="md:hidden basis-1 pl-4" justify="end">
-					<button
-						className="relative"
-						onClick={() => router.push(ROUTES.ACCOUNT.MAILINGS)}
-					>
-						<RiMegaphoneLine color="white" size={32} />
-						{mailings?.[0]?._id &&
-						(!me?.lastMailing || me?.lastMailing !== mailings?.[0]?._id) ? (
-							<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary"></div>
-						) : null}
-					</button>
 					{me ? (
-						<button
-							className="relative mr-10"
-							onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
-						>
-							<FiMessageCircle color="white" size={32} />
-							{unreaded ? (
-								<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary" />
-							) : null}
-						</button>
+						<>
+							<button
+								className="relative"
+								onClick={() => router.push(ROUTES.ACCOUNT.MAILINGS)}
+							>
+								<RiMegaphoneLine color="white" size={32} />
+								{mailings?.[0]?._id &&
+								(!me?.lastMailing || me?.lastMailing !== mailings?.[0]?._id) ? (
+									<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary"></div>
+								) : null}
+							</button>
+
+							<button
+								className="relative mr-10"
+								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+							>
+								<FiMessageCircle color="white" size={32} />
+								{unreaded ? (
+									<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary" />
+								) : null}
+							</button>
+						</>
 					) : null}
 					<button onClick={() => setMobileMenu(true)}>
 						<RiMenu4Fill color="white" size={32} />
