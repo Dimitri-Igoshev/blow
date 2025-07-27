@@ -47,7 +47,7 @@ export const AllCitiesModal: FC<AllCitiesModalProps> = ({
 								{cities?.map((city: any) => (
 									<button
 										key={city.value}
-										className="block hover:text-primary hover:underline py-1"
+										className="block hover:text-primary hover:underline py-1 overflow-hidden break-words text-left max-w-full"
 										onClick={() => {
 											dispatch(
 												setSearch({
