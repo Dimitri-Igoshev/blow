@@ -14,7 +14,7 @@ export const getActivityString = (date: Date): string => {
   const diffHour = differenceInHours(now, target);
   const diffDay = differenceInDays(now, target);
 
-  if (diffMin < 5) return "онлайн";
+  if (diffMin < 30) return "онлайн";
   if (diffMin < 60) return `${diffMin} мин назад`;
   if (diffHour < 24) return `${diffHour} ч назад`;
   if (diffDay < 7) return `${diffDay} д назад`;

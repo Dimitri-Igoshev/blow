@@ -68,7 +68,7 @@ export const Navbar = () => {
 					window.addEventListener(event, activityHandler)
 				);
 
-				debounce = 10000;
+				debounce = 60000;
 			}, debounce);
 		};
 

@@ -28,7 +28,8 @@ import { isPremium } from "@/helper/checkIsActive";
 import { ROUTES } from "@/app/routes";
 import { InfoModal } from "@/components/InfoModal";
 import { useCreateClaimMutation } from "@/redux/services/claimApi";
-import { useCityLabel } from "@/helper/getCityString"
+import { useCityLabel } from "@/helper/getCityString";
+import { BlowLoader } from "@/components/BlowLoader";
 
 interface ProfileViewProps {
 	params: any;
@@ -43,11 +44,11 @@ const ProfileView: FC<ProfileViewProps> = ({
 	const router = useRouter();
 
 	const { data: me } = useGetMeQuery(null);
-	const { data: user } = useGetUserQuery(id, { skip: !id });
+	const { data: user, isFetching } = useGetUserQuery(id, { skip: !id });
 
 	const [newVisit] = useNewVisitMutation();
 
-  const { getCityLabel } = useCityLabel();
+	const { getCityLabel } = useCityLabel();
 
 	useEffect(() => {
 		if (!me?._id || !id) return;
@@ -92,7 +93,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 			.unwrap()
 			.then(() => {
 				setClaim(true);
-				onComplainOpenChange()
+				onComplainOpenChange();
 				onComplainInfoOpen();
 			});
 	};
@@ -179,7 +180,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 	} = useDisclosure();
 
 	return (
-		<div className="flex w-full flex-col px-3 sm:px-9 pt-[86px] gap-[30px]">
+		<div className="flex w-full flex-col px-3 sm:px-9 pt-[86px] gap-[30px] min-h-screen">
 			{user ? (
 				<>
 					<div className="flex w-full items-center justify-between">
@@ -373,7 +374,34 @@ const ProfileView: FC<ProfileViewProps> = ({
 						</div>
 					</div>
 				</>
-			) : null}
+			) : (
+				<>
+					{isFetching ? (
+						<BlowLoader />
+					) : (
+						<div>
+							<div className="flex w-full items-center justify-between">
+								<div>
+									<Button
+										className="w-full z-0 relative"
+										radius="full"
+										onPress={() => router.back()}
+									>
+										Назад к результатам
+									</Button>
+								</div>
+							</div>
+
+							<div className="w-full h-full mt-20 flex justify-center px-6 sm:px-20">
+								<p className="sm:text-[20px] text-center">
+									Анкета была удалена пользователем или администрацией за
+									нарушение правил платформы.
+								</p>
+							</div>
+						</div>
+					)}
+				</>
+			)}
 
 			<NoteModal
 				isOpen={isNote}
