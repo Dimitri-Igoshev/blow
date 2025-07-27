@@ -267,7 +267,7 @@ export const Navbar = () => {
 
 							<button
 								className="relative mr-10"
-								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES + "/1")}
 							>
 								<FiMessageCircle color="white" size={22} />
 								{unreaded ? (
@@ -366,7 +366,7 @@ export const Navbar = () => {
 
 							<button
 								className="relative mr-10"
-								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES + "/1")}
 							>
 								<FiMessageCircle color="white" size={32} />
 								{unreaded ? (
