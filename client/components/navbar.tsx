@@ -12,7 +12,7 @@ import { Image } from "@heroui/image";
 import { useRouter } from "next/navigation";
 import { Avatar, useDisclosure } from "@heroui/react";
 import { useEffect, useState } from "react";
-import { RiCloseFill, RiMenu4Fill } from "react-icons/ri";
+import { RiCloseFill, RiMegaphoneLine, RiMenu4Fill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 
 import { RegisterModal } from "./register-modal";
@@ -36,6 +36,10 @@ import { isPremium } from "@/helper/checkIsActive";
 import { LiaCrownSolid } from "react-icons/lia";
 import { ru } from "date-fns/locale";
 import { format } from "date-fns";
+import { FiMessageCircle } from "react-icons/fi";
+import { BsMegaphone } from "react-icons/bs";
+import { useGetChatsQuery } from "@/redux/services/chatApi";
+import { useGetMailingsQuery } from "@/redux/services/mailingApi";
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -177,6 +181,31 @@ export const Navbar = () => {
 		)}`;
 	};
 
+	const { data: chats } = useGetChatsQuery(me?._id, {
+		skip: !me?._id,
+	});
+	const { data: mailings } = useGetMailingsQuery(null, {
+		skip: !me?._id,
+	});
+
+	const [unreaded, setUnreaded] = useState<number>(0);
+
+	useEffect(() => {
+		if (!chats) return;
+
+		let quantity = 0;
+
+		chats?.forEach((item: any) => {
+			item?.messages?.forEach((message: any) => {
+				if (message?.sender !== me?._id && message.isReaded === false) {
+					quantity += 1;
+				}
+			});
+		});
+
+		setUnreaded(quantity);
+	}, [chats]);
+
 	return (
 		<>
 			<HeroUINavbar
@@ -212,6 +241,27 @@ export const Navbar = () => {
             className="text-white cursor-pointer"
             onClick={() => router.push(ROUTES.HOME)}
           /> */}
+
+					<button
+						className="relative"
+						onClick={() => router.push(ROUTES.ACCOUNT.MAILINGS)}
+					>
+						<RiMegaphoneLine color="white" size={22} />
+						{mailings?.[0]?._id &&
+						(!me?.lastMailing || me?.lastMailing !== mailings?.[0]?._id) ? (
+							<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary"></div>
+						) : null}
+					</button>
+					<button
+						className="relative mr-10"
+						onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+					>
+						<FiMessageCircle color="white" size={22} />
+						{unreaded ? (
+							<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary" />
+						) : null}
+					</button>
+
 					<ThemeSwitch className="mr-6" />
 
 					{me?._id ? (
@@ -286,6 +336,25 @@ export const Navbar = () => {
 				</NavbarContent>
 
 				<NavbarContent className="md:hidden basis-1 pl-4" justify="end">
+					<button
+						className="relative"
+						onClick={() => router.push(ROUTES.ACCOUNT.MAILINGS)}
+					>
+						<RiMegaphoneLine color="white" size={32} />
+						{mailings?.[0]?._id &&
+						(!me?.lastMailing || me?.lastMailing !== mailings?.[0]?._id) ? (
+							<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary"></div>
+						) : null}
+					</button>
+					<button
+						className="relative mr-10"
+						onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES)}
+					>
+						<FiMessageCircle color="white" size={32} />
+						{unreaded ? (
+							<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary" />
+						) : null}
+					</button>
 					<button onClick={() => setMobileMenu(true)}>
 						<RiMenu4Fill color="white" size={32} />
 					</button>
