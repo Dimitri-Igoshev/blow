@@ -35,8 +35,6 @@ const AccountProfilePage = () => {
 
 	const logout = () => {
 		localStorage.setItem("access-token", "");
-		// router.replace(ROUTES.HOME);
-		// window.location.reload();
 		window.open("/", "_self");
 	};
 

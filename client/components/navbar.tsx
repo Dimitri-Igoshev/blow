@@ -40,6 +40,7 @@ import { FiMessageCircle } from "react-icons/fi";
 import { BsMegaphone } from "react-icons/bs";
 import { useGetChatsQuery } from "@/redux/services/chatApi";
 import { useGetMailingsQuery } from "@/redux/services/mailingApi";
+import { InfoModal } from "./InfoModal";
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -91,6 +92,10 @@ export const Navbar = () => {
 		if (!me) return;
 
 		if (me.status === "new" && !isConfirmPage) onConfirmationRequired();
+
+		if (me.status !== "active" && me.status !== "new") {
+			onInfoBlocked();
+		}
 	}, [me]);
 
 	const {
@@ -127,6 +132,11 @@ export const Navbar = () => {
 		isOpen: isConfirmationRequired,
 		onOpen: onConfirmationRequired,
 		onOpenChange: onConfirmationRequiredChange,
+	} = useDisclosure();
+	const {
+		isOpen: isInfoBlocked,
+		onOpen: onInfoBlocked,
+		onOpenChange: onInfoBlockedChange,
 	} = useDisclosure();
 
 	const onNext = (value: any) => {
@@ -252,7 +262,7 @@ export const Navbar = () => {
             onClick={() => router.push(ROUTES.HOME)}
           /> */}
 
-					{me ? (
+					{me && me?.status === "active" ? (
 						<>
 							<button
 								className="relative"
@@ -279,7 +289,7 @@ export const Navbar = () => {
 
 					<ThemeSwitch className="mr-6" />
 
-					{me?._id ? (
+					{me?._id && me?.status === "active" ? (
 						<>
 							<NavbarItem
 								className="hidden md:flex cursor-pointer"
@@ -351,7 +361,7 @@ export const Navbar = () => {
 				</NavbarContent>
 
 				<NavbarContent className="md:hidden basis-1 pl-4" justify="end">
-					{me ? (
+					{me && me?.status === "active" ? (
 						<>
 							<button
 								className="relative"
@@ -423,7 +433,7 @@ export const Navbar = () => {
 						</div>
 					) : null}
 
-					{me ? (
+					{me && me?.status === "active" ? (
 						<ul className="flex flex-col items-start gap-3 text-[18px] mt-4">
 							<button
 								onClick={() => {
@@ -531,6 +541,16 @@ export const Navbar = () => {
 			<ConfirmationModal
 				isOpen={isConfirmationRequired}
 				onOpenChange={onConfirmationRequiredChange}
+			/>
+			<InfoModal
+				isOpen={isInfoBlocked}
+				onOpenChange={() => {
+					onInfoBlockedChange()
+					logout()
+				}}
+				onClose={() => logout()}
+				title="Ошибка"
+				text="Ваша анкета заблокирована или удалена. Свяжитесь с администрацией BLOW."
 			/>
 		</>
 	);
