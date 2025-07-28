@@ -58,7 +58,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 			.catch((err) => console.log(err));
 
 		setNote(me?.notes.find((el: any) => el?._id === id)?.text || "");
-	}, [me, id]);
+	}, [id]);
 
 	const [currentImage, setCurrentImage] = useState(user?.photos[0]?.url);
 
@@ -182,19 +182,21 @@ const ProfileView: FC<ProfileViewProps> = ({
 	return (
 		<div
 			className={cn(
-				"flex w-full flex-col px-3 sm:px-9 gap-[30px] min-h-screen", {
-				"pt-[70px]": me,
-				"sm:pt-[80px]": !me
-			})}
+				"flex w-full flex-col px-3 sm:px-9 gap-[30px] min-h-screen",
+				{
+					"pt-[70px]": me,
+					"sm:pt-[80px]": !me,
+				}
+			)}
 		>
-			{user ? (
+			{user && user?.status === "active" ? (
 				<>
 					<div className="flex w-full items-center justify-between">
 						<div>
 							<Button
 								className="w-full z-0 relative"
 								radius="full"
-								onPress={() => router.back()}
+								onPress={() => router.push(ROUTES.ACCOUNT.SEARCH)}
 							>
 								Назад к результатам
 							</Button>
@@ -381,32 +383,28 @@ const ProfileView: FC<ProfileViewProps> = ({
 					</div>
 				</>
 			) : (
-				<>
-					{isFetching ? (
-						<BlowLoader />
-					) : (
+				<div>
+					<div className="flex w-full items-center justify-between">
 						<div>
-							<div className="flex w-full items-center justify-between sm:mt-20">
-								<div>
-									<Button
-										className="w-full z-0 relative"
-										radius="full"
-										onPress={() => router.back()}
-									>
-										Назад к результатам
-									</Button>
-								</div>
-							</div>
-
-							<div className="w-full h-full mt-20 flex justify-center px-6 sm:px-20">
-								<p className="sm:text-[20px] text-center">
-									Анкета была удалена пользователем или администрацией за
-									нарушение правил платформы.
-								</p>
-							</div>
+							<Button
+								className="w-full z-0 relative"
+								radius="full"
+								onPress={() => router.push(ROUTES.ACCOUNT.SEARCH)}
+							>
+								Назад к результатам
+							</Button>
 						</div>
-					)}
-				</>
+					</div>
+
+					{!user || user?.status !== "active" ? (
+						<div className="w-full h-full mt-20 flex justify-center px-6 sm:px-20">
+							<p className="sm:text-[20px] text-center">
+								Анкета была удалена пользователем или администрацией за
+								нарушение правил платформы.
+							</p>
+						</div>
+					) : null}
+				</div>
 			)}
 
 			<NoteModal
