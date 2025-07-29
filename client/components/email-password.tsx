@@ -67,6 +67,7 @@ export const EmailModal: FC<EmailModalProps> = ({
       height: newUser.height,
       weight: newUser.weight,
       sponsor: newUser.sponsor,
+      firstName: newUser.firstName,
     };
 
     if (newUser?.photo) {
@@ -119,7 +120,8 @@ export const EmailModal: FC<EmailModalProps> = ({
                   Данные входа
                 </ModalHeader>
                 <ModalBody>
-                  <div className="flex flex-col gap-5">
+                  <div>Введите свой емейл и придумайте пароль</div>
+                  <div className="flex flex-col gap-5 mt-3">
                     <Input
                       classNames={{
                         input: "bg-transparent dark:text-white",

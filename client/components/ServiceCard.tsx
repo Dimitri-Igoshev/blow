@@ -19,6 +19,7 @@ interface ServiceCardProps {
 	defaultVlue?: { price: string; period?: string; quantity?: string };
 	transactions?: any[];
 	options?: any[];
+	type?: string;
 }
 
 export const ServiceCard: FC<ServiceCardProps> = ({
@@ -32,6 +33,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 	defaultVlue,
 	transactions = [],
 	options = [],
+	type = "",
 }) => {
 	const [value, setValue] = useState({
 		label: "",
@@ -74,7 +76,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 	const [isHistory, setIsHistory] = useState(false);
 
 	return (
-		<div className="bg-white dark:bg-foreground-100 rounded-[36px] p-[30px] flex flex-col gap-6">
+		<div className="bg-white dark:bg-foreground-100 rounded-[36px] p-[20px] sm:p-[30px] flex flex-col gap-6">
 			<div className="flex flex-wrap justify-between items-center text-[24px] font-semibold">
 				<p>{title}</p>
 				<p
@@ -88,6 +90,18 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 			</div>
 
 			{text ? <p>{text}</p> : null}
+
+			{type === "mailing" ? (
+				<p>Ваша рассылка будет доступна для всех в течении 24 часов.</p>
+			) : null}
+
+			{type === "premium" ? (
+				<>
+					<p>При покупке премиума на неделю, поднятие в топ на 24 часа</p>
+					<p className="-mt-6">При покупке премиума на месяц, поднятие в топ на 3 дня</p>
+					<p className="-mt-6">При покупке премиума на 3 месяца, поднятие в топ на 7 дней</p>
+				</>
+			) : null}
 
 			{list.length ? (
 				<>
@@ -128,21 +142,21 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 			) : null}
 
 			{isHistory ? (
-				<div className="flex flex-col gap-3 p-4 rounded-[24px] bg-foreground-100">
+				<div className="flex flex-col gap-2 sm:gap-3 p-2 sm:p-4 rounded-[24px] bg-foreground-100">
 					{transactions.map((item: any) => (
 						<div
 							key={item._id}
-							className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-4 items-center"
+							className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-2 sm:grid-cols-4 items-center"
 						>
 							<div className="font-medium">
 								{item?.type === "credit" ? "Пополнение" : "Списание"}
 							</div>
-							<div className="flex justify-center text-xs">
+							<div className="flex justify-end sm:justify-center text-xs">
 								{format(new Date(item.updatedAt), "dd.MM.yyyy", {
 									locale: ru,
 								})}
 							</div>
-							<div className="flex justify-end text-xs">
+							<div className="flex sm:justify-end text-xs">
 								{item?.type === "debit"
 									? "Списано со счета"
 									: item.status === "failed"
@@ -182,7 +196,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 					</Button>
 				) : null}
 
-				<div className="flex items-center gap-3">
+				<div className="flex items-center gap-3 w-full sm:w-auto">
 					{!oneTime ? (
 						<Select
 							className="text-primary z-0 relative rounded-full w-full sm:w-[150px]"
@@ -204,16 +218,18 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 						</Select>
 					) : null}
 
-					{!oneTime ? (<Input
-						className="z-0 relative w-full sm:w-[150px]"
-						classNames={{ input: "font-semibold" }}
-						disabled={!oneTime}
-						endContent={<span className="text-primary">₽</span>}
-						placeholder=""
-						radius="full"
-						value={value.value || oneTime ? value.price : ""}
-						onChange={(e) => setValue({ ...value, price: e.target.value })}
-					/>) : null}
+					{!oneTime ? (
+						<Input
+							className="z-0 relative w-full sm:w-[150px]"
+							classNames={{ input: "font-semibold" }}
+							disabled={!oneTime}
+							endContent={<span className="text-primary">₽</span>}
+							placeholder=""
+							radius="full"
+							value={value.value || oneTime ? value.price : ""}
+							onChange={(e) => setValue({ ...value, price: e.target.value })}
+						/>
+					) : null}
 
 					<Button
 						className="z-0 relative w-full sm:w-auto"

@@ -142,6 +142,8 @@ export const Navbar = () => {
 	const onNext = (value: any) => {
 		setNewUser(value);
 
+		console.log('user', value)
+
 		onEmail();
 	};
 
@@ -217,6 +219,8 @@ export const Navbar = () => {
 	}, [chats]);
 
 	useEffect(() => {
+		if (!me) return;
+		
 		const interval = setInterval(() => {
 			refetch();
 		}, 60000);
@@ -540,7 +544,10 @@ export const Navbar = () => {
 			/>
 			<ConfirmationModal
 				isOpen={isConfirmationRequired}
-				onOpenChange={onConfirmationRequiredChange}
+				onOpenChange={() => {
+					logout()
+					onConfirmationRequiredChange()
+				}}
 			/>
 			<InfoModal
 				isOpen={isInfoBlocked}

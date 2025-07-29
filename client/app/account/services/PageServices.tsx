@@ -325,7 +325,7 @@ export default function AccountServices() {
 	};
 
 	return (
-		<div className="flex w-full flex-col px-9 pt-[84px] gap-[30px] min-h-screen">
+		<div className="flex w-full flex-col px-3 sm:px-9 pt-[84px] gap-[30px] min-h-screen">
 			<div className="flex w-full items-center justify-between">
 				<h1 className="font-semibold text-[36px]">Услуги</h1>
 			</div>
@@ -355,6 +355,7 @@ export default function AccountServices() {
 					subtile={getSubtitle(item)}
 					text={item.description}
 					title={item.name}
+					type={item._id === '6831854519e3572edace86b7' ? "mailing" : item._id === '6831be446c59cd4bad808bb5' ? "premium" : "service"}
 					onClick={(value: any) => buyService(item, value)}
 				/>
 			))}
@@ -392,7 +393,7 @@ export default function AccountServices() {
 				text={info.text}
 				title={info.title}
 				onOpenChange={onOpenChange}
-			/>
+			/>x
 
 			<InfoModal
 				// actionBtn="Купить"

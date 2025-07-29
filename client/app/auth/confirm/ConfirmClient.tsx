@@ -41,6 +41,7 @@ export default function ConfirmClient() {
         isOpen={true}
         text="Ваша почта успешно подтверждена."
         title="Поздравляем!"
+        onAction={() => router.push(ROUTES.ACCOUNT.PROFILE)}
         onOpenChange={() => router.push(ROUTES.ACCOUNT.PROFILE)}
       />
     </div>

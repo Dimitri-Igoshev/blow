@@ -8,6 +8,7 @@ import {
 	ModalFooter,
 	ModalHeader,
 } from "@heroui/react";
+import { on } from "events";
 import { FC } from "react";
 
 interface InfoModalProps {
@@ -52,7 +53,11 @@ export const InfoModal: FC<InfoModalProps> = ({
 				</ModalBody>
 				<ModalFooter>
 					<div className="flex flex-raw w-full gap-3">
-						<Button className="w-full" radius="full" onPress={onClose}>
+						<Button
+							className="w-full"
+							radius="full"
+							onPress={onOpenChange}
+						>
 							{closeBtn ? closeBtn : "Закрыть"}
 						</Button>
 						{onAction && actionBtn ? (

@@ -396,7 +396,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 						</div>
 					</div>
 
-					{!user || user?.status !== "active" ? (
+					{!isFetching && (!user || user?.status !== "active") ? (
 						<div className="w-full h-full mt-20 flex justify-center px-6 sm:px-20">
 							<p className="sm:text-[20px] text-center">
 								Анкета была удалена пользователем или администрацией за

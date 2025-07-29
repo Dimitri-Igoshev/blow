@@ -89,7 +89,7 @@ export default function ContactsPage() {
 							width={101}
 						/>
 					</div>
-					<div className="mt-4 sm:mt-0 flex items-center justify-center sm:justify-end gap-6">
+					<div className="mt-4 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-6">
 						<NextLink
 							href={ROUTES.CONTACTS}
 							className="underline cursor-pointer hover:text-primary text-nowrap"
@@ -108,12 +108,12 @@ export default function ContactsPage() {
 						>
 							Договор оферта
 						</NextLink>
-						{/* <NextLink
+						<NextLink
               href={ROUTES.RULES}
-              className="underline cursor-pointer hover:text-primary text-nowrap"
+              className="underline cursor-pointer hover:text-primary text-nowrap -mt-2 sm:mt-0"
             >
               Правила
-            </NextLink> */}
+            </NextLink>
 					</div>
 				</div>
 			</footer>
