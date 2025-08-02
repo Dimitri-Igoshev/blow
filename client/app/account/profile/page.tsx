@@ -223,7 +223,7 @@ const AccountProfilePage = () => {
 									<p>сейчас онлайн</p>
 								</div>
 								<div className="flex items-center gap-5">
-									<p className="text-[36px] font-semibold mt-3 sm:-mt-1.5 mr-3 sm:mr-0">
+									<p className="text-[36px] line-clamp-1 font-semibold mt-3 sm:-mt-1.5 mr-3 sm:mr-0">
 										{me?.firstName
 											? me.firstName
 											: me?.sex == "male"

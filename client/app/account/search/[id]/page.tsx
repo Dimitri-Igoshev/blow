@@ -260,7 +260,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 							<div className="flex flex-col gap-6">
 								<div className="flex justify-between items-start">
 									<div className="flex flex-col -mt-3">
-										<p className="font-semibold text-[36px]">
+										<p className="font-semibold line-clamp-1 text-[36px]">
 											{user?.firstName
 												? user.firstName
 												: user.sex === "male"

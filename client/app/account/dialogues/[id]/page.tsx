@@ -356,7 +356,7 @@ export default function AccountDialogues({
 							/>
 
 							<div className="flex flex-col justify-center items-start text-sm w-full">
-								<p className="font-semibold">
+								<p className="font-semibold line-clamp-1">
 									{getInterlocutor(chat)?.firstName
 										? getInterlocutor(chat)?.firstName
 										: getInterlocutor(chat)?.sex === "male"

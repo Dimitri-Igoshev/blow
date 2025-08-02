@@ -112,7 +112,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 						</div>
 
 						<div className="flex justify-between items-center flex-wrap">
-							<p className="text-[16px] sm:text-[24px] font-semibold w-full sm:w-auto">
+							<p className="text-[16px] line-clamp-1 sm:text-[24px] font-semibold w-full sm:w-auto">
 								{item?.firstName
 									? item.firstName
 									: item.sex === "male"

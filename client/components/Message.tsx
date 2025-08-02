@@ -48,7 +48,7 @@ export const Message: FC<MessageProps> = ({
 						width={30}
 					/>
 					<p
-						className={cn("font-semibold", {
+						className={cn("font-semibold line-clamp-1", {
 							["text-primary"]: message?.sender?._id !== me?._id,
 						})}
 					>

@@ -167,7 +167,7 @@ export default function EditProfile() {
 					radius="lg"
 					value={user?.firstName}
 					onChange={(e) =>
-						setUser({ ...user, firstName: truncateString(e.target.value, 12) })
+						setUser({ ...user, firstName: e.target.value })
 					}
 				/>
 

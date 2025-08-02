@@ -70,7 +70,7 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
             {getActivityString(item?.activity) === "онлайн" ? (
               <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
             ) : null}
-            <p className="font-semibold">
+            <p className="font-semibold line-clamp-1">
               {item?.firstName
                 ? item.firstName
                 : item?.sex === "male"
