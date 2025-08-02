@@ -73,12 +73,7 @@ export const Message: FC<MessageProps> = ({
 						}
 					)}
 				>
-					<p>
-						{maskContacts(
-							message.text,
-							message?.sender?._id === me._id
-						)}
-					</p>
+					<p>{message.text}</p>
 				</div>
 
 				<p className="text-[10px] text-right mt-1">
