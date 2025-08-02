@@ -115,7 +115,7 @@ export default function PolicyPage() {
 							width={101}
 						/>
 					</div>
-					<p className="text-center sm:twxt-left mt-5 sm:mt-0">
+					<p className="text-center sm:twxt-left mt-5 sm:mt-0 text-xs">
 						{new Date().getFullYear()} © BLOW. Сайт для лиц старше 18-ти лет.
 					</p>
 					<div className="hidden sm:flex justify-center">
@@ -127,7 +127,7 @@ export default function PolicyPage() {
 							width={101}
 						/>
 					</div>
-					<div className="mt-4 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-6">
+					<div className="text-xs mt-7 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-6">
 						<NextLink
 							href={ROUTES.CONTACTS}
 							className="underline cursor-pointer hover:text-primary text-nowrap"

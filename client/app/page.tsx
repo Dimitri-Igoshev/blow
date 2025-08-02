@@ -424,7 +424,7 @@ export default function Home() {
                     width={101}
                   />
                 </div>
-                <p className="text-center sm:twxt-left mt-5 sm:mt-0">
+                <p className="text-center sm:text-left mt-5 sm:mt-0 text-xs">
                   {new Date().getFullYear()} © BLOW. Сайт для лиц старше 18-ти
                   лет.
                 </p>
@@ -439,7 +439,7 @@ export default function Home() {
                     />
                   ) : null}
                 </div>
-                <div className="mt-4 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-6">
+                <div className="text-xs mt-7 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-6">
                   <NextLink
                     href={ROUTES.CONTACTS}
                     className="underline cursor-pointer hover:text-primary text-nowrap"
@@ -460,7 +460,7 @@ export default function Home() {
                   </NextLink>
                   <NextLink
                     href={ROUTES.RULES}
-                    className="underline cursor-pointer hover:text-primary text-nowrap -mt-2 sm:mt-0"
+                    className="underline cursor-pointer hover:text-primary text-nowrap"
                   >
                     Правила
                   </NextLink>

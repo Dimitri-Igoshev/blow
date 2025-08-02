@@ -17,8 +17,8 @@ import { ROUTES } from "@/app/routes";
 import UploadImages from "@/components/UploadImages";
 import { IPhoto } from "@/common/interface/photo.interface";
 import { truncateString } from "@/helper/truncateStr";
-import { BlowLoader } from "@/components/BlowLoader"
-import { useGetCitiesQuery } from "@/redux/services/cityApi"
+import { BlowLoader } from "@/components/BlowLoader";
+import { useGetCitiesQuery } from "@/redux/services/cityApi";
 
 const VoiceRecorder = dynamic(() => import("@/components/VoiceRecoder"), {
 	ssr: false,
@@ -28,10 +28,10 @@ export default function EditProfile() {
 	const router = useRouter();
 	const [user, setUser] = useState<any>();
 	const [loading, setLoading] = useState(false);
-  
+
 	const { data: me } = useGetMeQuery(null);
-	const { data: cities} = useGetCitiesQuery(null);
-  
+	const { data: cities } = useGetCitiesQuery(null);
+
 	const [files, setFiles] = useState<any[]>(me?.photos ? [...me.photos] : []);
 
 	useEffect(() => {
@@ -71,12 +71,12 @@ export default function EditProfile() {
 			.unwrap()
 			.then(() => {
 				router.push(ROUTES.ACCOUNT.PROFILE);
-				setLoading(false)
+				setLoading(false);
 			})
 			.catch((error) => {
-				console.log(error)
-				setLoading(false)
-			})
+				console.log(error);
+				setLoading(false);
+			});
 	};
 
 	const removeImage = (image: IPhoto) => {
@@ -97,7 +97,17 @@ export default function EditProfile() {
 
 		const formData = new FormData();
 
-		await formData.set("files", image?.file);
+		formData.set("files", image.file);
+		formData.set("firstName", user.firstName);
+		formData.set("city", user.city);
+		formData.set("age", user.age);
+		formData.set("height", user.height);
+		formData.set("weight", user.weight);
+		formData.set("sponsor", user.sponsor ? "true" : "false");
+		formData.set("traveling", user.traveling ? "true" : "false");
+		formData.set("relationships", user.relationships ? "true" : "false");
+		formData.set("evening", user.evening ? "true" : "false");
+		formData.set("about", user.about);
 
 		update({
 			id: me._id,
@@ -107,12 +117,11 @@ export default function EditProfile() {
 			.then((res) => {
 				setFiles([...res.photos]);
 				setLoading(false);
-				console.log(1, res)
+				console.log(1, res);
 			})
 			.catch((error) => {
-				console.log(error)
+				console.log(error);
 				setLoading(true);
-
 			});
 	};
 
@@ -128,11 +137,11 @@ export default function EditProfile() {
 		})
 			.unwrap()
 			.then((res) => {
-				setFiles([...res.photos])
+				setFiles([...res.photos]);
 				setLoading(false);
 			})
 			.catch((error) => {
-				console.log(error)
+				console.log(error);
 				setLoading(false);
 			});
 	};

@@ -30,6 +30,7 @@ import { InfoModal } from "@/components/InfoModal";
 import { useCreateClaimMutation } from "@/redux/services/claimApi";
 import { useCityLabel } from "@/helper/getCityString";
 import { BlowLoader } from "@/components/BlowLoader";
+import { maskContacts } from "@/helper/maskContacts"
 
 interface ProfileViewProps {
 	params: any;
@@ -332,7 +333,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 
 									<p className="mt-1">
 										{user?.about
-											? user.about
+											? maskContacts(user.about, premium)
 											: "Пользователь предпочел не указывать информацию о себе."}
 									</p>
 								</div>
