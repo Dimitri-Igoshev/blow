@@ -28,5 +28,4 @@ export const BlowLoader = ({ text = "Загрузка ...", noBlur = false }: { 
 		</Modal>
 		</div>
 	);
-	
 };
