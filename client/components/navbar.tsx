@@ -41,6 +41,7 @@ import { BsMegaphone } from "react-icons/bs";
 import { useGetChatsQuery } from "@/redux/services/chatApi";
 import { useGetMailingsQuery } from "@/redux/services/mailingApi";
 import { InfoModal } from "./InfoModal";
+import { useSession } from "@/hooks/useSession"
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -53,40 +54,42 @@ export const Navbar = () => {
 
 	const { data: me, isFetching } = useGetMeQuery(null);
 
-	const [setActivity] = useSetActivityMutation();
+	useSession(me?._id);
 
-	useEffect(() => {
-		if (!me?._id) return;
+	// const [setActivity] = useSetActivityMutation();
 
-		let debounce = 0;
+	// useEffect(() => {
+	// 	if (!me?._id) return;
 
-		const activityHandler = () => {
-			events.forEach((event) =>
-				window.removeEventListener(event, activityHandler)
-			);
-			setTimeout(() => {
-				setActivity({ id: me._id, body: { timestamp: new Date() } })
-					.unwrap()
-					.catch((err) => console.error(err));
+	// 	let debounce = 0;
 
-				events.forEach((event) =>
-					window.addEventListener(event, activityHandler)
-				);
+	// 	const activityHandler = () => {
+	// 		events.forEach((event) =>
+	// 			window.removeEventListener(event, activityHandler)
+	// 		);
+	// 		setTimeout(() => {
+	// 			setActivity({ id: me._id, body: { timestamp: new Date() } })
+	// 				.unwrap()
+	// 				.catch((err) => console.error(err));
 
-				debounce = 60000;
-			}, debounce);
-		};
+	// 			events.forEach((event) =>
+	// 				window.addEventListener(event, activityHandler)
+	// 			);
 
-		const events = ["mousemove", "keydown", "click"];
+	// 			debounce = 60000;
+	// 		}, debounce);
+	// 	};
 
-		events.forEach((event) => window.addEventListener(event, activityHandler));
+	// 	const events = ["mousemove", "keydown", "click"];
 
-		return () => {
-			events.forEach((event) =>
-				window.removeEventListener(event, activityHandler)
-			);
-		};
-	}, [me]);
+	// 	events.forEach((event) => window.addEventListener(event, activityHandler));
+
+	// 	return () => {
+	// 		events.forEach((event) =>
+	// 			window.removeEventListener(event, activityHandler)
+	// 		);
+	// 	};
+	// }, [me]);
 
 	useEffect(() => {
 		if (!me) return;

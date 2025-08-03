@@ -88,10 +88,10 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
         </div>
       </div>
 
-      <div className="bg-transparent absolute -right-[70px] top-[36px] z-10">
+      <div className="bg-transparent absolute -right-[100px] sm:-right-[70px] top-[12px] sm:top-[36px] z-10">
         {isTop(item) ? (
-          <div className="bg-primary w-[250px] h-[45px] rotate-45 flex justify-center items-center">
-            <Image alt="" className="w-[70px]" src="/top.png" />
+          <div className="bg-primary w-[250px] h-[25px] sm:w-[250px] sm:h-[45px] rotate-45 flex justify-center items-center">
+            <Image alt="" className="w-[40px] sm:w-[70px]" src="/top.png" />
           </div>
         ) : null}
       </div>

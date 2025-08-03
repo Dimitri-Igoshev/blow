@@ -3,7 +3,6 @@
 import { Image } from "@heroui/image";
 import { MdOutlineHeight, MdOutlineLogout } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
-import { Button } from "@heroui/button";
 import { PiWaveform } from "react-icons/pi";
 import { FiEdit } from "react-icons/fi";
 import { LuCrown, LuWallet } from "react-icons/lu";
@@ -25,7 +24,6 @@ import { config } from "@/common/env";
 import { RAISE_ID } from "@/helper/checkIsActive";
 import { InfoModal } from "@/components/InfoModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
-import Loader from "@/components/Loader";
 import { BlowLoader } from "@/components/BlowLoader";
 
 const AccountProfilePage = () => {

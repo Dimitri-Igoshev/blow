@@ -3,7 +3,7 @@ import { cn } from "@heroui/theme";
 import { Button } from "@heroui/button";
 import { PiWaveform } from "react-icons/pi";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+// import Image from "next/image";
 
 import { config } from "@/common/env";
 // import { getCityString } from "@/helper/getCityString";
@@ -12,7 +12,7 @@ import { getActivityString } from "@/helper/getActivityString";
 import { isPremium, isTop } from "@/helper/checkIsActive";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { InfoModal } from "./InfoModal";
-import { useDisclosure } from "@heroui/react";
+import { useDisclosure, Image } from "@heroui/react";
 import { useCityLabel } from "@/helper/getCityString";
 
 interface ProfilePreviewProps {
@@ -83,17 +83,21 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 									? "/men2.png"
 									: "/woman2.png"
 						}
-						fill
 						className="object-cover"
 					/>
 					{/* ТОП лейбл */}
-					{isTop(item) && (
-						<div className="absolute -right-[70px] top-[20px] z-10">
+					{isTop(item) ? (
+						<div className="absolute -right-[46px] sm:-right-[70px] top-[12px] sm:top-[20px] z-10">
 							<div className="bg-primary w-[133px] h-[20px] sm:w-[200px] sm:h-[30px] rotate-45 flex justify-center items-center">
 								<Image alt="" className="w-[27px] sm:w-[40px]" src="/top.png" />
 							</div>
 						</div>
-					)}
+					) : null}
+					{/* {isTop(item) ? (
+          <div className="bg-primary w-[250px] h-[25px] sm:w-[250px] sm:h-[45px] rotate-45 flex justify-center items-center">
+            <Image alt="" className="w-[40px] sm:w-[70px]" src="/top.png" />
+          </div>
+        ) : null} */}
 				</button>
 
 				<div className="flex flex-col justify-between gap-3 sm:gap-6 w-full">
