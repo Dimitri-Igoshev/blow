@@ -1,4 +1,9 @@
+# *
 User-agent: *
 Allow: /
 
+# Host
+Host: https://blow.ru
+
+# Sitemaps
 Sitemap: https://blow.ru/sitemap.xml

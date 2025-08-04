@@ -258,9 +258,9 @@ const ProfileView: FC<ProfileViewProps> = ({
 
 						<div className="col-span-12 sm:col-span-6 bg-white dark:bg-foreground-100 rounded-[36px] p-[36px] flex flex-col justify-between">
 							<div className="flex flex-col gap-6">
-								<div className="flex justify-between items-start">
-									<div className="flex flex-col -mt-3">
-										<p className="font-semibold line-clamp-1 text-[36px]">
+								<div className="flex justify-between items-start gap-3 owerflow-hidden">
+									<div className="flex flex-col -mt-3 max-w-[70%]">
+										<p className="font-semibold line-clamp-1 text-[24px] sm:text-[36px]">
 											{user?.firstName
 												? user.firstName
 												: user.sex === "male"

@@ -166,9 +166,11 @@ export default function EditProfile() {
 					placeholder=""
 					radius="lg"
 					value={user?.firstName}
-					onChange={(e) =>
-						setUser({ ...user, firstName: e.target.value })
-					}
+					maxLength={30} // Ограничение на уровне атрибута
+					onChange={(e) => {
+						const value = e.target.value.slice(0, 30); // Доп. защита
+						setUser({ ...user, firstName: value });
+					}}
 				/>
 
 				<Select
