@@ -175,6 +175,11 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
+					classNames={{
+						trigger: "py-3", // уменьшает отступы внутри селекта
+						value: "pt-0", // убирает сдвиг текста вниз
+						label: "text-gray-500 text-sm", // можно уменьшить шрифт лейбла
+					}}
 					label="Город"
 					selectedKeys={[user?.city]}
 					onChange={(el) => setUser({ ...user, city: el.target.value })}
@@ -186,6 +191,10 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
+					classNames={{
+						trigger: "flex items-center h-[48px]", // фиксированная высота и выравнивание
+						value: "flex items-center",
+					}}
 					label="Возраст (лет)"
 					selectedKeys={[user?.age]}
 					onChange={(el: any) => setUser({ ...user, age: el.target.value })}
