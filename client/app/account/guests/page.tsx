@@ -16,49 +16,60 @@ export default function AccountGuests() {
 	const [lastMonth, setLastMonth] = useState<any[]>([]);
 	const [lastYear, setLastYear] = useState<any[]>([]);
 
-	useEffect(() => {
-		if (!guests?.length) return;
+useEffect(() => {
+  if (!guests?.length) return;
 
-		const now = new Date();
+  const clonedGuests = guests.map((g) => ({ ...g }));
 
-		setLastDay(
-			guests
-				?.filter(
-					(item: any) => differenceInHours(now, new Date(item.createdAt)) <= 24
-				)
-				.map((item: any) => item.guest)
-		);
+  const uniqueArray = Array.from(
+    new Map(clonedGuests.map((item) => [String(item._id), item])).values()
+  );
 
-		setLastWeek(
-			guests
-				?.filter(
-					(item: any) =>
-						differenceInHours(now, new Date(item.createdAt)) > 24 &&
-						differenceInDays(now, new Date(item.createdAt)) <= 7
-				)
-				.map((item: any) => item.guest)
-		);
-		setLastMonth(
-			guests
-				?.filter(
-					(item: any) =>
-						differenceInHours(now, new Date(item.createdAt)) > 24 &&
-						differenceInDays(now, new Date(item.createdAt)) > 7 &&
-						differenceInDays(now, new Date(item.createdAt)) <= 30
-				)
-				.map((item: any) => item.guest)
-		);
-		setLastYear(
-			guests
-				?.filter(
-					(item: any) =>
-						differenceInHours(now, new Date(item.createdAt)) > 24 &&
-						differenceInDays(now, new Date(item.createdAt)) > 30 &&
-						differenceInDays(now, new Date(item.createdAt)) <= 365
-				)
-				.map((item: any) => item.guest)
-		);
-	}, [guests]);
+  const now = new Date();
+
+  const filterAndMap = (filterFn: (item: any) => boolean) => {
+    return Array.from(
+      new Map(
+        uniqueArray
+          .filter(filterFn)
+          .map((item: any) => [String(item.guest._id), item.guest]) // дедуплицируем guest
+      ).values()
+    );
+  };
+
+  setLastDay(
+    filterAndMap(
+      (item) => differenceInHours(now, new Date(item.createdAt)) <= 24
+    )
+  );
+
+  setLastWeek(
+    filterAndMap(
+      (item) =>
+        differenceInHours(now, new Date(item.createdAt)) > 24 &&
+        differenceInDays(now, new Date(item.createdAt)) <= 7
+    )
+  );
+
+  setLastMonth(
+    filterAndMap(
+      (item) =>
+        differenceInHours(now, new Date(item.createdAt)) > 24 &&
+        differenceInDays(now, new Date(item.createdAt)) > 7 &&
+        differenceInDays(now, new Date(item.createdAt)) <= 30
+    )
+  );
+
+  setLastYear(
+    filterAndMap(
+      (item) =>
+        differenceInHours(now, new Date(item.createdAt)) > 24 &&
+        differenceInDays(now, new Date(item.createdAt)) > 30 &&
+        differenceInDays(now, new Date(item.createdAt)) <= 365
+    )
+  );
+}, [guests]);
+
 
 	return (
 		<div className="flex w-full flex-col px-3 md:px-9 pt-[84px] gap-[30px] mb-[50px] min-h-screen h-full">
