@@ -195,14 +195,15 @@ const ProfileView: FC<ProfileViewProps> = ({
 	const [updateBlockList] = useUpdateUserMutation();
 
 	const onBlock = () => {
-		let blockList = me?.blockList || [];
-		if (isBlocked) {
-			blockList = blockList.filter((item: any) => item !== id);
+		let newBlockList = [];
+
+		if (me?.blockList?.includes(id)) {
+			newBlockList = me?.blockList.filter((item: any) => item !== id);
 		} else {
-			blockList.push(id);
+			newBlockList = [...me?.blockList, id]; // ✅ создаем новый массив вместо push
 		}
 
-		updateBlockList({ id: me._id, body: { blockList } }).unwrap();
+		updateBlockList({ id: me._id, body: { blockList: newBlockList } }).unwrap();
 	};
 
 	return (
