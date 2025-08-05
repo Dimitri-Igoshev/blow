@@ -71,33 +71,36 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				)}
 			>
 				<button
-					className="relative w-full sm:w-[300px] aspect-[2/3] overflow-hidden rounded-[20px] cursor-pointer"
+					className="relative w-full xl:max-w-[400px] aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer"
 					onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + item?._id)}
 				>
-					<Image
-						alt=""
-						src={
-							item?.photos?.[0]?.url
-								? `${config.MEDIA_URL}/${item.photos[0].url}`
-								: item?.sex === "male"
-									? "/men2.png"
-									: "/woman2.png"
-						}
-						className="object-cover"
-					/>
-					{/* ТОП лейбл */}
-					{isTop(item) ? (
-						<div className="absolute -right-[46px] sm:-right-[70px] top-[12px] sm:top-[20px] z-10">
-							<div className="bg-primary w-[133px] h-[20px] sm:w-[200px] sm:h-[30px] rotate-45 flex justify-center items-center">
-								<Image alt="" className="w-[27px] sm:w-[40px]" src="/top.png" />
+					<div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden rounded-[20px] ">
+						<Image
+							alt=""
+							src={
+								item?.photos?.[0]?.url
+									? `${config.MEDIA_URL}/${item.photos[0].url}`
+									: item?.sex === "male"
+										? "/men2.png"
+										: "/woman2.png"
+							}
+							className="w-full h-full object-cover min-w-full object-center" // 🔥 фикс высоты
+							radius="none" // убираем скругление от HeroUI (контейнер уже скруглен)
+						/>
+
+						{/* Лейбл TOP */}
+						{isTop(item) && (
+							<div className="absolute right-[-46px] sm:right-[-70px] top-[12px] sm:top-[20px] z-10">
+								<div className="bg-primary w-[133px] h-[20px] sm:w-[200px] sm:h-[30px] rotate-45 flex justify-center items-center">
+									<Image
+										alt=""
+										className="w-[27px] sm:w-[40px]"
+										src="/top.png"
+									/>
+								</div>
 							</div>
-						</div>
-					) : null}
-					{/* {isTop(item) ? (
-          <div className="bg-primary w-[250px] h-[25px] sm:w-[250px] sm:h-[45px] rotate-45 flex justify-center items-center">
-            <Image alt="" className="w-[40px] sm:w-[70px]" src="/top.png" />
-          </div>
-        ) : null} */}
+						)}
+					</div>
 				</button>
 
 				<div className="flex flex-col justify-between gap-3 sm:gap-6 w-full">
@@ -165,7 +168,13 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 									<PiWaveform className="w-5 h-5" />
 									<p>Голос</p>
 								</button>
-								<Button isIconOnly color="primary" radius="full" className="flex sm:hidden" onPress={handlePlay}>
+								<Button
+									isIconOnly
+									color="primary"
+									radius="full"
+									className="flex sm:hidden"
+									onPress={handlePlay}
+								>
 									<PiWaveform className="w-5 h-5" />
 								</Button>
 							</>

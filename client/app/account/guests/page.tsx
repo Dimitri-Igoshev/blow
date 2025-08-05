@@ -19,10 +19,10 @@ export default function AccountGuests() {
 useEffect(() => {
   if (!guests?.length) return;
 
-  const clonedGuests = guests.map((g) => ({ ...g }));
+  const clonedGuests = guests.map((g: any) => ({ ...g }));
 
   const uniqueArray = Array.from(
-    new Map(clonedGuests.map((item) => [String(item._id), item])).values()
+    new Map(clonedGuests.map((item: any) => [String(item._id), item])).values()
   );
 
   const now = new Date();
