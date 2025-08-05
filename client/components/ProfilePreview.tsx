@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { FC, useEffect, useRef, useState } from "react";
 import { cn } from "@heroui/theme";
@@ -66,53 +66,55 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 
 	const [isPortrait, setIsPortrait] = useState(false);
 
-useEffect(() => {
-  if (!item?.photos?.[0]?.url) return;
-  const img = new window.Image();
-  img.src = `${config.MEDIA_URL}/${item.photos[0].url}`;
-  img.onload = () => {
-    setIsPortrait(img.height > img.width); // Определяем ориентацию
-  };
-}, [item?.photos]);
+	useEffect(() => {
+		if (!item?.photos?.[0]?.url) return;
+		const img = new window.Image();
+		img.src = `${config.MEDIA_URL}/${item.photos[0].url}`;
+		img.onload = () => {
+			setIsPortrait(img.height > img.width); // Определяем ориентацию
+		};
+	}, [item?.photos]);
 
 	return (
 		<>
 			<div
 				className={cn(
-					"relative bg-white dark:bg-foreground-100 p-3 sm:p-6 flex flex-col xl:flex-row gap-3 sm:gap-6 rounded-[32px] col-span-1 w-full pb-[60px] sm:pb-6",
+					"relative bg-white dark:bg-foreground-100 p-3 sm:p-6 flex flex-col xl:flex-row gap-3 sm:gap-6 rounded-[32px] col-span-1 w-full pb-[60px] sm:pb-6 owerflow-hidden ",
 					className
 				)}
 			>
 				<button
-					className="relative w-full xl:max-w-[230px] aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer"
+					className="relative w-full xl:max-w-[230px] xl:flex-shrink-0  aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer"
 					onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + item?._id)}
 				>
-<div className="relative w-full xl:max-w-[230px] aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer">
-  <div className="absolute inset-0">
-    <img
-      alt=""
-      src={
-        item?.photos?.[0]?.url
-          ? `${config.MEDIA_URL}/${item.photos[0].url}`
-          : item?.sex === "male"
-            ? "/men2.png"
-            : "/woman2.png"
-      }
-      className="w-full h-full object-cover object-center"
-    />
+					<div className="relative w-full xl:max-w-[230px] xl:flex-shrink-0  aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer">
+						<div className="absolute inset-0">
+							<img
+								alt=""
+								src={
+									item?.photos?.[0]?.url
+										? `${config.MEDIA_URL}/${item.photos[0].url}`
+										: item?.sex === "male"
+											? "/men2.png"
+											: "/woman2.png"
+								}
+								className="w-full h-full object-cover object-center"
+							/>
 
-    {/* Лейбл TOP */}
-    {isTop(item) && (
-      <div className="absolute right-[-46px] sm:right-[-70px] top-[12px] sm:top-[20px] z-10">
-        <div className="bg-primary w-[133px] h-[20px] sm:w-[200px] sm:h-[30px] rotate-45 flex justify-center items-center">
-          <img alt="" className="w-[27px] sm:w-[40px]" src="/top.png" />
-        </div>
-      </div>
-    )}
-  </div>
-</div>
-
-
+							{/* Лейбл TOP */}
+							{isTop(item) && (
+								<div className="absolute right-[-46px] sm:right-[-70px] top-[12px] sm:top-[20px] z-10">
+									<div className="bg-primary w-[133px] h-[20px] sm:w-[200px] sm:h-[30px] rotate-45 flex justify-center items-center">
+										<img
+											alt=""
+											className="w-[27px] sm:w-[40px]"
+											src="/top.png"
+										/>
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
 				</button>
 
 				<div className="flex flex-col justify-between gap-3 sm:gap-6 w-full">
@@ -131,7 +133,10 @@ useEffect(() => {
 						</div>
 
 						<div className="flex justify-between items-center flex-wrap">
-							<p className="text-[16px] line-clamp-1 sm:text-[24px] font-semibold w-full sm:w-auto">
+							<p
+								className="text-[16px] sm:text-[24px] font-semibold w-full sm:w-auto max-w-[150px] sm:max-w-[200px] truncate whitespace-nowrap"
+								title={item?.firstName} // Показываем полное имя при наведении
+							>
 								{item?.firstName
 									? item.firstName
 									: item.sex === "male"
