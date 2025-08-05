@@ -179,7 +179,7 @@ export default function EditProfile() {
 					className="text-primary z-0 relative"
 					classNames={{
 						trigger: "h-[52px]", // фиксируем высоту селекта
-						label: "top-3 sm:top-4 text-sm", // выравниваем лейбл ближе к верху
+						label: "top-3 text-sm", // выравниваем лейбл ближе к верху
 						value: "pt-1", // убираем лишний отступ у значения
 					}}
 					label="Город"
@@ -196,7 +196,7 @@ export default function EditProfile() {
 					className="text-primary z-0 relative"
 					classNames={{
 						trigger: "h-[52px]", // фиксируем высоту селекта
-						label: "top-3 sm:top-4 text-sm", // выравниваем лейбл ближе к верху
+						label: "top-3 text-sm", // выравниваем лейбл ближе к верху
 						value: "pt-1", // убираем лишний отступ у значения
 					}}
 					label="Возраст (лет)"
@@ -213,7 +213,7 @@ export default function EditProfile() {
 					className="text-primary z-0 relative"
 					classNames={{
 						trigger: "h-[52px]", // фиксируем высоту селекта
-						label: "top-3 sm:top-4 text-sm", // выравниваем лейбл ближе к верху
+						label: "top-3 text-sm", // выравниваем лейбл ближе к верху
 						value: "pt-1", // убираем лишний отступ у значения
 					}}
 					label="Рост (см)"
@@ -230,7 +230,7 @@ export default function EditProfile() {
 					className="text-primary z-0 relative"
 					classNames={{
 						trigger: "h-[52px]", // фиксируем высоту селекта
-						label: "top-3 sm:top-4 text-sm", // выравниваем лейбл ближе к верху
+						label: "top-3 text-sm", // выравниваем лейбл ближе к верху
 						value: "pt-1", // убираем лишний отступ у значения
 					}}
 					label="Вес (кг)"

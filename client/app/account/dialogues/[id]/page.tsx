@@ -271,6 +271,11 @@ export default function AccountDialogues({
 	const [uploadFiles] = useUploadFileMutation();
 
 	const uploadFile = (file: any) => {
+		if (!file.type.startsWith("image/")) {
+			console.warn("Файл не является изображением:", file.type);
+			return;
+		}
+
 		setLoading(true);
 
 		const formData = new FormData();
