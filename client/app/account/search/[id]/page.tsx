@@ -260,12 +260,12 @@ const ProfileView: FC<ProfileViewProps> = ({
 								{user?.photos.map((item: any, idx: number) => (
 									<button
 										key={item.url}
-										className="overflow-hidden relative rounded-[36px]"
+										className="overflow-hidden relative rounded-[24px]"
 										onClick={() => setCurrentImage(item.url)}
 									>
-										{/* <Image
+										<Image
 											alt=""
-											className="z-0 relative"
+											className="z-0 relative object-cover min-w-full object-center"
 											height={"100%"}
 											radius="none"
 											src={
@@ -276,19 +276,19 @@ const ProfileView: FC<ProfileViewProps> = ({
 														: "/woman2.png"
 											}
 											width={"100%"}
-										/> */}
-										<Image
+										/>
+										{/* <Image
 											alt=""
 											src={
 												item?.photos?.[0]?.url
-													? `${config.MEDIA_URL}/${item.photos[0].url}`
+													? `${config.MEDIA_URL}/${item.url}`
 													: item?.sex === "male"
 														? "/men2.png"
 														: "/woman2.png"
 											}
 											className="w-full h-full object-cover min-w-full object-center" // 🔥 фикс высоты
 											radius="none" // убираем скругление от HeroUI (контейнер уже скруглен)
-										/>
+										/> */}
 									</button>
 								))}
 							</div>
