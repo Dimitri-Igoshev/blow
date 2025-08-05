@@ -146,7 +146,7 @@ export default function EditProfile() {
 			});
 	};
 
-	const isMobile = useMediaQuery("(max-width: 768px)"); // sm breakpoint
+	const isMobile = useMediaQuery("(max-width: 640px)"); // sm breakpoint
 
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[84px] gap-[30px]">
@@ -160,7 +160,7 @@ export default function EditProfile() {
 				<VoiceRecorder />
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 w-full mt-3 sm:mt-0 relative z-20">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 w-full mt-3 sm:mt-0 relative z-20">
 				<Input
 					className="z-0 relative"
 					classNames={{ input: "font-semibold" }}
@@ -177,8 +177,13 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
+					classNames={{
+						trigger: "h-[52px]", // фиксируем высоту селекта
+						label: "top-1 text-sm", // выравниваем лейбл ближе к верху
+						value: "pt-1", // убираем лишний отступ у значения
+					}}
 					label="Город"
-					labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
+					// labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
 					selectedKeys={[user?.city]}
 					onChange={(el) => setUser({ ...user, city: el.target.value })}
 				>
@@ -189,8 +194,13 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
+					classNames={{
+						trigger: "h-[52px]", // фиксируем высоту селекта
+						label: "top-1 text-sm", // выравниваем лейбл ближе к верху
+						value: "pt-1", // убираем лишний отступ у значения
+					}}
 					label="Возраст (лет)"
-					labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
+					// labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
 					selectedKeys={[user?.age]}
 					onChange={(el: any) => setUser({ ...user, age: el.target.value })}
 				>
@@ -201,8 +211,13 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
+					classNames={{
+						trigger: "h-[52px]", // фиксируем высоту селекта
+						label: "top-1 text-sm", // выравниваем лейбл ближе к верху
+						value: "pt-1", // убираем лишний отступ у значения
+					}}
 					label="Рост (см)"
-					labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
+					// labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
 					selectedKeys={[user?.height]}
 					onChange={(el: any) => setUser({ ...user, height: el.target.value })}
 				>
@@ -213,8 +228,13 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
+					classNames={{
+						trigger: "h-[52px]", // фиксируем высоту селекта
+						label: "top-1 text-sm", // выравниваем лейбл ближе к верху
+						value: "pt-1", // убираем лишний отступ у значения
+					}}
 					label="Вес (кг)"
-					labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
+					// labelPlacement={isMobile ? "outside" : "inside"} // 🔥 адаптивно
 					selectedKeys={[user?.weight]}
 					onChange={(el: any) => setUser({ ...user, weight: el.target.value })}
 				>
