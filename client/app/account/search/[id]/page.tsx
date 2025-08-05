@@ -20,6 +20,7 @@ import {
 	useGetUserQuery,
 	useNewVisitMutation,
 	useUpdateNoteMutation,
+	useUpdateUserMutation,
 } from "@/redux/services/userApi";
 import { getActivityString } from "@/helper/getActivityString";
 import { NoteModal } from "@/components/NoteModal";
@@ -29,8 +30,8 @@ import { ROUTES } from "@/app/routes";
 import { InfoModal } from "@/components/InfoModal";
 import { useCreateClaimMutation } from "@/redux/services/claimApi";
 import { useCityLabel } from "@/helper/getCityString";
-import { BlowLoader } from "@/components/BlowLoader";
-import { maskContacts } from "@/helper/maskContacts"
+import { maskContacts } from "@/helper/maskContacts";
+import useIsBlocked from "@/hooks/useIsBlocked";
 
 interface ProfileViewProps {
 	params: any;
@@ -112,10 +113,20 @@ const ProfileView: FC<ProfileViewProps> = ({
 		onOpenChange: onPremiumRequiredChange,
 	} = useDisclosure();
 
+	const {
+		isOpen: isRegisterRequired,
+		onOpen: onRegisterRequired,
+		onOpenChange: onRegisterRequiredChange,
+	} = useDisclosure();
+
 	const [startChat] = useStartChatMutation();
 
 	const onSendMessage = async () => {
-		if (me?.sex === "male" && !isPremium(me)) {
+		if (!me) {
+			onRegisterRequired();
+
+			return;
+		} else if (me?.sex === "male" && !isPremium(me)) {
 			onPremiumRequired();
 
 			return;
@@ -179,6 +190,20 @@ const ProfileView: FC<ProfileViewProps> = ({
 		onOpen: onComplainInfoOpen,
 		onOpenChange: onComplainInfoOpenChange,
 	} = useDisclosure();
+
+	const isBlocked = useIsBlocked(me, id);
+	const [updateBlockList] = useUpdateUserMutation();
+
+	const onBlock = () => {
+		let blockList = me?.blockList || [];
+		if (isBlocked) {
+			blockList = blockList.filter((item: any) => item !== id);
+		} else {
+			blockList.push(id);
+		}
+
+		updateBlockList({ id: me._id, body: { blockList } }).unwrap();
+	};
 
 	return (
 		<div
@@ -356,6 +381,16 @@ const ProfileView: FC<ProfileViewProps> = ({
 										>
 											{note ? "Редактировать заметку" : "Создать заметку"}
 										</Button>
+
+										<Button
+											className="z-0 relative"
+											color="secondary"
+											radius="full"
+											variant="solid"
+											onPress={onBlock}
+										>
+											{isBlocked ? "Разблокировать" : "Заблокировать"}
+										</Button>
 									</>
 								) : null}
 								<Button
@@ -432,6 +467,16 @@ const ProfileView: FC<ProfileViewProps> = ({
 				title={"Нужен премиум"}
 				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
 				onOpenChange={onPremiumRequiredChange}
+			/>
+
+			<InfoModal
+				isOpen={isRegisterRequired}
+				text={
+					"Для того чтобы начать общаться, Вам нужно зарегистрироваться на сайте"
+				}
+				title={"Нужна регистрация"}
+				onAction={() => null}
+				onOpenChange={onRegisterRequiredChange}
 			/>
 
 			<InfoModal

@@ -14,6 +14,7 @@ import { topupApi } from "./services/topupApi";
 import { cityApi } from "./services/cityApi"
 import { guestApi } from "./services/guestApi"
 import { sessionApi } from "./services/sessionApi"
+import { fileApi } from "./services/fileApi"
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ export const store = configureStore({
     [cityApi.reducerPath]: cityApi.reducer,
     [guestApi.reducerPath]: guestApi.reducer,
     [sessionApi.reducerPath]: sessionApi.reducer,
+    [fileApi.reducerPath]: fileApi.reducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) => {
@@ -46,6 +48,7 @@ export const store = configureStore({
       cityApi.middleware,
       guestApi.middleware,
       sessionApi.middleware,
+      fileApi.middleware,
     ]);
   },
 });
