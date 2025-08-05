@@ -71,7 +71,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				)}
 			>
 				<button
-					className="relative w-full xl:max-w-[400px] aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer"
+					className="relative w-full xl:max-w-[230px] aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer"
 					onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + item?._id)}
 				>
 					<div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden rounded-[20px] ">
