@@ -256,7 +256,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 								/>
 							</div>
 
-							<div className="grid grid-cols-3 sm:grid-cols-4 gap-4 w-full mt-4">
+							<div className="grid grid-cols-3 sm:grid-cols-4 mb-6 sm:mb-0 gap-4 w-full mt-4">
 								{user?.photos.map((item: any, idx: number) => (
 									<button
 										key={item.url}
