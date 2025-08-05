@@ -1,4 +1,6 @@
-import { FC, useRef } from "react";
+'use client'
+
+import { FC, useEffect, useRef, useState } from "react";
 import { cn } from "@heroui/theme";
 import { Button } from "@heroui/button";
 import { PiWaveform } from "react-icons/pi";
@@ -62,6 +64,17 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 
 	const { getCityLabel } = useCityLabel();
 
+	const [isPortrait, setIsPortrait] = useState(false);
+
+useEffect(() => {
+  if (!item?.photos?.[0]?.url) return;
+  const img = new window.Image();
+  img.src = `${config.MEDIA_URL}/${item.photos[0].url}`;
+  img.onload = () => {
+    setIsPortrait(img.height > img.width); // Определяем ориентацию
+  };
+}, [item?.photos]);
+
 	return (
 		<>
 			<div
@@ -74,33 +87,32 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 					className="relative w-full xl:max-w-[230px] aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer"
 					onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + item?._id)}
 				>
-					<div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden rounded-[20px] ">
-						<Image
-							alt=""
-							src={
-								item?.photos?.[0]?.url
-									? `${config.MEDIA_URL}/${item.photos[0].url}`
-									: item?.sex === "male"
-										? "/men2.png"
-										: "/woman2.png"
-							}
-							className="w-full h-full object-cover min-w-full object-center" // 🔥 фикс высоты
-							radius="none" // убираем скругление от HeroUI (контейнер уже скруглен)
-						/>
+<div className="relative w-full xl:max-w-[230px] aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer">
+  <div className="absolute inset-0">
+    <img
+      alt=""
+      src={
+        item?.photos?.[0]?.url
+          ? `${config.MEDIA_URL}/${item.photos[0].url}`
+          : item?.sex === "male"
+            ? "/men2.png"
+            : "/woman2.png"
+      }
+      className="w-full h-full object-cover object-center"
+    />
 
-						{/* Лейбл TOP */}
-						{isTop(item) && (
-							<div className="absolute right-[-46px] sm:right-[-70px] top-[12px] sm:top-[20px] z-10">
-								<div className="bg-primary w-[133px] h-[20px] sm:w-[200px] sm:h-[30px] rotate-45 flex justify-center items-center">
-									<Image
-										alt=""
-										className="w-[27px] sm:w-[40px]"
-										src="/top.png"
-									/>
-								</div>
-							</div>
-						)}
-					</div>
+    {/* Лейбл TOP */}
+    {isTop(item) && (
+      <div className="absolute right-[-46px] sm:right-[-70px] top-[12px] sm:top-[20px] z-10">
+        <div className="bg-primary w-[133px] h-[20px] sm:w-[200px] sm:h-[30px] rotate-45 flex justify-center items-center">
+          <img alt="" className="w-[27px] sm:w-[40px]" src="/top.png" />
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
+
 				</button>
 
 				<div className="flex flex-col justify-between gap-3 sm:gap-6 w-full">
