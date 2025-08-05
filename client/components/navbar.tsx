@@ -275,7 +275,7 @@ export const Navbar = () => {
 								className="relative"
 								onClick={() => router.push(ROUTES.ACCOUNT.MAILINGS)}
 							>
-								<RiMegaphoneLine color="white" size={22} />
+								<RiMegaphoneLine color="white" size={20} />
 								{mailings?.[0]?._id &&
 								(!me?.lastMailing || me?.lastMailing !== mailings?.[0]?._id) ? (
 									<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary"></div>
@@ -283,10 +283,10 @@ export const Navbar = () => {
 							</button>
 
 							<button
-								className="relative mr-10"
+								className="relative sm:mr-6"
 								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES + "/1")}
 							>
-								<FiMessageCircle color="white" size={22} />
+								<FiMessageCircle color="white" size={20} />
 								{unreaded ? (
 									<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary" />
 								) : null}

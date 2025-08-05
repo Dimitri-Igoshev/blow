@@ -237,7 +237,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 						</button> */}
 					</div>
 
-					<div className="w-full grid grid-cols-12 gap-9">
+					<div className="w-full grid grid-cols-12 sm:gap-9">
 						<div className="col-span-12 sm:col-span-6 flex flex-col">
 							<div className="overflow-hidden relative rounded-[36px]">
 								<Image
@@ -296,22 +296,36 @@ const ProfileView: FC<ProfileViewProps> = ({
 
 						<div className="col-span-12 sm:col-span-6 bg-white dark:bg-foreground-100 rounded-[36px] p-6 py-9 sm:p-[36px] flex flex-col justify-between">
 							<div className="flex flex-col gap-6">
-								<div className="flex justify-between items-start gap-3 owerflow-hidden">
-									<div className="flex flex-col -mt-3 max-w-[80%]">
-										<p className="font-semibold line-clamp-1 text-[20px] sm:text-[36px]">
+								<div className="flex justify-between items-start gap-6 owerflow-hidden w-full">
+									<div className="flex flex-col -mt-3">
+										<div className="flex lg:hidden gap-1.5 items-center">
+										{getActivityString(user?.activity) === "онлайн" ? (
+											<>
+												<div className="w-2 h-2 rounded-full bg-green-400" />
+												<p className="-mt-[2px] text-[12px] hidden sm:flex">
+													сейчас онлайн
+												</p>
+											</>
+										) : (
+											<p className="-mt-[2px] text-[12px]">
+												{getActivityString(user?.activity)}
+											</p>
+										)}
+									</div>
+										<p className="font-semibold line-clamp-1 text-[24px] xl:text-[36px]">
 											{user?.firstName
 												? user.firstName
 												: user.sex === "male"
 													? "Мужчина"
 													: "Девушка"}
 										</p>
-										<p className="text-[24px]">
+										<p className="text-[18px] xl:text-[24px]">
 											{user?.age ? user.age + ", " : ""}
 											{getCityLabel(user?.city)}
 										</p>
 									</div>
 
-									<div className="flex gap-1.5 items-center">
+									<div className="hidden lg:flex gap-1.5 items-center flex-nowrap min-w-[110px]">
 										{getActivityString(user?.activity) === "онлайн" ? (
 											<>
 												<div className="w-2 h-2 rounded-full bg-green-400" />
