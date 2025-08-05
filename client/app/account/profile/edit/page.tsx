@@ -175,11 +175,9 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
-					classNames={{ value: "font-semibold" }}
 					label="Город"
 					selectedKeys={[user?.city]}
 					onChange={(el) => setUser({ ...user, city: el.target.value })}
-					size='lg'
 				>
 					{cities?.map((city: any) => (
 						<SelectItem key={city.value}>{city.label}</SelectItem>
@@ -188,11 +186,9 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
-					classNames={{ value: "font-semibold" }}
 					label="Возраст (лет)"
 					selectedKeys={[user?.age]}
 					onChange={(el: any) => setUser({ ...user, age: el.target.value })}
-					size='lg'
 				>
 					{ages.map((age: any) => (
 						<SelectItem key={age.value}>{age.label}</SelectItem>
@@ -201,11 +197,9 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
-					classNames={{ value: "font-semibold" }}
 					label="Рост (см)"
 					selectedKeys={[user?.height]}
 					onChange={(el: any) => setUser({ ...user, height: el.target.value })}
-					size='lg'
 				>
 					{heights.map((height: any) => (
 						<SelectItem key={height.value}>{height.label}</SelectItem>
@@ -214,11 +208,9 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
-					classNames={{ value: "font-semibold" }}
 					label="Вес (кг)"
 					selectedKeys={[user?.weight]}
 					onChange={(el: any) => setUser({ ...user, weight: el.target.value })}
-					size='lg'
 				>
 					{weights.map((weight: any) => (
 						<SelectItem key={weight.value}>{weight.label}</SelectItem>
