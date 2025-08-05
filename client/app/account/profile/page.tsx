@@ -131,7 +131,7 @@ const AccountProfilePage = () => {
 						<div ref={ref} className="relative">
 							<Image
 								alt=""
-								className="relative border-[7px] border-white dark:border-foreground-100 z-0"
+								className="aspect-[1/1] relative border-[7px] border-white dark:border-foreground-100 z-0"
 								width={"100%"}
 								height={width ? width : "100%"}
 								radius="full"
@@ -215,13 +215,13 @@ const AccountProfilePage = () => {
 
 					<div className="mt-9 sm:mt-0 sm:col-span-3 flex flex-col">
 						<div className="bg-white dark:bg-foreground-100 p-9 rounded-[32px] flex flex-col gap-5 h-full">
-							<div className="flex  flex-wrap items-center justify-between w-full">
+							<div className="flex flex-wrap items-center justify-between w-full">
 								<div className="flex sm:hidden  items-center gap-2 w-full sm:w-auto">
 									<div className="w-2.5 h-2.5 rounded-full bg-green-400" />
 									<p>сейчас онлайн</p>
 								</div>
 								<div className="flex items-center gap-5">
-									<p className="text-[36px] line-clamp-1 font-semibold mt-3 sm:-mt-1.5 mr-3 sm:mr-0">
+									<p className="text-[24px] sm:text-[36px] line-clamp-1 font-semibold mt-3 sm:-mt-1.5 mr-3 sm:mr-0">
 										{me?.firstName
 											? me.firstName
 											: me?.sex == "male"
@@ -234,7 +234,7 @@ const AccountProfilePage = () => {
 									</div>
 								</div>
 
-								<p className="text-[24px]">
+								<p className="text-[18px] sm:text-[24px]">
 									{me?.age ? me.age + ", " : ""}
 									{getCityLabel(me?.city)}
 								</p>
@@ -262,7 +262,7 @@ const AccountProfilePage = () => {
 									{me?.voice ? (
 										<button
 											onClick={handlePlay}
-											className="bg-primary text-white rounded-full h-[38px] px-3.5 flex gap-1 items-center"
+											className="bg-primary text-white rounded-full h-[38px] mt-6 sm:mt-0 px-3.5 flex gap-1 items-center"
 										>
 											<PiWaveform className="w-5 h-5" />
 											<p>Прослушать</p>
@@ -295,7 +295,7 @@ const AccountProfilePage = () => {
 							<div className="text-[20px] font-semibold mt-6">О себе</div>
 
 							<Textarea
-								className="w-full min-h-full"
+								className="w-full sm:min-h-full"
 								classNames={{ input: "p-3 min-h-full resize-none" }}
 								placeholder="Пользователь предпочёл не указывать информацию о себе"
 								radius="lg"

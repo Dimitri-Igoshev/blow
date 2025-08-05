@@ -158,7 +158,7 @@ export default function EditProfile() {
 				<VoiceRecorder />
 			</div>
 
-			<div className="grid grid-cols-1 sm:grid-cols-5 gap-5 w-full mt-3 sm:mt-0">
+			<div className="grid grid-cols-1 sm:grid-cols-5 gap-5 w-full mt-3 sm:mt-0 relative z-20">
 				<Input
 					className="z-0 relative"
 					classNames={{ input: "font-semibold" }}
@@ -175,7 +175,7 @@ export default function EditProfile() {
 
 				<Select
 					className="text-primary z-0 relative"
-					classNames={{ value: "font-semibold" }}
+					classNames={{ value: "font-semibold mt-1" }}
 					label="Город"
 					selectedKeys={[user?.city]}
 					onChange={(el) => setUser({ ...user, city: el.target.value })}

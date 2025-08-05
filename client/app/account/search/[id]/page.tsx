@@ -243,7 +243,6 @@ const ProfileView: FC<ProfileViewProps> = ({
 								<Image
 									alt=""
 									className="z-0 relative"
-									height={"100%"}
 									radius="none"
 									src={
 										currentImage || user?.photos[0]?.url
@@ -253,6 +252,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 												: "/woman2.png"
 									}
 									width={"100%"}
+									height={"100%"}
 								/>
 							</div>
 
@@ -263,7 +263,7 @@ const ProfileView: FC<ProfileViewProps> = ({
 										className="overflow-hidden relative rounded-[36px]"
 										onClick={() => setCurrentImage(item.url)}
 									>
-										<Image
+										{/* <Image
 											alt=""
 											className="z-0 relative"
 											height={"100%"}
@@ -276,17 +276,29 @@ const ProfileView: FC<ProfileViewProps> = ({
 														: "/woman2.png"
 											}
 											width={"100%"}
+										/> */}
+										<Image
+											alt=""
+											src={
+												item?.photos?.[0]?.url
+													? `${config.MEDIA_URL}/${item.photos[0].url}`
+													: item?.sex === "male"
+														? "/men2.png"
+														: "/woman2.png"
+											}
+											className="w-full h-full object-cover min-w-full object-center" // 🔥 фикс высоты
+											radius="none" // убираем скругление от HeroUI (контейнер уже скруглен)
 										/>
 									</button>
 								))}
 							</div>
 						</div>
 
-						<div className="col-span-12 sm:col-span-6 bg-white dark:bg-foreground-100 rounded-[36px] p-[36px] flex flex-col justify-between">
+						<div className="col-span-12 sm:col-span-6 bg-white dark:bg-foreground-100 rounded-[36px] p-6 py-9 sm:p-[36px] flex flex-col justify-between">
 							<div className="flex flex-col gap-6">
 								<div className="flex justify-between items-start gap-3 owerflow-hidden">
-									<div className="flex flex-col -mt-3 max-w-[70%]">
-										<p className="font-semibold line-clamp-1 text-[24px] sm:text-[36px]">
+									<div className="flex flex-col -mt-3 max-w-[80%]">
+										<p className="font-semibold line-clamp-1 text-[20px] sm:text-[36px]">
 											{user?.firstName
 												? user.firstName
 												: user.sex === "male"
@@ -303,7 +315,9 @@ const ProfileView: FC<ProfileViewProps> = ({
 										{getActivityString(user?.activity) === "онлайн" ? (
 											<>
 												<div className="w-2 h-2 rounded-full bg-green-400" />
-												<p className="-mt-[2px] text-[12px]">сейчас онлайн</p>
+												<p className="-mt-[2px] text-[12px] hidden sm:flex">
+													сейчас онлайн
+												</p>
 											</>
 										) : (
 											<p className="-mt-[2px] text-[12px]">
