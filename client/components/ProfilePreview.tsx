@@ -163,14 +163,17 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 							Цели знакомства
 						</p>
 						<ul className="list-disc leading-5 ml-4 text-[12px] sm:text-[14px]">
-							{item.sponsor ? (
+							{/* {item.sponsor ? (
 								<li>
 									{item?.sex === "male" ? "стану спонсором" : "ищу спонсора"}
 								</li>
-							) : null}
-							{item.traveling ? <li>совместные путешествия</li> : null}
+							) : null} */}
+							{/* {item.traveling ? <li>совместные путешествия</li> : null}
 							{item.relationships ? <li>постоянные отношения</li> : null}
-							{item.evening ? <li>провести вечер</li> : null}
+							{item.evening ? <li>провести вечер</li> : null} */}
+							{item.relationships ? <li>серьезные отношения</li> : null}
+							{item.traveling ? <li>общение</li> : null}
+							{item.evening ? <li>свободные отношения</li> : null}
 						</ul>
 					</div>
 
