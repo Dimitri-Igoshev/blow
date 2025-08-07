@@ -67,7 +67,7 @@ export default function RulesPage() {
 						/>
 					</div>
 					<p className="text-center sm:text-left mt-5 sm:mt-0 text-xs">
-						{new Date().getFullYear()} © BLOW. Сайт для лиц старше 18-ти лет.
+						{new Date().getFullYear()} © BLOW
 					</p>
 					<div className="hidden sm:flex justify-center">
 						<Image

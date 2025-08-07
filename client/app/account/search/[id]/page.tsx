@@ -369,16 +369,19 @@ const ProfileView: FC<ProfileViewProps> = ({
 								<div className="flex flex-col gap-1 pt-6">
 									<p className="font-semibold text-[20px]">Цели знакомства</p>
 									<ul className="list-disc leading-9 mt-1 ml-5 text-[16px]">
-										{user.sponsor ? (
+										{/* {user.sponsor ? (
 											<li>
 												{user?.sex === "male"
 													? "стану спонсором"
 													: "ищу спонсора"}
 											</li>
-										) : null}
-										{user.traveling ? <li>совместные путешествия</li> : null}
-										{user.relationships ? <li>постоянные отношения</li> : null}
-										{user.evening ? <li>провести вечер</li> : null}
+										) : null} */}
+										{/* {user.traveling ? <li>совместные путешествия</li> : null} */}
+										{/* {user.relationships ? <li>постоянные отношения</li> : null} */}
+										{/* {user.evening ? <li>провести вечер</li> : null} */}
+										{user.relationships ? <li>серьезные отношения</li> : null}
+										{user.evening ? <li>общение</li> : null}
+										{user.traveling ? <li>свободное общение</li> : null}
 									</ul>
 								</div>
 

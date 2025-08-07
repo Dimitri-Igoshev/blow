@@ -258,7 +258,7 @@ export default function EditProfile() {
 			<h2 className="font-semibold text-[24px] mt-5">Цели знакомства</h2>
 
 			<div className="flex flex-wrap gap-[50px] w-full">
-				<Checkbox
+				{/* <Checkbox
 					defaultSelected
 					className="-mt-5 z-0 relative"
 					classNames={{
@@ -269,8 +269,8 @@ export default function EditProfile() {
 					onChange={(e) => setUser({ ...user, sponsor: !!e.target.checked })}
 				>
 					{user?.sex === "male" ? "я спонсор" : "ищу спонсора"}
-				</Checkbox>
-				<Checkbox
+				</Checkbox> */}
+				{/* <Checkbox
 					defaultSelected
 					className="-mt-5 z-0 relative"
 					classNames={{
@@ -307,6 +307,44 @@ export default function EditProfile() {
 					onChange={(e) => setUser({ ...user, evening: !!e.target.checked })}
 				>
 					провести вечер
+				</Checkbox> */}
+				<Checkbox
+					defaultSelected
+					className="-mt-5 z-0 relative"
+					classNames={{
+						wrapper: "bg-white dark:bg-foreground-300",
+					}}
+					icon={<HeartIcon />}
+					isSelected={!!user?.relationships}
+					onChange={(e) =>
+						setUser({ ...user, relationships: !!e.target.checked })
+					}
+				>
+					Серьезные отношения
+				</Checkbox>
+				<Checkbox
+					defaultSelected
+					className="-mt-5 z-0 relative"
+					classNames={{
+						wrapper: "bg-white dark:bg-foreground-300",
+					}}
+					icon={<HeartIcon />}
+					isSelected={!!user?.evening}
+					onChange={(e) => setUser({ ...user, evening: !!e.target.checked })}
+				>
+					Общение
+				</Checkbox>
+				<Checkbox
+					defaultSelected
+					className="-mt-5 z-0 relative"
+					classNames={{
+						wrapper: "bg-white dark:bg-foreground-300",
+					}}
+					icon={<HeartIcon />}
+					isSelected={!!user?.traveling}
+					onChange={(e) => setUser({ ...user, traveling: !!e.target.checked })}
+				>
+					Свободное общение
 				</Checkbox>
 			</div>
 

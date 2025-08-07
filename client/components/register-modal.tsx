@@ -261,7 +261,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										</>
 									) : null}
 
-									<p className="font-semibold mt-1">Цель знакомства</p>
+									{/* <p className="font-semibold mt-1">Цель знакомства</p>
 
 									<Checkbox
 										defaultSelected
@@ -286,7 +286,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										onChange={(e) => e.target.checked && setSponsor(false)}
 									>
 										{men ? "я не спонсор" : "не ищу спонсора"}
-									</Checkbox>
+									</Checkbox> */}
 								</div>
 							</ModalBody>
 							<ModalFooter>
