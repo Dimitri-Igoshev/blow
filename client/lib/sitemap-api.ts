@@ -16,7 +16,7 @@ export type PublicProfile = {
 // GET /users/public?sitemap=1&skip&limit -> [{slug, shortId, updatedAt}]
 export async function getPublicProfilesCount(): Promise<number> {
 	try {
-		const res = await fetch(`${BASE}/users/public/count`, {
+		const res = await fetch(`${BASE}/user/public/count`, {
 			cache: "no-store",
 		});
 		if (!res.ok) throw new Error("count not ok");
@@ -36,7 +36,7 @@ export async function getPublicProfilesBatch(
 	// ИДЕАЛ:
 	try {
 		const res = await fetch(
-			`${BASE}/users/public?sitemap=1&skip=${skip}&limit=${limit}`,
+			`${BASE}/user/public?sitemap=1&skip=${skip}&limit=${limit}`,
 			{ cache: "no-store" }
 		);
 		if (!res.ok) throw new Error("list not ok");
@@ -45,7 +45,7 @@ export async function getPublicProfilesBatch(
 	} catch {
 		// ФОЛБЭК к твоему текущему getUsers (у него нет skip/offset — возьмём просто limit)
 		// Вынеси на бэке отдельный endpoint под sitemap, чтобы убрать этот костыль.
-		const res = await fetch(`${BASE}/users?limit=${limit}&withPhoto=1`, {
+		const res = await fetch(`${BASE}/user?limit=${limit}&withPhoto=1`, {
 			cache: "no-store",
 		});
 		if (!res.ok) return [];
