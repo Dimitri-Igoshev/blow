@@ -157,7 +157,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										onValueChange={(value: string) => setFirstName(value)}
 									/>
 
-									{woman ? (
+									{/* {woman ? ( */}
 										<>
 											<Select
 												className="w-full text-primary"
@@ -215,7 +215,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 												))}
 											</Select>
 										</>
-									) : null}
+									{/* ) : null} */}
 
 									<Select
 										className="text-primary"
@@ -232,7 +232,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										))}
 									</Select>
 
-									{woman ? (
+									{/* {woman ? ( */}
 										<>
 											{imgSrc ? (
 												<div className="flex justify-center w-full rounded-[20px] overflow-hidden">
@@ -259,7 +259,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 												{photo ? "Заменить фото" : "Добавить фото"}
 											</Button>
 										</>
-									) : null}
+									{/* ) : null} */}
 
 									{/* <p className="font-semibold mt-1">Цель знакомства</p>
 

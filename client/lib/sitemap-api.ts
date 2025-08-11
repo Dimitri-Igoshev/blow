@@ -1,4 +1,4 @@
-import { config } from "@/common/env"
+import { config } from "@/common/env";
 
 const BASE = config.API_URL
 // ↑ поставь сюда свой API base (тот же, что юзают RTK endpoints, но тут — без хуков)
