@@ -16,4 +16,5 @@ export const ROUTES = {
     SERVICES: "/account/services",
   },
   PROFILE: "/profile",
+  TEST: "/test"
 };
