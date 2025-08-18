@@ -14,6 +14,7 @@ export const ROUTES = {
     NOTES: "/account/notes",
     SEARCH: "/account/search",
     SERVICES: "/account/services",
+    CITY: "/account/city",
   },
   PROFILE: "/profile",
   TEST: "/test"

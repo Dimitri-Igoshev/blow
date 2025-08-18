@@ -4,7 +4,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "BLOW",
-  description: "Поиск лучших содержанок и самых успешных мужчин",
+  description: "Знакомства для содержанок и спонсоров. Мужчины и девушки для взаимовыгодных отношений и приятного досуга.",
   navItems: [
     {
       label: "Главная",

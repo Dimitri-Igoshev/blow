@@ -8,10 +8,11 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
-import Script from "next/script"
-import ResetOverflowOnRouteChange from "@/components/ResetOverflowOnRouteChange"
+import Script from "next/script";
+import ResetOverflowOnRouteChange from "@/components/ResetOverflowOnRouteChange";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://blow.ru"),
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
@@ -20,6 +21,32 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  keywords: ["blow", "содержанки", "спонсоры", "мужчины", "знакомства", "девушки", "провести вечер", "совместные путешествия", "содержанки москвы", "содержанки питера" ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://blow.ru",
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} — знакомства содержанок и спонсоров`,
+    description:
+      "Платформа для знакомств содержанок и спонсоров: анкеты, встречи, общение.",
+    images: ["https://blow.ru/logo.png"],
+    locale: "ru_RU",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — знакомства`,
+    description:
+      "Знакомства для содержанок и спонсоров. Найди пару для приятного вечера.",
+    images: ["https://blow.ru/logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  viewport: { width: "device-width", initialScale: 1 },
 };
 
 export const viewport: Viewport = {

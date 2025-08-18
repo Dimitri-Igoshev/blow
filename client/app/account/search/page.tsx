@@ -1,16 +1,18 @@
 "use client";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 
 import { ProfilePreview } from "@/components/ProfilePreview";
 import { useGetMeQuery, useGetUsersQuery } from "@/redux/services/userApi";
 import { useGetCitiesQuery } from "@/redux/services/cityApi";
-import { cn } from "@heroui/react"
+import { cn } from "@heroui/react";
+import { setSearch } from "@/redux/features/searchSlice";
 // import { cities } from "@/data/cities";
 
-const AccountSearch = () => {
+const AccountSearch = ({ city = "" }: any) => {
+	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const search = state?.search?.search ? state.search.search : null;
 	const [limit, setLimit] = useState(20);
@@ -21,7 +23,11 @@ const AccountSearch = () => {
 		search ? { ...search, limit } : { limit }
 	);
 	const { data: cities } = useGetCitiesQuery(null);
-  const { data: me } = useGetMeQuery(null);
+	const { data: me } = useGetMeQuery(null);
+
+	useEffect(() => {
+		if (city) dispatch(setSearch({ ...search, city }));
+	}, []);
 
 	useEffect(() => {
 		if (inView && !isFetching) {

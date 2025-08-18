@@ -15,7 +15,7 @@ import { useGetMeQuery } from "@/redux/services/userApi";
 import { useGetChatsQuery } from "@/redux/services/chatApi";
 import { useGetMailingsQuery } from "@/redux/services/mailingApi";
 
-export default function PanelLayout({
+function AccountLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
@@ -25,7 +25,7 @@ export default function PanelLayout({
 	const { data: me } = useGetMeQuery(null);
 	const { data: mailings } = useGetMailingsQuery(null);
 
-	const isSearch = pathname === ROUTES.ACCOUNT.SEARCH;
+	const isSearch = pathname === ROUTES.ACCOUNT.SEARCH || pathname.includes(ROUTES.ACCOUNT.CITY);
 	const isChat = pathname.includes(ROUTES.ACCOUNT.DIALOGUES);
 
 	useEffect(() => {
@@ -269,3 +269,5 @@ export default function PanelLayout({
 		// </Protected>
 	);
 }
+
+export default AccountLayout as any
