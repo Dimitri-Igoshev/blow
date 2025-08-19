@@ -76,7 +76,7 @@ export default function AccountDialogues({
 	}, []);
 
 	useEffect(() => {
-		if (!chats || currentChat) return;
+		if (!chats) return;
 
 		if (id === "1") {
 			if (isMobile) {
@@ -90,7 +90,7 @@ export default function AccountDialogues({
 			setCurrentChat(chats.find((item: any) => item._id === id));
 			readMessages(chats.find((item: any) => item._id === id));
 		}
-	}, [chats]);
+	}, [chats, isMobile]);
 
 	const {
 		isOpen: isPremiumRequired,
@@ -175,10 +175,10 @@ export default function AccountDialogues({
 			const bLastMessage = b.messages[0];
 
 			const aDate = aLastMessage
-				? new Date(aLastMessage.updatedAt)
+				? new Date(aLastMessage.createdAt)
 				: new Date(0);
 			const bDate = bLastMessage
-				? new Date(bLastMessage.updatedAt)
+				? new Date(bLastMessage.createdAt)
 				: new Date(0);
 
 			// @ts-ignore
