@@ -17,5 +17,5 @@ export const ROUTES = {
     CITY: "/account/city",
   },
   PROFILE: "/profile",
-  TEST: "/test"
+  TEST: "/test",
 };
