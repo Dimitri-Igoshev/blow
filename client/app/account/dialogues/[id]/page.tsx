@@ -76,7 +76,7 @@ export default function AccountDialogues({
 	}, []);
 
 	useEffect(() => {
-		if (!chats) return;
+		if (!chats || currentChat) return;
 
 		if (id === "1") {
 			if (isMobile) {
@@ -90,7 +90,7 @@ export default function AccountDialogues({
 			setCurrentChat(chats.find((item: any) => item._id === id));
 			readMessages(chats.find((item: any) => item._id === id));
 		}
-	}, [chats, isMobile]);
+	}, [chats]);
 
 	const {
 		isOpen: isPremiumRequired,
