@@ -20,8 +20,8 @@ import { BlowLoader } from "@/components/BlowLoader";
 import { useGetCitiesQuery } from "@/redux/services/cityApi";
 
 export default function Home() {
-	const { data: womans } = useGetUsersQuery({ sex: "female", withPhoto: true });
-	const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true });
+	const { data: womans } = useGetUsersQuery({ sex: "female", withPhoto: true, random: true });
+	const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true, random: true });
 	const { data: cities } = useGetCitiesQuery(null);
 
 	const cities1 = cities?.slice(0, 6);
