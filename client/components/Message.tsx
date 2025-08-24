@@ -115,7 +115,7 @@ export const Message: FC<MessageProps> = ({
 				</div>
 
 				<p className="text-[10px] text-right mt-1">
-					{format(new Date(message?.createdAt), "HH:mm")}
+					{format(new Date(message?.createdAt), "HH:mm dd.MM.yyyy")}
 					{/* <span className="text-[9px]">
 						{format(new Date(message?.updatedAt), "dd.MM.yyyy")}
 					</span> */}

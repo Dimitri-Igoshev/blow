@@ -1,7 +1,7 @@
 import { Button } from "@heroui/button";
 import { cn, Input, Select, SelectItem } from "@heroui/react";
 import { useState, type FC } from "react";
-import { ru } from "date-fns/locale";
+import { de, ru } from "date-fns/locale";
 import { format } from "date-fns";
 import { FaTelegramPlane } from "react-icons/fa";
 import NextLink from "next/link";
@@ -35,11 +35,11 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 	options = [],
 	type = "",
 }) => {
-	const [value, setValue] = useState({
-		label: "",
-		value: "",
-		price: defaultVlue?.price || "",
-	});
+	// const [value, setValue] = useState({
+	// 	label: "",
+	// 	value: "",
+	// 	price: defaultVlue?.price || "",
+	// });
 
 	const getPeriodLabel = (value: any) => {
 		switch (value) {
@@ -73,6 +73,20 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 				price: i.price,
 			}));
 
+	const [value, setValue] = useState(
+		isQuantity
+			? {
+					label: options[0]?.quantity?.toString(),
+					value: '0',
+					price: options[0]?.price,
+				}
+			: {
+					label: getPeriodLabel(options[0]?.period.toString()),
+					value: '0',
+					price: options[0]?.price,
+				}
+	);
+
 	const [isHistory, setIsHistory] = useState(false);
 
 	return (
@@ -98,8 +112,12 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 			{type === "premium" ? (
 				<>
 					<p>При покупке премиума на неделю, поднятие в топ на 24 часа</p>
-					<p className="-mt-6">При покупке премиума на месяц, поднятие в топ на 3 дня</p>
-					<p className="-mt-6">При покупке премиума на 3 месяца, поднятие в топ на 7 дней</p>
+					<p className="-mt-6">
+						При покупке премиума на месяц, поднятие в топ на 3 дня
+					</p>
+					<p className="-mt-6">
+						При покупке премиума на 3 месяца, поднятие в топ на 7 дней
+					</p>
 				</>
 			) : null}
 

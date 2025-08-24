@@ -419,7 +419,7 @@ export default function AccountDialogues({
 
 									{canChatDelete(me) ? (
 										<MdDeleteOutline
-											className="min-w-4 min-h-4 opacity-0 group-hover:opacity-100 hover:text-primary mr-3"
+											className="hidden md:flex min-w-4 min-h-4 opacity-0 group-hover:opacity-100 hover:text-primary mr-3"
 											onClick={() => {
 												setSelectedChat(chat._id);
 												onOpenRemove();
