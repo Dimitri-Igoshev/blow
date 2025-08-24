@@ -393,7 +393,7 @@ export default function AccountServices() {
 				text={info.text}
 				title={info.title}
 				onOpenChange={onOpenChange}
-			/>x
+			/>
 
 			<InfoModal
 				// actionBtn="Купить"
