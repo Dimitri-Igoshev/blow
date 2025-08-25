@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
-import { use, useEffect, useRef, useState } from "react";
+import { use, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
@@ -29,6 +29,8 @@ import FileUploadButton from "@/components/FileUploadButton";
 import { useUploadFileMutation } from "@/redux/services/fileApi";
 import { BlowLoader } from "@/components/BlowLoader";
 import { FiSend } from "react-icons/fi";
+import { channel } from "diagnostics_channel"
+import { useScrollToBottom } from "@/hooks/useScrollToBottom"
 
 interface ProfileViewProps {
 	params: any;
@@ -155,17 +157,6 @@ export default function AccountDialogues({
 			onPremiumRequired();
 		}
 	}, [me]);
-
-	const containerRef = useRef(null);
-
-	useEffect(() => {
-		const container = containerRef.current;
-
-		if (container) {
-			// @ts-ignore
-			container.scrollTop = container.scrollHeight;
-		}
-	}, [chat]);
 
 	const [sortedChats, setSortedChats] = useState<any[]>([]);
 
@@ -307,6 +298,10 @@ export default function AccountDialogues({
 			.finally(() => setLoading(false));
 	};
 
+	const containerRef = useRef(null);
+
+	useScrollToBottom(containerRef, [chat, currentChat, me, chats]);
+
 	return (
 		<>
 			{loading ? (
@@ -404,7 +399,7 @@ export default function AccountDialogues({
 									/>
 
 									<div className="flex flex-col justify-center items-start text-sm w-full">
-										<p className="font-semibold line-clamp-1">
+										<p className="font-semibold line-clamp-1 text-left">
 											{getInterlocutor(chat)?.firstName
 												? getInterlocutor(chat)?.firstName
 												: getInterlocutor(chat)?.sex === "male"
@@ -442,7 +437,7 @@ export default function AccountDialogues({
 								<div
 									ref={containerRef}
 									className={cn(
-										"col-span-1 md:col-span-2 p-0 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[12px] relative text-[14px] overflow-y-scroll scroll-transparent flex-1",
+										"col-span-1 md:col-span-2 p-0 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[12px] relative text-[14px] overflow-y-scroll scroll-transparent scroll-smooth flex-1",
 										{
 											"hidden md:flex": !currentChat,
 										}
@@ -547,3 +542,4 @@ export default function AccountDialogues({
 		</>
 	);
 }
+

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const API = "https://blow.igoshev.de/api";
+const API = "https://api.blow.ru/api";
 // const API = "http://localhost:4000/api";
 
 export async function middleware(req: NextRequest) {
@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   if (url.pathname.startsWith("/account/search/")) {
     const id = url.pathname.split("/").pop()!;
     try {
-      const res = await fetch(`${API}/users/slug-by-id/${id}`, { cache: "no-store" });
+      const res = await fetch(`${API}/user/slug-by-id/${id}`, { cache: "no-store" });
       if (res.ok) {
         const { slug, shortId } = await res.json();
         url.pathname = `/u/${slug || shortId || id}`;

@@ -383,7 +383,8 @@ const ProfileClient: FC<ProfileViewProps> = ({ user }) => {
 
 									<p className="mt-1">
 										{user?.about
-											? maskContacts(user.about, false)
+											? maskContacts(user.about, false) ||
+												"Пользователь предпочел не указывать информацию о себе."
 											: "Пользователь предпочел не указывать информацию о себе."}
 									</p>
 								</div>

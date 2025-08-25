@@ -15,7 +15,7 @@ const AccountSearch = ({ city = "" }: any) => {
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const search = state?.search?.search ? state.search.search : null;
-	const [limit, setLimit] = useState(20);
+	const [limit, setLimit] = useState(100);
 
 	const { ref, inView } = useInView();
 
@@ -31,7 +31,7 @@ const AccountSearch = ({ city = "" }: any) => {
 
 	useEffect(() => {
 		if (inView && !isFetching) {
-			setLimit((prev) => prev + 20);
+			setLimit((prev) => prev + 100);
 		}
 	}, [inView]);
 

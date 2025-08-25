@@ -127,9 +127,9 @@ export default async function Page({
     profile = byId;
   }
 
-  if (!profile || profile?.status !== "active") {
-    notFound();
-  }
+  // if (!profile || profile?.status !== "active") {
+  //   notFound();
+  // }
 
   // Профиль готов — отдаём клиентский компонент с твоей версткой и логикой
   return <ProfileClient profile={profile} mediaBase={MEDIA_BASE} />;
