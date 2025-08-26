@@ -15,18 +15,18 @@ export default function ContactsPage() {
 					<p>
 						Наименование организации:{" "}
 						<span className="font-semibold">
-							ИП Смагулова Алёна Владиславовна
+							Freaks 4U Gaming GmbH
 						</span>
 					</p>
-					{/* <p>
-						Юридический адрес: <span className="font-semibold">An der Spreeschanze 10 , 13599 , Berlin , Germany</span>
-					</p> */}
 					<p>
+						Юридический адрес: <span className="font-semibold">An der Spreeschanze 10 , 13599 , Berlin , Germany</span>
+					</p>
+					{/* <p>
 						ИНН: <span className="font-semibold">290136806418</span>
 					</p>
 					<p>
 						ОГРНИП: <span className="font-semibold">324508100613082</span>
-					</p>
+					</p> */}
 					<p className="flex items-center gap-2">
 						<a
 							href="tel:+79031016945"

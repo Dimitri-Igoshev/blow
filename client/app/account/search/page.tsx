@@ -9,19 +9,32 @@ import { useGetMeQuery, useGetUsersQuery } from "@/redux/services/userApi";
 import { useGetCitiesQuery } from "@/redux/services/cityApi";
 import { cn } from "@heroui/react";
 import { setSearch } from "@/redux/features/searchSlice";
+import { motion, AnimatePresence } from "framer-motion";
 // import { cities } from "@/data/cities";
 
 const AccountSearch = ({ city = "" }: any) => {
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const search = state?.search?.search ? state.search.search : null;
-	const [limit, setLimit] = useState(100);
+	const [limit, setLimit] = useState(12);
 
 	const { ref, inView } = useInView();
 
-	const { data: users, isFetching } = useGetUsersQuery(
+	// const { data: users, isFetching } = useGetUsersQuery(
+	// 	search ? { ...search, limit } : { limit }
+	// );
+	const { data: pageUsers, isFetching } = useGetUsersQuery(
 		search ? { ...search, limit } : { limit }
 	);
+
+	// локальный стабильный список
+	const [list, setList] = useState<any[]>([]);
+
+	useEffect(() => {
+		setList([]);
+		setLimit(12);
+	}, [search]);
+
 	const { data: cities } = useGetCitiesQuery(null);
 	const { data: me } = useGetMeQuery(null);
 
@@ -31,9 +44,22 @@ const AccountSearch = ({ city = "" }: any) => {
 
 	useEffect(() => {
 		if (inView && !isFetching) {
-			setLimit((prev) => prev + 100);
+			setLimit((prev) => prev + 12);
 		}
-	}, [inView]);
+	}, [inView, isFetching]);
+
+	useEffect(() => {
+		if (!pageUsers) return;
+
+		setList((prev) => {
+			if (prev.length === 0) return pageUsers; // первая порция
+
+			const seen = new Set(prev.map((u: any) => u._id));
+			const toAppend = pageUsers.filter((u: any) => !seen.has(u._id));
+			// важно: сохраняем исходный порядок prev и добавляем хвост
+			return [...prev, ...toAppend];
+		});
+	}, [pageUsers]);
 
 	return (
 		<div
@@ -55,12 +81,22 @@ const AccountSearch = ({ city = "" }: any) => {
 					</span>
 				</h1>
 			</div>
-			{users?.length ? (
+			{list?.length ? (
 				<>
 					<div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-5 sm:gap-[34px] mt-[16px] sm:mt-0">
-						{users.map((item: any) => (
-							<ProfilePreview key={item._id} item={item} />
-						))}
+						<AnimatePresence initial={false}>
+							{list.map((item: any) => (
+								<motion.div
+									key={item._id}
+									initial={{ opacity: 0, y: 8 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0 }}
+									transition={{ duration: 0.18 }}
+								>
+									<ProfilePreview item={item} />
+								</motion.div>
+							))}
+						</AnimatePresence>
 					</div>
 
 					<div ref={ref} className="h-10 text-center text-gray-500" />
