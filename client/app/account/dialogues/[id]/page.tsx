@@ -4,13 +4,7 @@ import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
-import {
-	use,
-	useEffect,
-	useRef,
-	useState,
-	type RefObject,
-} from "react";
+import { use, useEffect, useRef, useState, type RefObject } from "react";
 import { useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
@@ -309,11 +303,10 @@ export default function AccountDialogues({
 	useScrollToBottom(containerRef, [chat, currentChat, me, chats]);
 
 	useEffect(() => {
-		if (id != 1) return
+		if (id !== "1") return;
 
-		setCurrentChat(null)
-	}, [currentChat, id])
-	
+		setCurrentChat(null);
+	}, [currentChat, id]);
 
 	return (
 		<>
