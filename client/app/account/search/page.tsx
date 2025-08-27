@@ -92,8 +92,9 @@ const AccountSearch = ({ city = "" }: any) => {
 									animate={{ opacity: 1, y: 0 }}
 									exit={{ opacity: 0 }}
 									transition={{ duration: 0.18 }}
+									className="h-full"
 								>
-									<ProfilePreview item={item} />
+									<ProfilePreview item={item} className="h-full" />
 								</motion.div>
 							))}
 						</AnimatePresence>
