@@ -4,7 +4,13 @@ import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
-import { use, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
+import {
+	use,
+	useEffect,
+	useRef,
+	useState,
+	type RefObject,
+} from "react";
 import { useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
@@ -29,8 +35,8 @@ import FileUploadButton from "@/components/FileUploadButton";
 import { useUploadFileMutation } from "@/redux/services/fileApi";
 import { BlowLoader } from "@/components/BlowLoader";
 import { FiSend } from "react-icons/fi";
-import { channel } from "diagnostics_channel"
-import { useScrollToBottom } from "@/hooks/useScrollToBottom"
+import { channel } from "diagnostics_channel";
+import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 
 interface ProfileViewProps {
 	params: any;
@@ -92,7 +98,7 @@ export default function AccountDialogues({
 			setCurrentChat(chats.find((item: any) => item._id === id));
 			readMessages(chats.find((item: any) => item._id === id));
 		}
-	}, [chats]);
+	}, [chats, id]);
 
 	const {
 		isOpen: isPremiumRequired,
@@ -301,6 +307,13 @@ export default function AccountDialogues({
 	const containerRef = useRef(null);
 
 	useScrollToBottom(containerRef, [chat, currentChat, me, chats]);
+
+	useEffect(() => {
+		if (id != 1) return
+
+		setCurrentChat(null)
+	}, [currentChat, id])
+	
 
 	return (
 		<>
@@ -542,4 +555,3 @@ export default function AccountDialogues({
 		</>
 	);
 }
-
