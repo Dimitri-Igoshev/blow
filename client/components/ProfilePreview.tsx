@@ -87,24 +87,37 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 	const onSendMessage = async () => {
 		if (!me) {
 			onRegisterRequired();
-
 			return;
-		} else if (me?.sex === "male" && !isPremium(me)) {
+		}
+		if (me?.sex === "male" && !isPremium(me)) {
 			onPremiumRequired();
-
 			return;
 		}
 
-		await startChat({ sender: me?._id, recipient: item?._id })
-			.unwrap()
-			.then((chat: any) => {
-				window.open(
-					`${ROUTES.ACCOUNT.DIALOGUES}/${chat._id}`,
-					"_blank",
-					"noopener,noreferrer"
-				);
-			})
-			.catch((err: any) => console.log(err));
+		// 1) Открываем вкладку СРАЗУ (синхронно) — мобильные это пропускают
+		const newTab = window.open("", "_blank"); // без feature-строки!
+		try {
+			const chat: any = await startChat({
+				sender: me._id,
+				recipient: item._id,
+			}).unwrap();
+			const url = `${ROUTES.ACCOUNT.DIALOGUES}/${chat._id}`;
+
+			if (newTab) {
+				// 2) Безопасность + перенаправление
+				try {
+					(newTab as any).opener = null;
+				} catch {}
+				newTab.location.href = url;
+			} else {
+				// если блокер не дал открыть — фоллбек
+				window.location.href = url;
+			}
+		} catch (err) {
+			console.log(err);
+			// если не получилось — закрываем заранее открытую вкладку
+			if (newTab && !newTab.closed) newTab.close();
+		}
 	};
 
 	return (
