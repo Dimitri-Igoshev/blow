@@ -11,6 +11,7 @@ import { maskContacts } from "@/helper/maskContacts";
 import { isPremium } from "@/helper/checkIsActive";
 import { Button } from "@heroui/button"
 import { MdOutlineFileDownload } from "react-icons/md"
+import { ROUTES } from "@/app/routes"
 
 interface MessageProps {
 	left?: boolean;
@@ -53,7 +54,7 @@ export const Message: FC<MessageProps> = ({
 				<div className="flex items-center gap-2">
 					<Image
 						alt=""
-						className="rounded-full z-0 relative min-w-[30px]"
+						className="rounded-full z-0 relative min-w-[30px] cursor-pointer"
 						height={30}
 						src={
 							message?.sender?.photos?.[0]?.url
@@ -64,6 +65,13 @@ export const Message: FC<MessageProps> = ({
 						}
 						style={{ objectFit: "cover" }}
 						width={30}
+            onClick={() =>
+              window.open(
+                `${ROUTES.ACCOUNT.SEARCH}/${message?.sender?._id}`,
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
 					/>
 					<p
 						className={cn("font-semibold line-clamp-1", {

@@ -16,6 +16,7 @@ import { useGetMeQuery } from "@/redux/services/userApi";
 import { InfoModal } from "./InfoModal";
 import { useDisclosure, Image } from "@heroui/react";
 import { useCityLabel } from "@/helper/getCityString";
+import { useStartChatMutation } from "@/redux/services/chatApi";
 
 interface ProfilePreviewProps {
 	item: any;
@@ -75,6 +76,37 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 		};
 	}, [item?.photos]);
 
+	const {
+		isOpen: isRegisterRequired,
+		onOpen: onRegisterRequired,
+		onOpenChange: onRegisterRequiredChange,
+	} = useDisclosure();
+
+	const [startChat] = useStartChatMutation();
+
+	const onSendMessage = async () => {
+		if (!me) {
+			onRegisterRequired();
+
+			return;
+		} else if (me?.sex === "male" && !isPremium(me)) {
+			onPremiumRequired();
+
+			return;
+		}
+
+		await startChat({ sender: me?._id, recipient: item?._id })
+			.unwrap()
+			.then((chat: any) => {
+				window.open(
+					`${ROUTES.ACCOUNT.DIALOGUES}/${chat._id}`,
+					"_blank",
+					"noopener,noreferrer"
+				);
+			})
+			.catch((err: any) => console.log(err));
+	};
+
 	return (
 		<>
 			<div
@@ -85,7 +117,13 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 			>
 				<button
 					className="relative w-full xl:max-w-[230px] xl:flex-shrink-0  aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer"
-					onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + item?._id)}
+					onClick={() =>
+						window.open(
+							`${ROUTES.ACCOUNT.SEARCH}/${item._id}`,
+							"_blank",
+							"noopener,noreferrer"
+						)
+					}
 				>
 					<div className="relative w-full xl:max-w-[230px] xl:flex-shrink-0  aspect-[10/15] overflow-hidden rounded-[20px] cursor-pointer">
 						<div className="absolute inset-0">
@@ -201,7 +239,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 						)}
 
 						{/* Кнопка "Профиль" */}
-						<Button
+						{/* <Button
 							className="w-full sm:w-auto flex"
 							color="secondary"
 							radius="full"
@@ -211,6 +249,16 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 							}
 						>
 							Профиль
+						</Button> */}
+
+						<Button
+							className="w-full sm:w-auto flex"
+							color="secondary"
+							radius="full"
+							variant="solid"
+							onPress={onSendMessage}
+						>
+							Написать
 						</Button>
 					</div>
 				</div>
@@ -234,6 +282,16 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				}
 				title={"Нужны регистрация и премиум"}
 				onOpenChange={onRegistrationRequiredChange}
+			/>
+
+			<InfoModal
+				isOpen={isRegisterRequired}
+				text={
+					"Для того чтобы начать общаться, Вам нужно зарегистрироваться на сайте"
+				}
+				title={"Нужна регистрация"}
+				onAction={() => null}
+				onOpenChange={onRegisterRequiredChange}
 			/>
 		</>
 	);

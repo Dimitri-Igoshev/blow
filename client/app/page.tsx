@@ -24,13 +24,6 @@ export default function Home() {
 	const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true, random: true });
 	const { data: cities } = useGetCitiesQuery(null);
 
-	const cities1 = cities?.slice(0, 6);
-	const cities2 = cities?.slice(6, 12);
-	const cities3 = cities?.slice(12, 18);
-	const cities4 = cities?.slice(18, 24);
-	const cities5 = cities?.slice(24, 30);
-	const cities6 = cities?.slice(30, 34);
-
 	const state = useSelector((state: any) => state);
 	const search = state?.search?.search ? state.search.search : null;
 	const { data: users } = useGetUsersQuery(search, {});
