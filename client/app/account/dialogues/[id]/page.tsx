@@ -119,7 +119,7 @@ export default function AccountDialogues({
 		send(body)
 			.then((res) => setText(""))
 			.catch((err) => setText(""))
-			.finally(() => scrollToTop());
+			// .finally(() => scrollToTop());
 	};
 
 	useEffect(() => {
@@ -298,9 +298,13 @@ export default function AccountDialogues({
 			.finally(() => setLoading(false));
 	};
 
-	const containerRef = useRef(null);
+	const containerRef = useRef<any>(null);
 
-	useScrollToBottom(containerRef, [chat, currentChat, me, chats]);
+	useScrollToBottom(
+		containerRef,
+		[currentChat?._id, chat?.length], // ✅ достаточно этого
+		{ smooth: true }
+	);
 
 	return (
 		<>
@@ -435,6 +439,7 @@ export default function AccountDialogues({
 						<div className="relative col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col h-full w-full">
 							<div className="rounded-[24px] border-[7px] p-3 border-white dark:border-foreground-100">
 								<div
+									key={currentChat?._id}
 									ref={containerRef}
 									className={cn(
 										"col-span-1 md:col-span-2 p-0 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[12px] relative text-[14px] overflow-y-scroll scroll-transparent scroll-smooth flex-1",
@@ -479,8 +484,8 @@ export default function AccountDialogues({
 										value={text}
 										onChange={(e) => setText(e.target.value)}
 										onKeyDown={handleKeyDown}
-										onFocus={scrollToTop}
-										onBlur={scrollToTop}
+										// onFocus={scrollToTop}
+										// onBlur={scrollToTop}
 									/>
 									<FileUploadButton
 										onFileSelect={(file: any) => uploadFile(file)}
