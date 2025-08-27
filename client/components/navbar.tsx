@@ -41,7 +41,7 @@ import { BsMegaphone } from "react-icons/bs";
 import { useGetChatsQuery } from "@/redux/services/chatApi";
 import { useGetMailingsQuery } from "@/redux/services/mailingApi";
 import { InfoModal } from "./InfoModal";
-import { useSession } from "@/hooks/useSession"
+import { useSession } from "@/hooks/useSession";
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -145,7 +145,7 @@ export const Navbar = () => {
 	const onNext = (value: any) => {
 		setNewUser(value);
 
-		console.log('user', value)
+		console.log("user", value);
 
 		onEmail();
 	};
@@ -223,7 +223,7 @@ export const Navbar = () => {
 
 	useEffect(() => {
 		if (!me) return;
-		
+
 		const interval = setInterval(() => {
 			refetch();
 		}, 60000);
@@ -282,15 +282,16 @@ export const Navbar = () => {
 								) : null}
 							</button>
 
-							<button
+							<a
 								className="relative sm:mr-6"
-								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES + "1")}
+								href={ROUTES.ACCOUNT.DIALOGUES + "1"}
+								// onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES + "1")}
 							>
 								<FiMessageCircle color="white" size={20} />
 								{unreaded ? (
 									<div className="absolute top-px right-px w-2 h-2 rounded-full bg-primary" />
 								) : null}
-							</button>
+							</a>
 						</>
 					) : null}
 
@@ -381,15 +382,16 @@ export const Navbar = () => {
 								) : null}
 							</button>
 
-							<button
+							<a
 								className="relative mr-10"
-								onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES + "1")}
+								// onClick={() => router.push(ROUTES.ACCOUNT.DIALOGUES + "1")}
+								href={ROUTES.ACCOUNT.DIALOGUES + "1"}
 							>
 								<FiMessageCircle color="white" size={32} />
 								{unreaded ? (
 									<div className="absolute top-px right-px w-3 h-3 rounded-full bg-primary" />
 								) : null}
-							</button>
+							</a>
 						</>
 					) : null}
 					<button onClick={() => setMobileMenu(true)}>
@@ -458,14 +460,15 @@ export const Navbar = () => {
 							>
 								Профиль
 							</button>
-							<button
+							<a
+								href={ROUTES.ACCOUNT.DIALOGUES + "1"}
 								onClick={() => {
-									router.push(ROUTES.ACCOUNT.DIALOGUES + "1");
+									// router.push(ROUTES.ACCOUNT.DIALOGUES + "1");
 									setMobileMenu(false);
 								}}
 							>
 								Диалоги
-							</button>
+							</a>
 							<button
 								onClick={() => {
 									router.push(ROUTES.ACCOUNT.GUESTS);
@@ -548,15 +551,15 @@ export const Navbar = () => {
 			<ConfirmationModal
 				isOpen={isConfirmationRequired}
 				onOpenChange={() => {
-					logout()
-					onConfirmationRequiredChange()
+					logout();
+					onConfirmationRequiredChange();
 				}}
 			/>
 			<InfoModal
 				isOpen={isInfoBlocked}
 				onOpenChange={() => {
-					onInfoBlockedChange()
-					logout()
+					onInfoBlockedChange();
+					logout();
 				}}
 				onClose={() => logout()}
 				title="Ошибка"
