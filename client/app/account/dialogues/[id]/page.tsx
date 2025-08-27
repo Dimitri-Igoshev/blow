@@ -302,12 +302,6 @@ export default function AccountDialogues({
 
 	useScrollToBottom(containerRef, [chat, currentChat, me, chats]);
 
-	useEffect(() => {
-		if (id !== "1") return;
-
-		setCurrentChat(null);
-	}, [currentChat, id]);
-
 	return (
 		<>
 			{loading ? (
