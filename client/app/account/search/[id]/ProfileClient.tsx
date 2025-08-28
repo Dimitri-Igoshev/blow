@@ -72,6 +72,8 @@ const ProfileClient: FC<ProfileViewProps> = ({ user }) => {
 	const [deleteNote] = useDeleteNoteMutation();
 
 	const addNote = async (text: string) => {
+		if (!text) return;
+
 		if (note) {
 			editNote({ id: me?._id, body: { text, userId: user?._id } }).unwrap();
 		} else {
@@ -84,6 +86,8 @@ const ProfileClient: FC<ProfileViewProps> = ({ user }) => {
 	const [createClaim] = useCreateClaimMutation();
 
 	const addClaim = async (text: string) => {
+		if (!text) return;
+
 		createClaim({ from: me?._id, text, about: user?._id })
 			.unwrap()
 			.then(() => {
@@ -94,10 +98,14 @@ const ProfileClient: FC<ProfileViewProps> = ({ user }) => {
 	};
 
 	const removeNote = async () => {
-		if (note) {
-			deleteNote({ id: me?._id, body: { userId: user?._id } }).unwrap();
-			setNote("");
-		}
+		console.log("hi");
+		// if (note) {
+		deleteNote({ id: me?._id, body: { userId: user?._id } })
+			.unwrap()
+			.then((res) => console.log(res))
+			.catch((err) => console.log(err));
+		setNote("");
+		// }
 	};
 
 	const {
@@ -393,7 +401,7 @@ const ProfileClient: FC<ProfileViewProps> = ({ user }) => {
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
 								{note ? (
 									<div className="grid col-span-1 sm:col-span-2 gap-6 mt-6 w-full">
-										<Note text={note} />
+										<Note text={note} onDelete={removeNote} />
 									</div>
 								) : null}
 								{me ? (

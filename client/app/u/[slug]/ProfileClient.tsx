@@ -73,7 +73,7 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
   const [deleteNote] = useDeleteNoteMutation();
 
   const addNote = async (text: string) => {
-    if (!me?._id || !id) return;
+    if (!text || !me?._id || !id) return;
     if (note) {
       editNote({ id: me?._id, body: { text, userId: id } }).unwrap();
     } else {
@@ -86,7 +86,7 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
   const [createClaim] = useCreateClaimMutation();
 
   const addClaim = async (text: string) => {
-    if (!me?._id || !id) return;
+    if (!text || !me?._id || !id) return;
     createClaim({ from: me?._id, text, about: id })
       .unwrap()
       .then(() => {
@@ -353,7 +353,7 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
                 {note ? (
                   <div className="grid col-span-1 sm:col-span-2 gap-6 mt-6 w-full">
-                    <Note text={note} />
+                    <Note text={note} onDelete={removeNote} />
                   </div>
                 ) : null}
 

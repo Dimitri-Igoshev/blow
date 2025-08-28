@@ -6,14 +6,16 @@ import { useRouter } from "next/navigation";
 import { ROUTES } from "@/app/routes";
 import { config } from "@/common/env";
 import { useGetUserQuery } from "@/redux/services/userApi";
+import { Button } from "@heroui/button";
+import { MdDeleteOutline } from "react-icons/md";
 
-export const NoteCard = ({ note }: any) => {
+export const NoteCard = ({ note, onDelete }: any) => {
 	const { data: user } = useGetUserQuery(note._id);
 	const router = useRouter();
 
 	return (
 		<button
-			className="bg-white flex-col sm:flex-row dark:bg-foreground-100 flex gap-5 rounded-[24px] p-5 cursor-pointer"
+			className="bg-white dark:bg-foreground-100 flex justify-between gap-5 rounded-[24px] p-5 cursor-pointer group"
 			onClick={() => router.push(ROUTES.ACCOUNT.SEARCH + "/" + note._id)}
 		>
 			{/* <div className="min-w-[60px]"> */}
@@ -37,23 +39,35 @@ export const NoteCard = ({ note }: any) => {
 				onClick={() => router.push(`${ROUTES.ACCOUNT.SEARCH}/${user?._id}`)}
 			/> */}
 			{/* </div> */}
-			<div className="rounded-[18px] overflow-hidden min-w-full sm:min-w-[90px]">
-				{user ? (
-					<Image
-						alt=""
-						className="z-0 relative w-full h-auto sm:h-[120px] sm:w-[90px]"
-						radius="none"
-						src={
-							user?.photos[0]?.url
-								? `${config.MEDIA_URL}/${user.photos[0].url}`
-								: user?.sex === "male"
-									? "/men2.png"
-									: "/woman2.png"
-						}
-					/>
-				) : null}
+			<div className="bg-white dark:bg-foreground-100 flex gap-5">
+				<div className="relative w-[60px] h-[60px] min-w-[60px] min-h-[60px] xl:flex-shrink-0 aspect-[1/1] overflow-hidden rounded-full cursor-pointer">
+					<div className="absolute inset-0">
+						<img
+							alt=""
+							src={
+								user?.photos[0]?.url
+									? `${config.MEDIA_URL}/${user.photos[0].url}`
+									: user?.sex === "male"
+										? "/men2.png"
+										: "/woman2.png"
+							}
+							className="w-full h-full object-cover object-center"
+						/>
+					</div>
+				</div>
+				<p className="text-[18px] text-left">{note.text}</p>
 			</div>
-			<p className="text-[18px] text-left">{note.text}</p>
+
+			<Button
+				isIconOnly
+				size="sm"
+				radius="full"
+				onPress={onDelete}
+				color="primary"
+				className="hidden group-hover:flex"
+			>
+				<MdDeleteOutline className="text-[20px]" />
+			</Button>
 		</button>
 	);
 };
