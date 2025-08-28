@@ -269,7 +269,7 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 					selectedKey={search?.city ?? null}
 					allowsCustomValue={false}
 					allowsEmptyCollection
-					isClearable
+					isClearable={false}
 					onSelectionChange={(key) => {
 						// key может быть string | number | null
 						const city = (key ?? null) as string | null;
