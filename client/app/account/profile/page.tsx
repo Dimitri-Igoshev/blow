@@ -4,6 +4,7 @@ import { Image } from "@heroui/image";
 import { MdOutlineHeight, MdOutlineLogout } from "react-icons/md";
 import { GiWeight } from "react-icons/gi";
 import { PiWaveform } from "react-icons/pi";
+import dynamic from "next/dynamic";
 import { FiEdit } from "react-icons/fi";
 import { LuCrown, LuWallet } from "react-icons/lu";
 import { IoArrowUp } from "react-icons/io5";
@@ -25,6 +26,10 @@ import { RAISE_ID } from "@/helper/checkIsActive";
 import { InfoModal } from "@/components/InfoModal";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { BlowLoader } from "@/components/BlowLoader";
+
+const VoiceRecorder = dynamic(() => import("@/components/VoiceRecoder"), {
+	ssr: false,
+});
 
 const AccountProfilePage = () => {
 	const router = useRouter();
@@ -258,7 +263,7 @@ const AccountProfilePage = () => {
 									</div>
 								</div>
 
-								<div>
+								{/* <div>
 									{me?.voice ? (
 										<button
 											onClick={handlePlay}
@@ -268,7 +273,8 @@ const AccountProfilePage = () => {
 											<p>Прослушать</p>
 										</button>
 									) : null}
-								</div>
+								</div> */}
+								<VoiceRecorder />
 							</div>
 
 							<div className="text-[20px] font-semibold mt-3">
