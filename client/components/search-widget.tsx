@@ -300,8 +300,14 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
         </Select> */}
 			</div>
 
-			<div className="flex gap-6 items-center w-full justify-between">
+			<div className={cn("flex wrap gap-6 items-center w-full justify-between", {
+        // ['flex-col']: horizontal
+      })}>
 				{isPremium(me) || me?.sex === "female" ? (
+          <div className={cn("items-center", {
+            ['flex gap-6  w-full justify-between']: horizontal,
+            ['mt-2']: !horizontal
+          })}>
 					<Switch
 						classNames={{
 							label: "text-white",
@@ -320,12 +326,34 @@ export const SearchWidget: FC<SearchWidgetProps> = ({
 					>
 						Онлайн
 					</Switch>
+          <Switch
+						classNames={{
+							label: "text-white",
+						}}
+            className={cn('text-nowrap', {
+              ['flex']: horizontal,
+              ['hidden']: !horizontal
+            })}
+						color="success"
+						isSelected={!!search.withPhoto}
+						onValueChange={(value) => {
+							dispatch(
+								setSearch({
+									...search,
+									withPhoto: value ? "true" : "",
+								})
+							);
+						}}
+					>
+						C фото
+					</Switch>
+          </div>
 				) : null}
 				<Button
 					className={cn(
 						"font-semibold text-white dark:bg-black bg-dark w-full",
 						{
-							"mt-2": !horizontal,
+							"mt-2 w-full": !horizontal,
 							"xl:hidden 2xl:flex": horizontal,
 						}
 					)}
