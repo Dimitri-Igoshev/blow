@@ -274,7 +274,7 @@ const AccountProfilePage = () => {
 										</button>
 									) : null}
 								</div> */}
-								<VoiceRecorder />
+								<VoiceRecorder className='mt-3 sm:mt-0' />
 							</div>
 
 							<div className="text-[20px] font-semibold mt-3">

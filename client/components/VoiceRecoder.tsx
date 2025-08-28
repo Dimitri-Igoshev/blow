@@ -8,7 +8,7 @@ import { useGetMeQuery, useUpdateUserMutation } from "@/redux/services/userApi";
 import { config } from "@/common/env";
 import { BlowLoader } from "./BlowLoader";
 
-const VoiceRecorder = () => {
+const VoiceRecorder = ({ className }: any) => {
 	const [recording, setRecording] = useState(false);
 	const [audioUrl, setAudioUrl] = useState<string | null>(null);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -110,8 +110,8 @@ const VoiceRecorder = () => {
 	};
 
 	return (
-		<div>
-			<div className="flex items-center gap-3">
+		<div className={className} >
+			<div className="flex flex-wrap items-center gap-3">
 				{(me?.voice || audioUrl) && !recording ? (
 					<button
 						onClick={handlePlay}
