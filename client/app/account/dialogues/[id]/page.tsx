@@ -522,7 +522,7 @@ export default function AccountDialogues({
 
 							{currentChat ? (
 								// панель ввода
-								<div className="relative flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
+								<div className="relative flex items-center gap-3 p-3 md:p-0 bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
 									{/* превью цитаты */}
 									<div className="absolute -top-20 left-3 right-3 md:static md:top-auto">
 										<ReplyPreview />
@@ -530,7 +530,7 @@ export default function AccountDialogues({
 
 									{/* ПИКЕР СМАЙЛОВ — вынесен СЮДА, фиксируем сверху */}
 									{showEmoji ? (
-										<div className="absolute top-0 left-0 right-0 -translate-y-full mb-2 z-50 flex justify-center">
+										<div className="absolute -top-4 sm:top-[500px] left-0 right-0 -translate-y-full mb-2 z-50 flex justify-center">
 											{/* @ts-ignore */}
 											<Picker
 												data={data}
