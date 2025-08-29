@@ -107,6 +107,10 @@ export default function AccountDialogues({
 
 	const [replyTo, setReplyTo] = useState<any>(null);
 
+	useEffect(() => {
+	  setReplyTo(null);
+	}, [currentChat])
+	
 	const handleSubmit = async () => {
 		if (!text) return;
 
