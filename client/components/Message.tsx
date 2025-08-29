@@ -9,39 +9,64 @@ import { config } from "@/common/env";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { maskContacts } from "@/helper/maskContacts";
 import { isPremium } from "@/helper/checkIsActive";
-import { Button } from "@heroui/button"
-import { MdOutlineFileDownload } from "react-icons/md"
-import { ROUTES } from "@/app/routes"
+import { Button } from "@heroui/button";
+import { MdOutlineFileDownload } from "react-icons/md";
+import { ROUTES } from "@/app/routes";
+import { FiCornerUpRight } from "react-icons/fi";
 
 interface MessageProps {
 	left?: boolean;
 	message?: any;
 	sameSender?: boolean;
+	onReply?: (m: any) => void;
 }
 
 export const Message: FC<MessageProps> = ({
 	left = false,
 	message,
 	sameSender = false,
+	onReply,
 }) => {
 	const { data: me } = useGetMeQuery(null);
 	const premium = isPremium(me);
 
 	const handleDownload = async () => {
-    const fileUrl = `${config.MEDIA_URL}/${message?.fileUrl}`;
-    
-    const response = await fetch(fileUrl);
-    const blob = await response.blob();
+		const fileUrl = `${config.MEDIA_URL}/${message?.fileUrl}`;
 
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", ""); // 💾 имя файла
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
-  };
+		const response = await fetch(fileUrl);
+		const blob = await response.blob();
+
+		const url = window.URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+		link.setAttribute("download", ""); // 💾 имя файла
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+		window.URL.revokeObjectURL(url);
+	};
+
+	const ReplyQuote = () => {
+		if (!message?.replyTo) return null;
+		const r = message.replyTo;
+		return (
+			<div className="mb-2 rounded-md border border-default-200 bg-default-100/60 p-2">
+				<div className="text-xs opacity-70">
+					{r?.sender?.firstName
+						? r.sender.firstName
+						: r?.sender?.sex === "male"
+							? "Мужчина"
+							: "Девушка"}
+					{" • "}
+					{format(new Date(r?.createdAt), "HH:mm dd.MM")}
+				</div>
+				{r?.fileUrl ? (
+					<div className="mt-1 text-xs italic opacity-80">📎 Вложение</div>
+				) : null}
+				{r?.text ? <div className="text-sm line-clamp-3">{r.text}</div> : null}
+			</div>
+		);
+	};
 
 	return (
 		<div
@@ -65,13 +90,13 @@ export const Message: FC<MessageProps> = ({
 						}
 						style={{ objectFit: "cover" }}
 						width={30}
-            onClick={() =>
-              window.open(
-                `${ROUTES.ACCOUNT.SEARCH}/${message?.sender?._id}`,
-                "_blank",
-                "noopener,noreferrer",
-              )
-            }
+						onClick={() =>
+							window.open(
+								`${ROUTES.ACCOUNT.SEARCH}/${message?.sender?._id}`,
+								"_blank",
+								"noopener,noreferrer"
+							)
+						}
 					/>
 					<p
 						className={cn("font-semibold line-clamp-1", {
@@ -93,12 +118,12 @@ export const Message: FC<MessageProps> = ({
 				<div
 					className={cn(
 						"flex flex-col justify-between bg-white dark:bg-foreground-100 rounded-[12px] px-5 p-3 -mt-3 md:max-w-[50%]",
-						{
-							["rounded-tr-none"]: !left,
-							["rounded-tl-none"]: left,
-						}
+						{ ["rounded-tr-none"]: !left, ["rounded-tl-none"]: left }
 					)}
 				>
+					{/* 👇 цитата сверху */}
+					<ReplyQuote />
+
 					{message?.fileUrl ? (
 						<div className="relative group">
 							<Image
@@ -119,7 +144,18 @@ export const Message: FC<MessageProps> = ({
 							</Button>
 						</div>
 					) : null}
-					<p>{message.text}</p>
+					{message?.text ? <p>{message.text}</p> : null}
+
+					{/* Кнопка "Ответить" */}
+					{onReply ? (
+						<button
+							className="self-end mt-2 text-xs opacity-70 hover:opacity-100 inline-flex items-center gap-1"
+							onClick={() => onReply(message)}
+							title="Ответить"
+						>
+							<FiCornerUpRight /> Ответить
+						</button>
+					) : null}
 				</div>
 
 				<p className="text-[10px] text-right mt-1">

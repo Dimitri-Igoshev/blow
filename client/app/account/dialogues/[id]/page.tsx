@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
-import { use, useEffect, useRef, useState, type RefObject } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
@@ -29,8 +29,11 @@ import FileUploadButton from "@/components/FileUploadButton";
 import { useUploadFileMutation } from "@/redux/services/fileApi";
 import { BlowLoader } from "@/components/BlowLoader";
 import { FiSend } from "react-icons/fi";
-import { channel } from "diagnostics_channel";
 import { useScrollToBottom } from "@/hooks/useScrollToBottom";
+
+import dynamic from "next/dynamic";
+import data from "@emoji-mart/data";
+const Picker = dynamic(() => import("@emoji-mart/react"), { ssr: false });
 
 interface ProfileViewProps {
 	params: any;
@@ -71,15 +74,11 @@ export default function AccountDialogues({
 			refetch();
 			refetch2();
 		}, 3000);
-
-		return () => {
-			clearInterval(interval);
-		};
+		return () => clearInterval(interval);
 	}, []);
 
 	useEffect(() => {
 		if (!chats || currentChat) return;
-
 		if (id === "1") {
 			if (isMobile) {
 				setCurrentChat(null);
@@ -106,6 +105,8 @@ export default function AccountDialogues({
 		}
 	};
 
+	const [replyTo, setReplyTo] = useState<any>(null);
+
 	const handleSubmit = async () => {
 		if (!text) return;
 
@@ -114,12 +115,15 @@ export default function AccountDialogues({
 			sender: me._id,
 			recipient: getInterlocutor(currentChat)._id,
 			text,
+			replyTo: replyTo?._id ?? null,
 		};
 
 		send(body)
-			.then((res) => setText(""))
-			.catch((err) => setText(""))
-			// .finally(() => scrollToTop());
+			.then(() => {
+				setText("");
+				setReplyTo(null);
+			})
+			.catch(() => setText(""));
 	};
 
 	useEffect(() => {
@@ -179,19 +183,16 @@ export default function AccountDialogues({
 
 	useEffect(() => {
 		if (!chat) return;
-
 		setSortedChats(sortChatsByLastMessage(chats));
 	}, [chat]);
 
 	const hasUnreadedMesages = (chat: any) => {
 		let quantity = 0;
-
 		chat?.messages?.forEach((message: any) => {
 			if (message?.sender !== me?._id && message.isReaded === false) {
 				quantity += 1;
 			}
 		});
-
 		return quantity;
 	};
 
@@ -211,13 +212,9 @@ export default function AccountDialogues({
 			left: document.body.style.left,
 			right: document.body.style.right,
 		};
-
-		// Применяем стили
 		document.body.style.position = "fixed";
 		document.body.style.left = "0";
 		document.body.style.right = "0";
-
-		// Очистка: возвращаем как было
 		return () => {
 			document.body.style.position = "";
 			document.body.style.left = originalStyle.left;
@@ -244,7 +241,6 @@ export default function AccountDialogues({
 
 	const remove = () => {
 		if (!selectedChat) return;
-
 		deleteChat({ id: selectedChat, userId: me._id })
 			.unwrap()
 			.then(() => {
@@ -252,9 +248,8 @@ export default function AccountDialogues({
 				onRemoveSuccess();
 				router.refresh();
 			})
-			.catch((err) => {
+			.catch(() => {
 				onOpenChangeRemove();
-				console.log(err);
 			});
 	};
 
@@ -266,11 +261,8 @@ export default function AccountDialogues({
 			console.warn("Файл не является изображением:", file.type);
 			return;
 		}
-
 		setLoading(true);
-
 		const formData = new FormData();
-
 		formData.set("files", file);
 
 		uploadFiles(formData)
@@ -282,29 +274,92 @@ export default function AccountDialogues({
 					recipient: getInterlocutor(currentChat)._id,
 					text,
 					fileUrl: res[0].url,
+					replyTo: replyTo?._id ?? null,
 				};
 
 				send(body)
-					.then((res) => setText(""))
-					.catch((err) => setText(""))
+					.then(() => {
+						setText("");
+						setReplyTo(null);
+					})
+					.catch(() => setText(""))
 					.finally(() => {
 						scrollToTop();
 						setLoading(false);
 					});
 			})
-			.catch((err: any) => {
-				setLoading(false);
-			})
+			.catch(() => setLoading(false))
 			.finally(() => setLoading(false));
 	};
 
 	const containerRef = useRef<any>(null);
 
-	useScrollToBottom(
-		containerRef,
-		[currentChat?._id, chat?.length], // ✅ достаточно этого
-		{ smooth: true }
-	);
+	useScrollToBottom(containerRef, [currentChat?._id, chat?.length], {
+		smooth: true,
+	});
+
+	// ====== PREVIEW ЦИТАТЫ ======
+	const ReplyPreview = () => {
+		if (!replyTo) return null;
+		return (
+			<div className="mx-3 mb-2 rounded-[12px] border border-default-200 bg-default-100 p-2 flex items-start justify-between gap-3">
+				<div className="text-sm">
+					<div className="text-xs opacity-70">
+						Ответ на:{" "}
+						{replyTo?.sender?.firstName ??
+							(replyTo?.sender?.sex === "male" ? "Мужчина" : "Девушка")}
+					</div>
+					{replyTo?.fileUrl ? (
+						<div className="text-xs italic">📎 Вложение</div>
+					) : null}
+					{replyTo?.text ? (
+						<div className="line-clamp-2">{replyTo.text}</div>
+					) : null}
+				</div>
+				<button
+					className="text-xs opacity-70 hover:opacity-100"
+					onClick={() => setReplyTo(null)}
+				>
+					✕
+				</button>
+			</div>
+		);
+	};
+
+	// ====== EMOJI ======
+	const [showEmoji, setShowEmoji] = useState(false);
+	const inputRef = useRef<HTMLInputElement | null>(null);
+
+	// HeroUI Input может прокидывать inputRef внутрь: используем callback-ref, чтобы поймать реальный DOM <input>
+	const setInputDomRef = (node: any) => {
+		const el: HTMLInputElement | null =
+			node?.inputRef?.current ?? (node as HTMLInputElement | null) ?? null;
+		if (el) inputRef.current = el;
+	};
+
+	const addEmoji = (emoji: any) => {
+		const sym: string = emoji?.native || "";
+		if (!sym) return;
+
+		setText((prev) => {
+			const el = inputRef.current;
+			if (!el) return prev + sym; // fallback
+			const start = el.selectionStart ?? prev.length;
+			const end = el.selectionEnd ?? prev.length;
+			const next = prev.slice(0, start) + sym + prev.slice(end);
+			// вернуть фокус/каретку на след. кадр
+			requestAnimationFrame(() => {
+				el.focus();
+				const pos = start + sym.length;
+				try {
+					el.setSelectionRange(pos, pos);
+				} catch {}
+			});
+			return next;
+		});
+
+		setShowEmoji(false); // закрыть после выбора (можно убрать)
+	};
 
 	return (
 		<>
@@ -345,7 +400,6 @@ export default function AccountDialogues({
 								Диалоги
 							</h1>
 						)}
-						{/* <h1 className="hidden md:flex font-semibold text-[36px]">Диалоги</h1> */}
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[100%] fixed top-[220px] sm:top-[250px] left-0 right-0 px-3 sm:px-9 w-full">
@@ -372,7 +426,6 @@ export default function AccountDialogues({
 									)}
 									onClick={() => {
 										setCurrentChat(chat);
-
 										if (hasUnreadedMesages(chat)) {
 											readMessages(chat);
 										}
@@ -396,9 +449,6 @@ export default function AccountDialogues({
 											window.open(
 												`${ROUTES.ACCOUNT.SEARCH}/${getInterlocutor(chat)?._id}`
 											);
-											// router.push(
-											// 	ROUTES.ACCOUNT.SEARCH + "/" + getInterlocutor(chat)?._id
-											// );
 										}}
 									/>
 
@@ -443,9 +493,7 @@ export default function AccountDialogues({
 									ref={containerRef}
 									className={cn(
 										"col-span-1 md:col-span-2 p-0 py-3.5 pr-6 lg:col-span-3 xl:col-span-4 w-full rounded-[12px] relative text-[14px] overflow-y-scroll scroll-transparent scroll-smooth flex-1",
-										{
-											"hidden md:flex": !currentChat,
-										}
+										{ "hidden md:flex": !currentChat }
 									)}
 									style={{
 										height: "calc((var(--vh, 1vh) * 100 - 210px) * 0.75)",
@@ -463,6 +511,7 @@ export default function AccountDialogues({
 														}
 														key={message?._id}
 														left
+														onReply={(m) => setReplyTo(m)}
 													/>
 												))}
 											</>
@@ -472,8 +521,39 @@ export default function AccountDialogues({
 							</div>
 
 							{currentChat ? (
-								<div className="flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
+								// панель ввода
+								<div className="relative flex items-center gap-3 p-3 md:p-0 bg-white dark:bg-transparent md:bg-transparent fixed bottom-0 left-0 right-0 md:static md:mt-3">
+									{/* превью цитаты */}
+									<div className="absolute -top-20 left-3 right-3 md:static md:top-auto">
+										<ReplyPreview />
+									</div>
+
+									{/* ПИКЕР СМАЙЛОВ — вынесен СЮДА, фиксируем сверху */}
+									{showEmoji ? (
+										<div className="absolute top-0 left-0 right-0 -translate-y-full mb-2 z-50 flex justify-center">
+											{/* @ts-ignore */}
+											<Picker
+												data={data}
+												onEmojiSelect={addEmoji}
+												locale="ru"
+											/>
+										</div>
+									) : null}
+
+									{/* кнопка смайликов */}
+									<Button
+										isIconOnly
+										radius="full"
+										color="secondary"
+										onPress={() => setShowEmoji((v) => !v)}
+										title="Смайлики"
+									>
+										<p className="text-[20px]">🙂</p>
+									</Button>
+
+									{/* инпут */}
 									<Input
+										ref={setInputDomRef as any} // 👈 корректный DOM-ref
 										classNames={{
 											input: "bg-transparent dark:text-white",
 											inputWrapper: "dark:bg-foreground-200",
@@ -484,9 +564,8 @@ export default function AccountDialogues({
 										value={text}
 										onChange={(e) => setText(e.target.value)}
 										onKeyDown={handleKeyDown}
-										// onFocus={scrollToTop}
-										// onBlur={scrollToTop}
 									/>
+
 									<FileUploadButton
 										onFileSelect={(file: any) => uploadFile(file)}
 									/>
