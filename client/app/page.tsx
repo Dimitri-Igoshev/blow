@@ -73,7 +73,7 @@ export default function Home() {
 
 						<div className="hidden md:flex flex-col md:w-[1100px] gap-8">
 							<h1 className="text-[26px] lg:text-[36px] font-semibold text-white lg:leading-[56px]">
-								Премиальное знакомство: успех встречает красоту.
+								Премиальное знакомство: успех встречает красоту. Поиск лучших содержанок и самых успешных мужчин.
 							</h1>
 							<ul className="hidden md:block text-white uppercase list-disc leading-7 ml-4">
 								<li>Реальные анкеты и качественные фото</li>
@@ -268,8 +268,7 @@ export default function Home() {
 
 						<div className="pt-[60px] sm:pt-[70px] bg-gray text-black/50 dark:text-white/50 leading-6 dark:bg-black px-6 sm:px-12">
 							<h2 className="text-[20px] sm:text-[24px] font-semibold">
-								Найди девушку или мужчину рядом с тобой – знакомься, общайся и
-								наслаждайся приятным обществом в своем городе!
+								Найди любовницу или спонсора рядом с тобой – знакомься, общайся и наслаждайся приятным обществом в своем городе!
 							</h2>
 						</div>
 

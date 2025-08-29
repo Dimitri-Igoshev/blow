@@ -258,7 +258,7 @@ export default function EditProfile() {
 			<h2 className="font-semibold text-[24px] mt-5">Цели знакомства</h2>
 
 			<div className="flex flex-wrap gap-[50px] w-full">
-				{/* <Checkbox
+				<Checkbox
 					defaultSelected
 					className="-mt-5 z-0 relative"
 					classNames={{
@@ -269,7 +269,7 @@ export default function EditProfile() {
 					onChange={(e) => setUser({ ...user, sponsor: !!e.target.checked })}
 				>
 					{user?.sex === "male" ? "я спонсор" : "ищу спонсора"}
-				</Checkbox> */}
+				</Checkbox>
 				{/* <Checkbox
 					defaultSelected
 					className="-mt-5 z-0 relative"
@@ -332,7 +332,7 @@ export default function EditProfile() {
 					isSelected={!!user?.evening}
 					onChange={(e) => setUser({ ...user, evening: !!e.target.checked })}
 				>
-					Общение
+					Провести вечер
 				</Checkbox>
 				<Checkbox
 					defaultSelected
@@ -344,7 +344,7 @@ export default function EditProfile() {
 					isSelected={!!user?.traveling}
 					onChange={(e) => setUser({ ...user, traveling: !!e.target.checked })}
 				>
-					Свободное общение
+					Совместные путешествия
 				</Checkbox>
 			</div>
 

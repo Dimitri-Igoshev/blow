@@ -282,19 +282,19 @@ const AccountProfilePage = () => {
 							</div>
 
 							<ul className="flex flex-wrap w-full gap-6 pl-4">
-								{/* {!me?.sponsor ? null : (
+								{!me?.sponsor ? null : (
 									<li className="list-disc mr-8">
 										{me?.sex === "male" ? "Стану спонсором" : "Ищу спонсора"}
 									</li>
-								)} */}
+								)}
 								{!me?.relationships ? null : (
 									<li className="list-disc mr-8">Серьезные отношения</li>
 								)}
 								{!me?.evening ? null : (
-									<li className="list-disc mr-8">Общение</li>
+									<li className="list-disc mr-8">Провести вечер</li>
 								)}
 								{!me?.traveling ? null : (
-									<li className="list-disc mr-8">Свободное общение</li>
+									<li className="list-disc mr-8">Совместные путешествия</li>
 								)}
 								{/* {!me?.traveling ? null : (
 									<li className="list-disc mr-8">Совместные путешествия</li>
