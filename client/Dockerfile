@@ -5,7 +5,8 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN rm -rf node_modules package-lock.json
-RUN npm install --legacy-peer-deps
+# RUN npm install --legacy-peer-deps
+RUN npm install --force
 COPY . .
 RUN npm list @emoji-mart/react || echo "Не удалось найти @emoji-mart/react"
 RUN npm run build
@@ -15,7 +16,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 COPY --from=builder /app ./
-RUN npm install --legacy-peer-deps
+RUN npm install --force
 
 EXPOSE 3000
 CMD ["npm", "start"]
