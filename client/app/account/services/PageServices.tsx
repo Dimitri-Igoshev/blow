@@ -13,9 +13,10 @@ import {
 	useBuyServiceMutation,
 	useBuyServicesKitMutation,
 	useGetMeQuery,
+	useReiseProfileMutation,
 } from "@/redux/services/userApi";
 import { InfoModal } from "@/components/InfoModal";
-import { isPremium, MAILING_ID } from "@/helper/checkIsActive";
+import { isPremium, MAILING_ID, RAISE_ID } from "@/helper/checkIsActive";
 import {
 	useCreatePaymentMutation,
 	useTopUpMutation,
@@ -220,13 +221,17 @@ export default function AccountServices() {
 	const [info, setInfo] = useState({
 		title: "",
 		text: "",
+		btn: "",
 	});
+
+	const [isUp, setIsUp] = useState(false);
 
 	const buyService = (item: any, value: any) => {
 		if (me?.balance < +value?.price) {
 			setInfo({
 				title: "Ошибка",
 				text: "Недостаточно средств!",
+				btn: "",
 			});
 
 			return onOpen();
@@ -255,7 +260,12 @@ export default function AccountServices() {
 					setInfo({
 						title: "Поздравляем",
 						text: "Услуга добавлена!",
+						btn: "",
 					});
+
+					if (item?._id === "6830b4d752bb4caefa041497") {
+						setIsUp(true);
+					}
 
 					return onOpen();
 				})
@@ -277,6 +287,7 @@ export default function AccountServices() {
 					setInfo({
 						title: "Поздравляем",
 						text: "Премиум добавлен!",
+						btn: "",
 					});
 
 					return onOpen();
@@ -324,6 +335,42 @@ export default function AccountServices() {
 			.catch((e: any) => console.log(e));
 	};
 
+	const [raise] = useReiseProfileMutation();
+
+	const raiseProfile = () => {
+		if (!me) return;
+
+		const can =
+			me?.services?.find((s: any) => s._id === RAISE_ID)?.quantity > 0;
+
+		if (!can) {
+			setInfo({
+				title: "Не доступно",
+				text: "Вам необходмо приобрести услугу поднятия анкеты",
+				btn: "Купить",
+			});
+
+			onOpen();
+
+			return;
+		}
+
+		raise(me?._id)
+			.unwrap()
+			.then(() => {
+				setInfo({
+					title: "Успешно",
+					text: "Мы подняли вашу анкету, теперь вы стали еще заметнее!",
+					btn: "",
+				});
+
+				setIsUp(false);
+
+				onOpen();
+			})
+			.catch((err: any) => console.log(err));
+	};
+
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[84px] gap-[30px] min-h-screen">
 			<div className="flex w-full items-center justify-between">
@@ -355,7 +402,13 @@ export default function AccountServices() {
 					subtile={getSubtitle(item)}
 					text={item.description}
 					title={item.name}
-					type={item._id === '6831854519e3572edace86b7' ? "mailing" : item._id === '6831be446c59cd4bad808bb5' ? "premium" : "service"}
+					type={
+						item._id === "6831854519e3572edace86b7"
+							? "mailing"
+							: item._id === "6831be446c59cd4bad808bb5"
+								? "premium"
+								: "service"
+					}
 					onClick={(value: any) => buyService(item, value)}
 				/>
 			))}
@@ -393,6 +446,8 @@ export default function AccountServices() {
 				text={info.text}
 				title={info.title}
 				onOpenChange={onOpenChange}
+				actionBtn={isUp ? "Поднять" : info.btn ? info.btn : ""}
+				onAction={raiseProfile}
 			/>
 
 			<InfoModal

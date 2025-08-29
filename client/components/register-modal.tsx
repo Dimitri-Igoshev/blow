@@ -54,7 +54,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 	const [weight, setWeight] = useState("");
 	const [photo, setPhoto] = useState<any>();
 	const [imgSrc, setImgSrc] = useState<string>("");
-  const [firstName, setFirstName] = useState("")
+	const [firstName, setFirstName] = useState("");
 
 	const inputRef = useRef<any>(null);
 
@@ -158,63 +158,61 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 									/>
 
 									{/* {woman ? ( */}
-										<>
-											<Select
-												className="w-full text-primary"
-												classNames={{
-													trigger: "bg-white dark:bg-foreground-300",
-												}}
-												placeholder="возраст (лет)"
-												radius="full"
-												selectedKeys={[age]}
-												startContent={<MdOutlineGirl size={24} />}
-												onChange={(el: any) => setAge(el.target.value)}
-											>
-												{ages.map((age) => (
-													<SelectItem key={age.value}>{age.label}</SelectItem>
-												))}
-											</Select>
+									<>
+										<Select
+											className="w-full text-primary"
+											classNames={{
+												trigger: "bg-white dark:bg-foreground-300",
+											}}
+											placeholder="возраст (лет)"
+											radius="full"
+											selectedKeys={[age]}
+											startContent={<MdOutlineGirl size={24} />}
+											onChange={(el: any) => setAge(el.target.value)}
+										>
+											{ages.map((age) => (
+												<SelectItem key={age.value}>{age.label}</SelectItem>
+											))}
+										</Select>
 
-											<Select
-												className="w-full text-primary"
-												classNames={{
-													trigger: "bg-white dark:bg-foreground-300",
-												}}
-												placeholder="рост (см)"
-												radius="full"
-												selectedKeys={[height]}
-												startContent={
-													<MdOutlineHeight className="w-[22px]" size={22} />
-												}
-												onChange={(el: any) => setHeight(el.target.value)}
-											>
-												{heights.map((height) => (
-													<SelectItem key={height.value}>
-														{height.label}
-													</SelectItem>
-												))}
-											</Select>
+										<Select
+											className="w-full text-primary"
+											classNames={{
+												trigger: "bg-white dark:bg-foreground-300",
+											}}
+											placeholder="рост (см)"
+											radius="full"
+											selectedKeys={[height]}
+											startContent={
+												<MdOutlineHeight className="w-[22px]" size={22} />
+											}
+											onChange={(el: any) => setHeight(el.target.value)}
+										>
+											{heights.map((height) => (
+												<SelectItem key={height.value}>
+													{height.label}
+												</SelectItem>
+											))}
+										</Select>
 
-											<Select
-												className="w-full text-primary"
-												classNames={{
-													trigger: "bg-white dark:bg-foreground-300",
-												}}
-												placeholder="вес (кг)"
-												radius="full"
-												selectedKeys={[weight]}
-												startContent={
-													<GiWeight className="w-[22px]" size={18} />
-												}
-												onChange={(el: any) => setWeight(el.target.value)}
-											>
-												{weights.map((weight) => (
-													<SelectItem key={weight.value}>
-														{weight.label}
-													</SelectItem>
-												))}
-											</Select>
-										</>
+										<Select
+											className="w-full text-primary"
+											classNames={{
+												trigger: "bg-white dark:bg-foreground-300",
+											}}
+											placeholder="вес (кг)"
+											radius="full"
+											selectedKeys={[weight]}
+											startContent={<GiWeight className="w-[22px]" size={18} />}
+											onChange={(el: any) => setWeight(el.target.value)}
+										>
+											{weights.map((weight) => (
+												<SelectItem key={weight.value}>
+													{weight.label}
+												</SelectItem>
+											))}
+										</Select>
+									</>
 									{/* ) : null} */}
 
 									<Select
@@ -227,38 +225,40 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										selectedKeys={[city]}
 										onChange={(el: any) => setCity(el.target.value)}
 									>
-										{cities?.map((city: any) => (
-											<SelectItem key={city.value}>{city.label}</SelectItem>
-										))}
+										{cities
+											?.filter((item: any) => item.value)
+											.map((city: any) => (
+												<SelectItem key={city.value}>{city.label}</SelectItem>
+											))}
 									</Select>
 
 									{/* {woman ? ( */}
-										<>
-											{imgSrc ? (
-												<div className="flex justify-center w-full rounded-[20px] overflow-hidden">
-													<img alt="" src={imgSrc} />
-												</div>
-											) : null}
-											<input
-												ref={inputRef}
-												className="hidden"
-												type="file"
-												onChange={onSelectFile}
-											/>
+									<>
+										{imgSrc ? (
+											<div className="flex justify-center w-full rounded-[20px] overflow-hidden">
+												<img alt="" src={imgSrc} />
+											</div>
+										) : null}
+										<input
+											ref={inputRef}
+											className="hidden"
+											type="file"
+											onChange={onSelectFile}
+										/>
 
-											<Button
-												className="w-full"
-												color="primary"
-												radius="full"
-												startContent={
-													<HiOutlineCamera className="w-[22px]" size={20} />
-												}
-												variant="bordered"
-												onPress={() => inputRef.current.click()}
-											>
-												{photo ? "Заменить фото" : "Добавить фото"}
-											</Button>
-										</>
+										<Button
+											className="w-full"
+											color="primary"
+											radius="full"
+											startContent={
+												<HiOutlineCamera className="w-[22px]" size={20} />
+											}
+											variant="bordered"
+											onPress={() => inputRef.current.click()}
+										>
+											{photo ? "Заменить фото" : "Добавить фото"}
+										</Button>
+									</>
 									{/* ) : null} */}
 
 									{/* <p className="font-semibold mt-1">Цель знакомства</p>
@@ -298,7 +298,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										radius="full"
 										onPress={() => {
 											onNext({
-                        firstName,
+												firstName,
 												men,
 												woman,
 												city,
