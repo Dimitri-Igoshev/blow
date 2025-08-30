@@ -12,7 +12,7 @@ import { setSearch } from "@/redux/features/searchSlice";
 import { motion, AnimatePresence } from "framer-motion";
 // import { cities } from "@/data/cities";
 
-const AccountSearch = ({ city = "" }: any) => {
+const AccountSearch = ({ city = "", sex = "", withPhoto = "" }: any) => {
 	const dispatch = useDispatch();
 	const state = useSelector((state: any) => state);
 	const search = state?.search?.search ? state.search.search : null;
@@ -24,7 +24,7 @@ const AccountSearch = ({ city = "" }: any) => {
 	// 	search ? { ...search, limit } : { limit }
 	// );
 	const { data: pageUsers, isFetching } = useGetUsersQuery(
-		search ? { ...search, limit } : { limit }
+		search ? { ...search, limit, sex, withPhoto } : { limit }
 	);
 
 	// локальный стабильный список
