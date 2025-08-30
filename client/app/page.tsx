@@ -20,8 +20,36 @@ import { BlowLoader } from "@/components/BlowLoader";
 import { useGetCitiesQuery } from "@/redux/services/cityApi";
 
 export default function Home() {
-	const { data: womans } = useGetUsersQuery({ sex: "female", withPhoto: true, random: true });
-	const { data: mens } = useGetUsersQuery({ sex: "male", withPhoto: true, random: true });
+	const { data: womans } = useGetUsersQuery(
+		{
+			sex: "female",
+			withPhoto: true,
+			random: true,
+		},
+		{
+			refetchOnMountOrArgChange: false,
+			refetchOnFocus: false,
+			refetchOnReconnect: false,
+			//@ts-ignore
+			keepUnusedDataFor: 60,
+			fixedCacheKey: "users-female-random-once",
+		}
+	);
+	const { data: mens } = useGetUsersQuery(
+		{
+			sex: "male",
+			withPhoto: true,
+			random: true,
+		},
+		{
+			refetchOnMountOrArgChange: false,
+			refetchOnFocus: false,
+			refetchOnReconnect: false,
+			//@ts-ignore
+			keepUnusedDataFor: 60,
+			fixedCacheKey: "users-male-random-once",
+		}
+	);
 	const { data: cities } = useGetCitiesQuery(null);
 
 	const state = useSelector((state: any) => state);
@@ -46,7 +74,7 @@ export default function Home() {
 
 		const timer = setTimeout(() => {
 			setLoaded(true);
-		}, 250);
+		}, 500);
 
 		return () => clearTimeout(timer);
 	}, [womans, mens]);
@@ -73,7 +101,8 @@ export default function Home() {
 
 						<div className="hidden md:flex flex-col md:w-[1100px] gap-8">
 							<h1 className="text-[26px] lg:text-[36px] font-semibold text-white lg:leading-[56px]">
-								Премиальное знакомство: успех встречает красоту. Поиск лучших содержанок и самых успешных мужчин.
+								Премиальное знакомство: успех встречает красоту. Поиск лучших
+								содержанок и самых успешных мужчин.
 							</h1>
 							<ul className="hidden md:block text-white uppercase list-disc leading-7 ml-4">
 								<li>Реальные анкеты и качественные фото</li>
@@ -224,7 +253,8 @@ export default function Home() {
                 отношений. BLOW — ваш проводник в мир изысканных знакомств и
                 незабываемых впечатлений.
               </p> */}
-								<p className="mt-4">
+
+								{/* <p className="mt-4">
 									BLOW — это изысканное пространство для успешных людей, где
 									встречаются мужчины и женщины, стремящиеся к гармоничным
 									отношениям. Наша миссия — создание комфортной среды для
@@ -262,13 +292,61 @@ export default function Home() {
 									необходимое для начала прекрасного путешествия в мир успешных
 									отношений. BLOW — ваш проводник в мир изысканных знакомств и
 									незабываемых впечатлений.
+								</p> */}
+
+								<p className="mt-4">
+									<span className="font-semibold">
+										BLOW — это пространство для тех, кто ищет не случайные
+										знакомства, а чётко понимает свои цели.
+									</span>{" "}
+									Здесь встречаются состоятельные мужчины и красивые, ухоженные
+									женщины, готовые к отношениям на условиях взаимной выгоды и
+									уважения.
+								</p>
+								<p className="mt-4">
+									Наша миссия — создать атмосферу, где всё честно и прозрачно:
+									каждый понимает, чего хочет и что готов дать взамен.
+									<span className="font-semibold">
+										{" "}
+										BLOW — это не про случайные свидания, а про осознанные
+										связи: спонсор и содержанка, партнёрство, серьёзные
+										отношения, совместные путешествия или просто тёплый вечер в
+										хорошей компании.
+									</span>
+								</p>
+								<p className="mt-4">
+									<span className="font-semibold">
+										Мужчины на платформе — успешные и щедрые, ценящие красоту,
+										преданность и умение вдохновлять. Женщины — ухоженные,
+										утончённые и открытые к покровительству, вниманию и заботе.
+									</span>
+								</p>
+								<p className="mt-4">
+									BLOW — это закрытое сообщество, где каждый профиль проходит
+									проверку. Здесь нет случайных людей, только те, кто знает цену
+									времени и ищет конкретный формат отношений.
+								</p>
+								<p className="mt-4">
+									Для женщин это возможность встретить надёжного и щедрого
+									мужчину, с которым можно строить будущее или наслаждаться
+									моментами. Для мужчин — шанс найти очаровательную спутницу,
+									готовую дарить тепло, внимание и вдохновение.
+								</p>
+								<p className="mt-4">
+									<span className="font-semibold">
+										BLOW — ваш доступ в мир, где каждое знакомство начинается с
+										взаимного понимания: спонсорство, серьёзные отношения,
+										путешествия или вечер вдвоём. Всё зависит только от ваших
+										желаний.
+									</span>
 								</p>
 							</div>
 						) : null}
 
 						<div className="pt-[60px] sm:pt-[70px] bg-gray text-black/50 dark:text-white/50 leading-6 dark:bg-black px-6 sm:px-12">
 							<h2 className="text-[20px] sm:text-[24px] font-semibold">
-								Найди любовницу или спонсора рядом с тобой – знакомься, общайся и наслаждайся приятным обществом в своем городе!
+								Найди любовницу или спонсора рядом с тобой – знакомься, общайся
+								и наслаждайся приятным обществом в своем городе!
 							</h2>
 						</div>
 
