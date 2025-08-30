@@ -20,11 +20,16 @@ const AccountSearch = ({ city = "", sex = "", withPhoto = "" }: any) => {
 
 	const { ref, inView } = useInView();
 
+	useEffect(() => {
+		if (sex) dispatch(setSearch({ ...search, sex }));
+		if (withPhoto) dispatch(setSearch({ ...search, withPhoto }));
+	}, []);
+
 	// const { data: users, isFetching } = useGetUsersQuery(
 	// 	search ? { ...search, limit } : { limit }
 	// );
 	const { data: pageUsers, isFetching } = useGetUsersQuery(
-		search ? { ...search, limit, sex, withPhoto } : { limit }
+		search ? { ...search, limit } : { limit }
 	);
 
 	// локальный стабильный список
