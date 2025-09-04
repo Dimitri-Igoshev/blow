@@ -45,7 +45,7 @@ export const InfoModal: FC<InfoModalProps> = ({
 			onOpenChange={onOpenChange}
 		>
 			<ModalContent>
-				<ModalHeader className="flex flex-col gap-1 text-[20px]">
+				<ModalHeader className="flex flex-col gap-1 text-[20px] mr-6">
 					{title}
 				</ModalHeader>
 				<ModalBody>

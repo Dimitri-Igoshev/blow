@@ -214,7 +214,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 					</Button>
 				) : null}
 
-				<div className="flex items-center gap-3 w-full sm:w-auto">
+				<div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
 					{!oneTime ? (
 						<Select
 							className="text-primary z-0 relative rounded-full w-full sm:w-[150px]"

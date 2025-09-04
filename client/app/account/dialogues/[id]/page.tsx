@@ -30,6 +30,7 @@ import { useUploadFileMutation } from "@/redux/services/fileApi";
 import { BlowLoader } from "@/components/BlowLoader";
 import { FiSend } from "react-icons/fi";
 import { useScrollToBottom } from "@/hooks/useScrollToBottom";
+import { MdIosShare } from "react-icons/md";
 
 import dynamic from "next/dynamic";
 import data from "@emoji-mart/data";
@@ -108,9 +109,9 @@ export default function AccountDialogues({
 	const [replyTo, setReplyTo] = useState<any>(null);
 
 	useEffect(() => {
-	  setReplyTo(null);
-	}, [currentChat])
-	
+		setReplyTo(null);
+	}, [currentChat]);
+
 	const handleSubmit = async () => {
 		if (!text) return;
 
@@ -365,6 +366,10 @@ export default function AccountDialogues({
 		setShowEmoji(false); // закрыть после выбора (можно убрать)
 	};
 
+	const isSaleContactInfoViewed =
+		typeof window !== "undefined" &&
+		localStorage.getItem("isSaleContactInfoViewed") === "true";
+
 	return (
 		<>
 			{loading ? (
@@ -544,6 +549,17 @@ export default function AccountDialogues({
 										</div>
 									) : null}
 
+									<Button
+										radius="full"
+										className="hidden sm:flex min-w-[120px]"
+										color="secondary"
+										startContent={
+											<MdIosShare className="text-[18px] -mt-0.5" />
+										}
+									>
+										Контакт
+									</Button>
+
 									{/* кнопка смайликов */}
 									<Button
 										isIconOnly
@@ -586,7 +602,7 @@ export default function AccountDialogues({
 									</Button>
 
 									<Button
-										className="hidden sm:flex"
+										className="hidden sm:flex min-w-[110px]"
 										color="primary"
 										radius="full"
 										variant="solid"
@@ -623,6 +639,13 @@ export default function AccountDialogues({
 						isOpen={isRemoveSuccess}
 						text={"Переписка успешно удалена!"}
 						title={"Удаление преписки"}
+						onOpenChange={onRemoveSuccessChange}
+					/>
+
+					<InfoModal
+						isOpen={false}
+						text={"Ты сама решаешь, сколько стоит твой контакт — установи свою цену и начинай зарабатывать! Мы сразу переводим 50% от стоимости продажи на твой счёт удобным для тебя способом."}
+						title={"💰 Зарабатывай на интересе к тебе — продавай свой контакт!"}
 						onOpenChange={onRemoveSuccessChange}
 					/>
 				</div>
