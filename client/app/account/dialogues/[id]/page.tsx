@@ -568,7 +568,7 @@ export default function AccountDialogues({
 										</div>
 									) : null}
 
-									<Button
+									{/* <Button
 										radius="full"
 										className="hidden sm:flex min-w-[120px]"
 										color="secondary"
@@ -577,7 +577,7 @@ export default function AccountDialogues({
 										}
 									>
 										Контакт
-									</Button>
+									</Button> */}
 
 									{/* кнопка смайликов */}
 									<Button
@@ -661,11 +661,11 @@ export default function AccountDialogues({
 						onOpenChange={onRemoveSuccessChange}
 					/>
 
-					<PromotionModal
+					{/* <PromotionModal
 						isOpen={isPromo}
 						onOpenChange={onPromoChange}
 						onClose={promoViewed}
-					/>
+					/> */}
 				</div>
 			)}
 		</>
