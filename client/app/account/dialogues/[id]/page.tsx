@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
-import { use, useEffect, useRef, useState } from "react";
+import { use, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
@@ -34,6 +34,7 @@ import { MdIosShare } from "react-icons/md";
 
 import dynamic from "next/dynamic";
 import data from "@emoji-mart/data";
+import { PromotionModal } from "./PromotionModal";
 const Picker = dynamic(() => import("@emoji-mart/react"), { ssr: false });
 
 interface ProfileViewProps {
@@ -242,6 +243,12 @@ export default function AccountDialogues({
 		onOpenChange: onRemoveSuccessChange,
 	} = useDisclosure();
 
+	const {
+		isOpen: isPromo,
+		onOpen: onPromo,
+		onOpenChange: onPromoChange,
+	} = useDisclosure();
+
 	const [deleteChat] = useDeleteChatMutation();
 
 	const remove = () => {
@@ -366,9 +373,21 @@ export default function AccountDialogues({
 		setShowEmoji(false); // закрыть после выбора (можно убрать)
 	};
 
-	const isSaleContactInfoViewed =
-		typeof window !== "undefined" &&
-		localStorage.getItem("isSaleContactInfoViewed") === "true";
+	useLayoutEffect(() => {
+		const isSaleContactInfoViewed =
+			typeof window !== "undefined" &&
+			localStorage.getItem("isSaleContactInfoViewed") === "true";
+
+		if (!isSaleContactInfoViewed) {
+			setTimeout(() => {
+				onPromo();
+			}, 1000);
+		}
+	}, []);
+
+	const promoViewed = () => {
+		localStorage.setItem("isSaleContactInfoViewed", "true");
+	};
 
 	return (
 		<>
@@ -642,11 +661,10 @@ export default function AccountDialogues({
 						onOpenChange={onRemoveSuccessChange}
 					/>
 
-					<InfoModal
-						isOpen={false}
-						text={"Ты сама решаешь, сколько стоит твой контакт — установи свою цену и начинай зарабатывать! Мы сразу переводим 50% от стоимости продажи на твой счёт удобным для тебя способом."}
-						title={"💰 Зарабатывай на интересе к тебе — продавай свой контакт!"}
-						onOpenChange={onRemoveSuccessChange}
+					<PromotionModal
+						isOpen={isPromo}
+						onOpenChange={onPromoChange}
+						onClose={promoViewed}
 					/>
 				</div>
 			)}
