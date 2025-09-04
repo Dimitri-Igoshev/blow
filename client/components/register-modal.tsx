@@ -98,11 +98,12 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 				}}
 				isDismissable={false}
 				isOpen={isOpen}
-				// placement="center"
+				placement="center"
+				scrollBehavior="inside"   
 				size="sm"
 				onOpenChange={onOpenChange}
 			>
-				<ModalContent>
+				<ModalContent className="max-h-[85dvh]">
 					{(onClose) => (
 						<>
 							<ModalHeader className="flex flex-col gap-1 text-[20px]">
