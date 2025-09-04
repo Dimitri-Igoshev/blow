@@ -113,9 +113,9 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 									<div className="flex items-center w-full gap-4">
 										<Button
 											className={cn(
-												"text-xs font-regular bg-white w-full dark:bg-foreground-300",
+												"text-xs font-regular bg-transparent w-full",
 												{
-													"bg-dark dark:bg-black text-white": men,
+													" dark:text-white border-primary border-2": men,
 												}
 											)}
 											radius="full"
@@ -129,9 +129,9 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 										</Button>
 										<Button
 											className={cn(
-												"text-xs  font-regular bg-white w-full dark:bg-foreground-300",
+												"text-xs  font-regular bg-transparent w-full",
 												{
-													"bg-dark dark:bg-black text-white": woman,
+													"dark:text-white border-primary border-2": woman,
 												}
 											)}
 											radius="full"
