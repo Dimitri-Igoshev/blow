@@ -378,7 +378,7 @@ export default function AccountDialogues({
 			typeof window !== "undefined" &&
 			localStorage.getItem("isSaleContactInfoViewed") === "true";
 
-		if (!isSaleContactInfoViewed) {
+		if (me?.sex === 'female' && !isSaleContactInfoViewed) {
 			setTimeout(() => {
 				onPromo();
 			}, 1000);
