@@ -59,7 +59,7 @@ export const EmailModal: FC<EmailModalProps> = ({
 		setIsLoading(true);
 
 		const body: any = {
-			email: data.email,
+			email: data.email.toLowerCase(),
 			password: data.password,
 			sex: newUser.men ? "male" : "female",
 			age: newUser.age,

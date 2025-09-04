@@ -56,7 +56,7 @@ export const LoginModal: FC<LoginModalProps> = ({
 		setIsLoading(true);
 
 		const body: any = {
-			email: data.email,
+			email: data.email.toLowerCase(),
 			password: data.password,
 		};
 
