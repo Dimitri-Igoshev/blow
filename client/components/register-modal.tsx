@@ -98,7 +98,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({
 				}}
 				isDismissable={false}
 				isOpen={isOpen}
-				placement="center"
+				// placement="center"
 				size="sm"
 				onOpenChange={onOpenChange}
 			>
