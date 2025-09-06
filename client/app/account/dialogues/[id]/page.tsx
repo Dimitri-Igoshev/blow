@@ -432,22 +432,13 @@ export default function AccountDialogues({
 										className="flex sm:hidden min-w-[120px]"
 										color="secondary"
 										startContent={
-											<MdIosShare className="text-[18px] -mt-0.5" />
+											<MdIosShare className="text-[18px]" />
 										}
 										onPress={onShareContact}
 									>
 										Контакт
 									</Button>
 								) : null}
-
-								<Button
-									radius="full"
-									className="flex sm:hidden min-w-[120px]"
-									color="secondary"
-									startContent={<MdIosShare className="text-[18px] -mt-0.5" />}
-								>
-									Контакт
-								</Button>
 
 								{canChatDelete(me) ? (
 									<Button
