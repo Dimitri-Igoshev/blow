@@ -429,7 +429,7 @@ export default function AccountDialogues({
 								{me?.sex === "female" ? (
 									<Button
 										radius="full"
-										className="flex sm:hidden min-w-[120px]"
+										className="flex sm:hidden min-w-[120px] !-mt-6"
 										color="secondary"
 										startContent={
 											<MdIosShare className="text-[18px]" />
