@@ -35,6 +35,9 @@ import { MdIosShare } from "react-icons/md";
 import dynamic from "next/dynamic";
 import data from "@emoji-mart/data";
 import { PromotionModal } from "./PromotionModal";
+import ShareContactModal from "./ShareContactModal";
+import { SystemMessage } from "@/components/SystemMessage";
+import ConfirmPurchaseModal from "./ConfirmPurchaseModal"
 const Picker = dynamic(() => import("@emoji-mart/react"), { ssr: false });
 
 interface ProfileViewProps {
@@ -66,7 +69,7 @@ export default function AccountDialogues({
 	const [send] = useSendMessageMutation();
 
 	const getInterlocutor = (chat: any) => {
-		return chat?.sender?._id === me?._id ? chat.recipient : chat.sender;
+		return chat?.sender?._id === me?._id ? chat?.recipient : chat?.sender;
 	};
 
 	const router = useRouter();
@@ -249,6 +252,18 @@ export default function AccountDialogues({
 		onOpenChange: onPromoChange,
 	} = useDisclosure();
 
+	const {
+		isOpen: isShareContact,
+		onOpen: onShareContact,
+		onOpenChange: onShareContactChange,
+	} = useDisclosure();
+
+	const {
+		isOpen: isPurchaseContact,
+		onOpen: onPurchaseContact,
+		onOpenChange: onPurchaseContactChange,
+	} = useDisclosure();
+
 	const [deleteChat] = useDeleteChatMutation();
 
 	const remove = () => {
@@ -378,16 +393,18 @@ export default function AccountDialogues({
 			typeof window !== "undefined" &&
 			localStorage.getItem("isSaleContactInfoViewed") === "true";
 
-		if (me?.sex === 'female' && !isSaleContactInfoViewed) {
+		if (me?.sex === "female" && !isSaleContactInfoViewed) {
 			setTimeout(() => {
 				onPromo();
 			}, 1000);
 		}
-	}, []);
+	}, [me]);
 
 	const promoViewed = () => {
 		localStorage.setItem("isSaleContactInfoViewed", "true");
 	};
+
+	const [contactData, setContactData] = useState<any>()
 
 	return (
 		<>
@@ -407,6 +424,29 @@ export default function AccountDialogues({
 									onPress={() => setCurrentChat(null)}
 								>
 									Назад
+								</Button>
+
+								{me?.sex === "female" ? (
+									<Button
+										radius="full"
+										className="flex sm:hidden min-w-[120px]"
+										color="secondary"
+										startContent={
+											<MdIosShare className="text-[18px] -mt-0.5" />
+										}
+										onPress={onShareContact}
+									>
+										Контакт
+									</Button>
+								) : null}
+
+								<Button
+									radius="full"
+									className="flex sm:hidden min-w-[120px]"
+									color="secondary"
+									startContent={<MdIosShare className="text-[18px] -mt-0.5" />}
+								>
+									Контакт
 								</Button>
 
 								{canChatDelete(me) ? (
@@ -531,16 +571,36 @@ export default function AccountDialogues({
 										{chat ? (
 											<>
 												{chat?.map((message: any, idx: number) => (
-													<Message
-														message={message}
-														sameSender={
-															chat?.[idx - 1]?.sender?._id ===
-															message?.sender?._id
-														}
-														key={message?._id}
-														left
-														onReply={(m) => setReplyTo(m)}
-													/>
+													<>
+														{message?.sender ? (
+															<Message
+																message={message}
+																sameSender={
+																	chat?.[idx - 1]?.sender?._id ===
+																	message?.sender?._id
+																}
+																key={message?._id}
+																left
+																onReply={(m) => setReplyTo(m)}
+															/>
+														) : (
+															<SystemMessage
+																message={message}
+																sameSender={
+																	chat?.[idx - 1]?.sender?._id ===
+																	message?.sender?._id
+																}
+																key={message?._id}
+																left
+																onAction={(action: string, amount: number, contactType: string) => {
+																	if (action === "contact") {
+																		setContactData({ amount, contactType })
+																		onPurchaseContact()
+																	}
+																}}
+															/>
+														)}
+													</>
 												))}
 											</>
 										) : null}
@@ -568,16 +628,19 @@ export default function AccountDialogues({
 										</div>
 									) : null}
 
-									{/* <Button
-										radius="full"
-										className="hidden sm:flex min-w-[120px]"
-										color="secondary"
-										startContent={
-											<MdIosShare className="text-[18px] -mt-0.5" />
-										}
-									>
-										Контакт
-									</Button> */}
+									{me?.sex === "female" ? (
+										<Button
+											radius="full"
+											className="hidden sm:flex min-w-[120px]"
+											color="secondary"
+											startContent={
+												<MdIosShare className="text-[18px] -mt-0.5" />
+											}
+											onPress={onShareContact}
+										>
+											Контакт
+										</Button>
+									) : null}
 
 									{/* кнопка смайликов */}
 									<Button
@@ -661,11 +724,32 @@ export default function AccountDialogues({
 						onOpenChange={onRemoveSuccessChange}
 					/>
 
-					{/* <PromotionModal
-						isOpen={isPromo}
-						onOpenChange={onPromoChange}
-						onClose={promoViewed}
-					/> */}
+					{me?.sex === "female" ? (
+						<PromotionModal
+							isOpen={isPromo}
+							onOpenChange={onPromoChange}
+							onClose={promoViewed}
+						/>
+					) : null}
+
+					{me?.sex === "female" ? (
+						<ShareContactModal
+							chatId={currentChat?._id}
+							recipientId={currentChat?.recipient?._id}
+							isOpen={isShareContact}
+							onOpenChange={onShareContactChange}
+						/>
+					) : null}
+
+					{me?.sex === 'male' ? (
+						<ConfirmPurchaseModal
+							isOpen={isPurchaseContact}
+							onOpenChange={onPurchaseContactChange}
+							user={getInterlocutor(currentChat)}
+							amount={contactData?.amount}
+							contactType={contactData?.contactType}
+						/>
+					): null}
 				</div>
 			)}
 		</>

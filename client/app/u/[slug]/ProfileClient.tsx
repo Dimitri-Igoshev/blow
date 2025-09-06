@@ -201,6 +201,17 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 		updateBlockList({ id: me._id, body: { blockList: newBlockList } }).unwrap();
 	};
 
+	const [contacts, setContacts] = useState<any>();
+
+	useEffect(() => {
+		if (!me) return;
+
+		const contacts = me?.purchasedContacts?.find((i: any) => i.user === id);
+		if (contacts) setContacts(contacts);
+
+		console.log(me?.purchasedContacts);
+	}, [me]);
+
 	return (
 		<div
 			className={cn(
@@ -368,6 +379,27 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 											: "Пользователь предпочел не указывать информацию о себе."}
 									</p>
 								</div>
+
+								{contacts ? (
+									<div className="flex flex-col gap-1 pt-6">
+										<p className="font-semibold text-[20px]">Контакты</p>
+										{contacts?.telegram ? (
+											<p className="mt-1">
+												Telegram - {contacts?.telegram || "???"}
+											</p>
+										) : null}
+										{contacts?.whatsapp ? (
+											<p className="mt-1">
+												WhatsApp - {contacts?.whatsapp || "???"}
+											</p>
+										) : null}
+										{contacts?.phone ? (
+											<p className="mt-1">
+												Номер телефона - {contacts?.phone || "???"}
+											</p>
+										) : null}
+									</div>
+								) : null}
 							</div>
 
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">

@@ -63,6 +63,9 @@ export const PromotionModal: FC<PromotionModalProps> = ({
 					</p>
 					<p>Просто, безопасно и выгодно.</p>
 					<p>Твоя ценность — твои правила!</p>
+					<p className="font-semibold">Важные условия</p>
+					<p className="text-primary text-sm">- Срок зачисления денежных средств : 48 часов</p>
+					<p className="text-primary text-sm -mt-3">- При обмане либо предоставлении ложной информации : отказ в выплате + блокировка вашей страницы</p>
 				</ModalBody>
 				<ModalFooter>
 					<div className="flex flex-raw w-full gap-3">

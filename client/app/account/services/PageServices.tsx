@@ -26,6 +26,7 @@ import { config } from "@/common/env";
 import crypto from "crypto";
 import { TopUpModal } from "@/components/TopUpModal";
 import { useVerifyTokenMutation } from "@/redux/services/topupApi";
+import WithdrawalModal from "./WithdrawalModal"
 
 type PaymentData = {
 	PayerId?: string;
@@ -371,6 +372,12 @@ export default function AccountServices() {
 			.catch((err: any) => console.log(err));
 	};
 
+		const {
+		isOpen: isWithdrawal,
+		onOpen: onWithdrawal,
+		onOpenChange: onWithdrawalChange,
+	} = useDisclosure();
+
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[84px] gap-[30px] min-h-screen">
 			<div className="flex w-full items-center justify-between">
@@ -392,6 +399,7 @@ export default function AccountServices() {
 				onClick={() =>
 					router.push("https://digital.wildberries.ru/author/53091011")
 				}
+				onWithdrawal={onWithdrawal}
 			/>
 
 			{genderServices?.map((item: any) => (
@@ -472,6 +480,11 @@ export default function AccountServices() {
 				onOpenChange={onTopupErrorChange}
 				title="Ошибка"
 				text="Карта пополнения неактивна или уже использована"
+			/>
+
+			<WithdrawalModal
+				isOpen={isWithdrawal}
+				onOpenChange={onWithdrawalChange}
 			/>
 		</div>
 	);

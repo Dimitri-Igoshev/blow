@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@heroui/button";
 import { cn, Input, Select, SelectItem } from "@heroui/react";
 import { useState, type FC } from "react";
@@ -7,6 +9,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import NextLink from "next/link";
 import { ROUTES } from "@/app/routes";
 import { MdEmail } from "react-icons/md";
+import { useGetMeQuery } from "@/redux/services/userApi";
 
 interface ServiceCardProps {
 	title: string;
@@ -14,6 +17,7 @@ interface ServiceCardProps {
 	text?: string;
 	list?: string[];
 	oneTime?: boolean;
+	onWithdrawal?: () => void;
 	onClick: (value: any) => void;
 	buttonText: string;
 	defaultVlue?: { price: string; period?: string; quantity?: string };
@@ -28,6 +32,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 	text = "",
 	list = [],
 	oneTime = false,
+	onWithdrawal,
 	onClick,
 	buttonText,
 	defaultVlue,
@@ -40,6 +45,8 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 	// 	value: "",
 	// 	price: defaultVlue?.price || "",
 	// });
+
+	const { data: me } = useGetMeQuery(null);
 
 	const getPeriodLabel = (value: any) => {
 		switch (value) {
@@ -77,12 +84,12 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 		isQuantity
 			? {
 					label: options[0]?.quantity?.toString(),
-					value: '0',
+					value: "0",
 					price: options[0]?.price,
 				}
 			: {
 					label: getPeriodLabel(options[0]?.period.toString()),
-					value: '0',
+					value: "0",
 					price: options[0]?.price,
 				}
 	);
@@ -164,19 +171,24 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 					{transactions.map((item: any) => (
 						<div
 							key={item._id}
-							className="bg-white dark:bg-black p-3 px-4 rounded-[16px] grid gap-3 grid-cols-2 sm:grid-cols-4 items-center"
+							className="bg-white dark:bg-black p-3 items-center px-4 rounded-[16px] grid gap-3 grid-cols-2 sm:grid-cols-5"
 						>
-							<div className="font-medium">
+							<div className="font-medium items-center">
 								{item?.type === "credit" ? "Пополнение" : "Списание"}
 							</div>
-							<div className="flex justify-end sm:justify-center text-xs">
+							<div className="flex justify-end sm:justify-center text-xs items-center">
 								{format(new Date(item.updatedAt), "dd.MM.yyyy", {
 									locale: ru,
 								})}
 							</div>
-							<div className="flex sm:justify-end text-xs">
+							<div className="felx text-xs items-center">
+								{item?.description || "Без описания"}
+							</div>
+							<div className="flex sm:justify-end text-xs items-center">
 								{item?.type === "debit"
-									? "Списано со счета"
+									? item.status === "pending"
+										? "Обрабатывается..."
+										: "Списано со счета"
 									: item.status === "failed"
 										? "Ошибка оплаты"
 										: item.status === "new"
@@ -247,6 +259,21 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 							value={value.value || oneTime ? value.price : ""}
 							onChange={(e) => setValue({ ...value, price: e.target.value })}
 						/>
+					) : null}
+
+					{me?.sex === "female" || !me?.sex ? (
+						<Button
+							className="z-0 relative w-full sm:w-auto"
+							color={
+								value.price && (value.value || oneTime) ? "primary" : "default"
+							}
+							disabled={!value.price && !value.value}
+							radius="full"
+							variant="solid"
+							onPress={onWithdrawal}
+						>
+							Вывод средств
+						</Button>
 					) : null}
 
 					<Button

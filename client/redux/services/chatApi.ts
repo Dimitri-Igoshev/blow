@@ -55,6 +55,13 @@ export const chatApi = createApi({
 			queryFn: async () => ({ data: [] }), // данные придут через сокет
 			providesTags: ["Messages", "Chats"],
 		}),
+		systemMessage: build.mutation({
+			query: (body) => ({
+				url: "system",
+				method: "POST",
+				body,
+			}),
+		})
 	}),
 });
 
@@ -66,5 +73,6 @@ export const {
 	useDeleteMessageMutation,
 	useSubscribeQuery,
 	useStartChatMutation,
-  useDeleteChatMutation
+  useDeleteChatMutation,
+	useSystemMessageMutation
 } = chatApi;

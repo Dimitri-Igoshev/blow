@@ -119,6 +119,22 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["User", "Me"],
     }),
+    buyContact: builder.mutation({
+      query: (body) => ({
+        url: `/buy/contact`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["User", "Me"],
+    }),
+    withdawal: builder.mutation({
+      query: (body) => ({
+        url: `/withdawal/money`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["User", "Me"],
+    }),
     buyServicesKit: builder.mutation({
       query: (body) => ({
         url: `/buy/services-kit`,
@@ -151,6 +167,8 @@ export const {
   useDeleteNoteMutation,
   useAddBalanceMutation,
   useBuyServiceMutation,
+  useBuyContactMutation,
   useBuyServicesKitMutation,
   useReiseProfileMutation,
+  useWithdawalMutation,
 } = userApi;
