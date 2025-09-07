@@ -27,7 +27,7 @@ const WithdrawalModal: FC<WithdrawalModalProps> = ({
 }) => {
 	const withdrawalOptions = [
 		{ label: "На номер телефона", value: "phone" },
-		{ label: "Кошелек USDT", value: "usdt" },
+		{ label: "Кошелек USDT TRC20", value: "usdt" },
 	];
 
 	const [withdrawalType, setWithdrawalType] = useState(withdrawalOptions[0]);
