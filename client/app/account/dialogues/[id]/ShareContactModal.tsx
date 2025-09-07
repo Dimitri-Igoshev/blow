@@ -142,9 +142,9 @@ const ShareContact: FC<ShareContactProps> = ({
 				<ModalContent>
 					<ModalHeader className="flex flex-col gap-1 text-[20px] text-center">
 						<div className="flex items-center justify-between gap-3">
-							<p>Поделиться контактом</p>
+							<p>Продать контакт</p>
 							<IoInformationCircleOutline
-								className="cursor-pointer hover:text-primary"
+								className="cursor-pointer hover:text-primary text-[24px]"
 								onClick={onPromo}
 							/>
 						</div>
