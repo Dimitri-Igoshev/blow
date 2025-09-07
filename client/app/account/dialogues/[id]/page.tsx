@@ -752,7 +752,7 @@ export default function AccountDialogues({
 					{me?.sex === "female" ? (
 						<ShareContactModal
 							chatId={currentChat?._id}
-							recipientId={currentChat?.recipient?._id}
+							recipientId={getInterlocutor(currentChat)?._id}
 							isOpen={isShareContact}
 							onOpenChange={onShareContactChange}
 						/>
