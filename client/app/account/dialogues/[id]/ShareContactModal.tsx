@@ -97,6 +97,7 @@ const ShareContact: FC<ShareContactProps> = ({
 			chat: chatId,
 			recipient: recipientId,
 			text: `Вы можете приобрести контакт (${contactType.label}) пользователя ${name} по цене ${price} ₽`,
+			unreadBy: [recipientId]
 		})
 			.unwrap()
 			.then((res) => onOpenChange())

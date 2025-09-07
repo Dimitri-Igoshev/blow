@@ -212,6 +212,16 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 		console.log(me?.purchasedContacts);
 	}, [me]);
 
+	const getContact = () => {
+		const contact = me?.purchasedContacts[me?.purchasedContacts.length - 1];
+
+		if (contact?.whatsapp) return `WhatsApp: ${contact?.whatsapp}`;
+		if (contact?.telegram) return `Telegram: ${contact?.telegram}`;
+		if (contact?.phone) return `Телефон: ${contact?.phone}`;
+
+		return "";
+	};
+
 	return (
 		<div
 			className={cn(
@@ -380,24 +390,10 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 									</p>
 								</div>
 
-								{contacts ? (
+								{getContact ? (
 									<div className="flex flex-col gap-1 pt-6">
-										<p className="font-semibold text-[20px]">Контакты</p>
-										{contacts?.telegram ? (
-											<p className="mt-1">
-												Telegram - {contacts?.telegram || "???"}
-											</p>
-										) : null}
-										{contacts?.whatsapp ? (
-											<p className="mt-1">
-												WhatsApp - {contacts?.whatsapp || "???"}
-											</p>
-										) : null}
-										{contacts?.phone ? (
-											<p className="mt-1">
-												Номер телефона - {contacts?.phone || "???"}
-											</p>
-										) : null}
+										<p className="font-semibold text-[20px]">Контакт</p>
+										<p className="mt-1">{getContact()}</p>
 									</div>
 								) : null}
 							</div>
