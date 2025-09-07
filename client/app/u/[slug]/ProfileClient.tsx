@@ -213,7 +213,8 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 	}, [me]);
 
 	const getContact = () => {
-		const contact = me?.purchasedContacts[me?.purchasedContacts.length - 1];
+		const contacts = me?.purchasedContacts?.filter((i: any) => i.user === id);
+		const contact = contacts?.length ? contacts[contacts?.length - 1] : null
 
 		if (contact?.whatsapp) return `WhatsApp: ${contact?.whatsapp}`;
 		if (contact?.telegram) return `Telegram: ${contact?.telegram}`;
@@ -390,7 +391,7 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 									</p>
 								</div>
 
-								{getContact ? (
+								{getContact() ? (
 									<div className="flex flex-col gap-1 pt-6">
 										<p className="font-semibold text-[20px]">Контакт</p>
 										<p className="mt-1">{getContact()}</p>
