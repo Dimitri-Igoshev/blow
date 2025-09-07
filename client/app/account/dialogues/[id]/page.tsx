@@ -31,13 +31,14 @@ import { BlowLoader } from "@/components/BlowLoader";
 import { FiSend } from "react-icons/fi";
 import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 import { MdIosShare } from "react-icons/md";
+import { MdOutlineCurrencyRuble } from "react-icons/md";
 
 import dynamic from "next/dynamic";
 import data from "@emoji-mart/data";
 import { PromotionModal } from "./PromotionModal";
 import ShareContactModal from "./ShareContactModal";
 import { SystemMessage } from "@/components/SystemMessage";
-import ConfirmPurchaseModal from "./ConfirmPurchaseModal"
+import ConfirmPurchaseModal from "./ConfirmPurchaseModal";
 const Picker = dynamic(() => import("@emoji-mart/react"), { ssr: false });
 
 interface ProfileViewProps {
@@ -197,8 +198,16 @@ export default function AccountDialogues({
 
 	const hasUnreadedMesages = (chat: any) => {
 		let quantity = 0;
+		// chat?.messages?.forEach((message: any) => {
+		// 	if (message?.sender !== me?._id && message.isReaded === false) {
+		// 		quantity += 1;
+		// 	}
+		// });
 		chat?.messages?.forEach((message: any) => {
-			if (message?.sender !== me?._id && message.isReaded === false) {
+			if (
+				message?.sender !== me?._id &&
+				message?.unreadBy?.find((i: string) => i === me?._id)
+			) {
 				quantity += 1;
 			}
 		});
@@ -208,9 +217,22 @@ export default function AccountDialogues({
 	const [updateMessage] = useUpdateMessageMutation();
 
 	const readMessages = (chat: any) => {
+		// chat?.messages?.forEach(async (message: any) => {
+		// 	if (!message.isReaded && message?.sender !== me?._id) {
+		// 		updateMessage({ id: message._id, body: { isReaded: true } });
+		// 	}
+		// });
 		chat?.messages?.forEach(async (message: any) => {
-			if (!message.isReaded && message?.sender !== me?._id) {
-				updateMessage({ id: message._id, body: { isReaded: true } });
+			if (
+				message.unreadBy.find((i: string) => i === me?._id) &&
+				message?.sender !== me?._id
+			) {
+				updateMessage({
+					id: message._id,
+					body: {
+						unreadBy: message.unreadBy.filter((i: string) => i !== me._id),
+					},
+				});
 			}
 		});
 	};
@@ -404,7 +426,7 @@ export default function AccountDialogues({
 		localStorage.setItem("isSaleContactInfoViewed", "true");
 	};
 
-	const [contactData, setContactData] = useState<any>()
+	const [contactData, setContactData] = useState<any>();
 
 	return (
 		<>
@@ -432,7 +454,7 @@ export default function AccountDialogues({
 										className="flex sm:hidden min-w-[120px] !-mt-6"
 										color="secondary"
 										startContent={
-											<MdIosShare className="text-[18px]" />
+											<MdOutlineCurrencyRuble className="text-[18px]" />
 										}
 										onPress={onShareContact}
 									>
@@ -583,10 +605,14 @@ export default function AccountDialogues({
 																}
 																key={message?._id}
 																left
-																onAction={(action: string, amount: number, contactType: string) => {
+																onAction={(
+																	action: string,
+																	amount: number,
+																	contactType: string
+																) => {
 																	if (action === "contact") {
-																		setContactData({ amount, contactType })
-																		onPurchaseContact()
+																		setContactData({ amount, contactType });
+																		onPurchaseContact();
 																	}
 																}}
 															/>
@@ -625,7 +651,7 @@ export default function AccountDialogues({
 											className="hidden sm:flex min-w-[120px]"
 											color="secondary"
 											startContent={
-												<MdIosShare className="text-[18px] -mt-0.5" />
+												<MdOutlineCurrencyRuble className="text-[18px] -mt-0.5" />
 											}
 											onPress={onShareContact}
 										>
@@ -732,7 +758,7 @@ export default function AccountDialogues({
 						/>
 					) : null}
 
-					{me?.sex === 'male' ? (
+					{me?.sex === "male" ? (
 						<ConfirmPurchaseModal
 							isOpen={isPurchaseContact}
 							onOpenChange={onPurchaseContactChange}
@@ -740,7 +766,7 @@ export default function AccountDialogues({
 							amount={contactData?.amount}
 							contactType={contactData?.contactType}
 						/>
-					): null}
+					) : null}
 				</div>
 			)}
 		</>

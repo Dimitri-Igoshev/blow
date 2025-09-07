@@ -188,7 +188,9 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 								{item?.type === "debit"
 									? item.status === "pending"
 										? "Обрабатывается..."
-										: "Списано со счета"
+										: item.status === "completed"
+											? "Завершено"
+											: "Списано со счета"
 									: item.status === "failed"
 										? "Ошибка оплаты"
 										: item.status === "new"
@@ -261,7 +263,7 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 						/>
 					) : null}
 
-					{me?.sex === "female" || !me?.sex ? (
+					{oneTime && me?.sex === "female" ? (
 						<Button
 							className="z-0 relative w-full sm:w-auto"
 							color={

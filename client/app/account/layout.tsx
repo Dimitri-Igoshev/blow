@@ -74,9 +74,17 @@ function AccountLayout({
 
 		let quantity = 0;
 
+		// chats?.forEach((item: any) => {
+		// 	item?.messages?.forEach((message: any) => {
+		// 		if (message?.sender !== me?._id && message.isReaded === false) {
+		// 			quantity += 1;
+		// 		}
+		// 	});
+		// });
+
 		chats?.forEach((item: any) => {
 			item?.messages?.forEach((message: any) => {
-				if (message?.sender !== me?._id && message.isReaded === false) {
+				if (message?.sender !== me?._id && message.unreadBy.find((i: string) => i === me?._id)) {
 					quantity += 1;
 				}
 			});
