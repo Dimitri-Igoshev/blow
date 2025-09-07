@@ -280,9 +280,11 @@ export const ServiceCard: FC<ServiceCardProps> = ({
 
 					<Button
 						className="z-0 relative w-full sm:w-auto"
-						color={
-							value.price && (value.value || oneTime) ? "primary" : "default"
-						}
+						// color={
+						// 	value.price && (value.value || oneTime) ? "primary" : "default"
+						// }
+						color="primary"
+						size={buttonText === "Пополнить" ? "lg" : "md"}
 						disabled={!value.price && !value.value}
 						radius="full"
 						variant="solid"
