@@ -16,6 +16,8 @@ import {
 	useDisclosure,
 } from "@heroui/react";
 import { FC, useEffect, useState } from "react";
+import { IoInformationCircleOutline } from "react-icons/io5";
+import { PromotionModal } from "./PromotionModal";
 
 interface ShareContactProps {
 	chatId: string;
@@ -49,6 +51,12 @@ const ShareContact: FC<ShareContactProps> = ({
 		isOpen: isOpenInfo,
 		onOpen: onOpenInfo,
 		onOpenChange: onOpenInfoChange,
+	} = useDisclosure();
+
+	const {
+		isOpen: isPromo,
+		onOpen: onPromo,
+		onOpenChange: onPromoChange,
 	} = useDisclosure();
 
 	const [info, setInfo] = useState({
@@ -97,10 +105,10 @@ const ShareContact: FC<ShareContactProps> = ({
 			chat: chatId,
 			recipient: recipientId,
 			text: `Вы можете приобрести контакт (${contactType.label}) пользователя ${name} по цене ${price} ₽`,
-			unreadBy: [recipientId]
+			unreadBy: [recipientId],
 		})
 			.unwrap()
-			.then((res) => onOpenChange())
+			.then(() => onOpenChange())
 			.catch((err) => console.log(err));
 	};
 
@@ -133,7 +141,13 @@ const ShareContact: FC<ShareContactProps> = ({
 			>
 				<ModalContent>
 					<ModalHeader className="flex flex-col gap-1 text-[20px] text-center">
-						Поделиться контактом
+						<div className="flex items-center justify-between gap-3">
+							<p>Поделиться контактом</p>
+							<IoInformationCircleOutline
+								className="cursor-pointer hover:text-primary"
+								onClick={onPromo}
+							/>
+						</div>
 					</ModalHeader>
 					<ModalBody>
 						<div className="flex flex-col gap-5">
@@ -227,6 +241,14 @@ const ShareContact: FC<ShareContactProps> = ({
 				onOpenChange={onOpenInfoChange}
 				actionBtn={info.btn || ""}
 			/>
+
+			{me?.sex === "female" ? (
+				<PromotionModal
+					isOpen={isPromo}
+					onOpenChange={onPromoChange}
+					onClose={() => null}
+				/>
+			) : null}
 		</>
 	);
 };
