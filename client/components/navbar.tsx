@@ -222,7 +222,7 @@ export const Navbar = () => {
 			item?.messages?.forEach((message: any) => {
 				if (
 					message?.sender !== me?._id &&
-					message.unreadBy.find((i: string) => i === me?._id)
+					message?.unreadBy?.find((i: string) => i === me?._id)
 				) {
 					quantity += 1;
 				}

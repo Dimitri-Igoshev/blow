@@ -84,7 +84,7 @@ function AccountLayout({
 
 		chats?.forEach((item: any) => {
 			item?.messages?.forEach((message: any) => {
-				if (message?.sender !== me?._id && message.unreadBy.find((i: string) => i === me?._id)) {
+				if (message?.sender !== me?._id && message?.unreadBy?.find((i: string) => i === me?._id)) {
 					quantity += 1;
 				}
 			});
