@@ -20,6 +20,8 @@ export const heights = [
   { value: "168", label: "168" },
   { value: "169", label: "169" },
   { value: "170", label: "170" },
+  { value: "171", label: "171" },
+  { value: "172", label: "172" },
   { value: "173", label: "173" },
   { value: "174", label: "174" },
   { value: "175", label: "175" },
