@@ -27,6 +27,7 @@ import crypto from "crypto";
 import { TopUpModal } from "@/components/TopUpModal";
 import { useVerifyTokenMutation } from "@/redux/services/topupApi";
 import WithdrawalModal from "./WithdrawalModal"
+import PaymentModal from "./PaymentModal"
 
 type PaymentData = {
 	PayerId?: string;
@@ -378,6 +379,12 @@ export default function AccountServices() {
 		onOpenChange: onWithdrawalChange,
 	} = useDisclosure();
 
+	const {
+		isOpen: isPayment,
+		onOpen: onPayment,
+		onOpenChange: onPaymentChange,
+	} = useDisclosure();
+
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[84px] gap-[30px] min-h-screen">
 			<div className="flex w-full items-center justify-between">
@@ -396,9 +403,7 @@ export default function AccountServices() {
 				subtile={`${me?.balance || 0} ₽`}
 				title="Кошелек"
 				transactions={me?.transactions || []}
-				onClick={() =>
-					router.push("https://digital.wildberries.ru/author/53091011")
-				}
+				onClick={onPayment}
 				onWithdrawal={onWithdrawal}
 			/>
 
@@ -485,6 +490,11 @@ export default function AccountServices() {
 			<WithdrawalModal
 				isOpen={isWithdrawal}
 				onOpenChange={onWithdrawalChange}
+			/>
+
+			<PaymentModal
+				isOpen={isPayment}
+				onOpenChange={onPaymentChange}
 			/>
 		</div>
 	);

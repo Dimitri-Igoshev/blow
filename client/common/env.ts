@@ -11,6 +11,12 @@ export const config = {
 	API_URL: "https://api.blow.ru/api",
 	MEDIA_URL: "https://api.blow.ru",
 
+	NEXT_PUBLIC_APP_URL: "https://blow.ru",
+	NEXT_PUBLIC_API_URL: "https://api.blow.ru/api",
+	// NEXT_PUBLIC_APP_URL: "http://localhost:3000",
+	// NEXT_PUBLIC_API_URL: "http://localhost:4000/api",
+	NEXT_PUBLIC_YOOMONEY_CLIENT_ID: "707B433F3941122508C946C61E10AF75C678151A29A61B8310DDE4C9C5D6B674",
+
 	TBANK_TERMINAL_KEY: "1752254920585",
 	TBANK_PASSWORD: "k%mOHw64FH5Ex&vF",
 };
