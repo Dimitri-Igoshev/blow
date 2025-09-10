@@ -8,10 +8,9 @@ export function ConnectYooMoneyButton() {
 		const params = new URLSearchParams({
 			client_id: config.NEXT_PUBLIC_YOOMONEY_CLIENT_ID!,
 			response_type: "code",
-			redirect_uri: `${config.NEXT_PUBLIC_APP_URL}/oauth/callback`,
-			scope: "payment", // можно добавить operation-history при желании
-			instance_name: "BLOW",
-			// state положите в куку/xсессию и добавьте сюда (защита от CSRF)
+			redirect_uri: `${config.NEXT_PUBLIC_APP_URL}/api/notification`,
+			scope: "payment",
+			instance_name: "BLOW"
 		});
 		window.location.href = `https://yoomoney.ru/oauth/authorize?${params.toString()}`;
 	};
@@ -24,7 +23,6 @@ export function ConnectYooMoneyButton() {
 			}
 			onPress={onClick}
 		>
-			{/* Подключитxxь YooMoney */}
       YooMoney
 		</Button>
 	);
