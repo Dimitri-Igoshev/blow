@@ -1,7 +1,33 @@
-"use client";
+'use client';
+import { useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useExchangeCodeMutation } from '@/redux/services/yoomoneyApi'
 
-export default function OldPage() {
-	return <div className="mt-20">Notification</div>;
+export default function YoomoneyCallbackPage() {
+  const sp = useSearchParams();
+  const router = useRouter();
+  const code = sp.get('code');
+  const state = sp.get('state');
+  const [exchangeCode, { isLoading, data, error }] = useExchangeCodeMutation();
+
+  useEffect(() => {
+    const expected = sessionStorage.getItem('ym_state');
+    if (state && expected && state !== expected) {
+      console.error('State mismatch');
+      return;
+    }
+    if (code) {
+      exchangeCode({ code }); // см. RTK Query ниже
+    }
+  }, [code, state, exchangeCode]);
+
+  if (isLoading) return <p>Завершаем вход…</p>;
+  if (error) return <p>Ошибка обмена кода на токен</p>;
+  if (data) {
+    // здесь можешь сохранить токен в сторадж/куки или вызвать бекенд для связки с аккаунтом
+    router.replace('/dashboard');
+  }
+  return null;
 }
 
 // import { config } from '@/common/env'

@@ -16,6 +16,7 @@ import { guestApi } from "./services/guestApi"
 import { sessionApi } from "./services/sessionApi"
 import { fileApi } from "./services/fileApi"
 import { withdrawalApi } from "./services/withdrawalApi"
+import { yoomoneyApi } from "./services/yoomoneyApi"
 
 export const store = configureStore({
   reducer: {
@@ -34,6 +35,7 @@ export const store = configureStore({
     [sessionApi.reducerPath]: sessionApi.reducer,
     [fileApi.reducerPath]: fileApi.reducer,
     [withdrawalApi.reducerPath]: withdrawalApi.reducer,
+    [yoomoneyApi.reducerPath]: yoomoneyApi.reducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) => {
@@ -52,6 +54,7 @@ export const store = configureStore({
       sessionApi.middleware,
       fileApi.middleware,
       withdrawalApi.middleware,
+      yoomoneyApi.middleware,
     ]);
   },
 });
