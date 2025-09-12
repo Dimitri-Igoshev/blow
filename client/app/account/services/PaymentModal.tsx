@@ -58,11 +58,7 @@ const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 							>
 								Wildberries
 							</Button>
-							<YoomoneyAuthButton
-								clientId={config.NEXT_PUBLIC_YOOMONEY_CLIENT_ID}
-								redirectUri="https://blow.ru/api/notification"
-								scope="payment-p2p"
-							/>
+							<YoomoneyAuthButton />
 						</div>
 					</ModalBody>
 					{/* <ModalFooter>
