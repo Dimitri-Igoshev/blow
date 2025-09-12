@@ -1,31 +1,38 @@
-import { config } from '@/common/env'
-import { NextRequest, NextResponse } from 'next/server';
+"use client";
 
-const APP_URL = config.NEXT_PUBLIC_APP_URL!;
-const API = config.NEXT_PUBLIC_API_URL!;
-
-export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const code = url.searchParams.get('code');
-  const state = url.searchParams.get('state') ?? undefined;
-
-  if (!code) return NextResponse.redirect(`${APP_URL}/billing?error=missing_code`);
-
-  // Прокидываем code на ваш бэкенд для обмена на access_token и привязки к текущему пользователю
-  const r = await fetch(`${API}/yoomoney/oauth/token`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ code, state }),
-    cache: 'no-store',
-  });
-
-  if (!r.ok) {
-    return NextResponse.redirect(`${APP_URL}/billing?error=token_exchange_failed`);
-  }
-
-  return NextResponse.redirect(`${APP_URL}/billing?connected=yoomoney`);
+export default function OldPage() {
+	return <div className="mt-20">Notification</div>;
 }
 
+// import { config } from '@/common/env'
+// import { NextRequest, NextResponse } from 'next/server';
+
+// const APP_URL = config.NEXT_PUBLIC_APP_URL!;
+// const API = config.NEXT_PUBLIC_API_URL!;
+
+// export async function GET(req: NextRequest) {
+//   const url = new URL(req.url);
+//   const code = url.searchParams.get('code');
+//   const state = url.searchParams.get('state') ?? undefined;
+
+//   if (!code) return NextResponse.redirect(`${APP_URL}/billing?error=missing_code`);
+
+//   // Прокидываем code на ваш бэкенд для обмена на access_token и привязки к текущему пользователю
+//   const r = await fetch(`${API}/yoomoney/oauth/token`, {
+//     method: 'POST',
+//     headers: { 'content-type': 'application/json' },
+//     body: JSON.stringify({ code, state }),
+//     cache: 'no-store',
+//   });
+
+//   if (!r.ok) {
+//     return NextResponse.redirect(`${APP_URL}/billing?error=token_exchange_failed`);
+//   }
+
+//   return NextResponse.redirect(`${APP_URL}/billing?connected=yoomoney`);
+// }
+
+//=====================
 
 // import { NextRequest } from "next/server";
 

@@ -1,18 +1,20 @@
 "use client";
 
-import { ConnectYooMoneyButton } from "@/app/billing/deposit/ConnectButton"
+import { ConnectYooMoneyButton } from "@/app/billing/deposit/ConnectButton";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import {
 	Button,
-  Image,
+	Image,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
 } from "@heroui/react";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import { FC } from "react";
+import YoomoneyAuthButton from "./YoomoneyAuthButton";
+import { config } from "@/common/env";
 
 interface PaymentModalProps {
 	isOpen: boolean;
@@ -21,7 +23,7 @@ interface PaymentModalProps {
 
 const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 	const { data: me } = useGetMeQuery(null);
-  const router = useRouter();
+	const router = useRouter();
 
 	return (
 		<>
@@ -45,16 +47,22 @@ const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 						<div className="flex flex-col gap-5 pb-4">
 							<Button
 								radius="full"
-                size="lg" 
-                startContent={<Image src="/wb.svg" width={20} height={20} radius="none" />}
+								size="lg"
+								startContent={
+									<Image src="/wb.svg" width={20} height={20} radius="none" />
+								}
 								onPress={() => {
 									router.push("https://digital.wildberries.ru/author/53091011");
-                  onOpenChange()
+									onOpenChange();
 								}}
 							>
 								Wildberries
 							</Button>
-              <ConnectYooMoneyButton />
+							<YoomoneyAuthButton
+								clientId={config.NEXT_PUBLIC_YOOMONEY_CLIENT_ID}
+								redirectUri="https://blow.ru/api/notification"
+								scope={[me?._id]}
+							/>
 						</div>
 					</ModalBody>
 					{/* <ModalFooter>
