@@ -14,9 +14,10 @@ import { getActivityString } from "@/helper/getActivityString";
 import { isPremium, isTop } from "@/helper/checkIsActive";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { InfoModal } from "./InfoModal";
-import { useDisclosure, Image } from "@heroui/react";
+import { useDisclosure } from "@heroui/react";
 import { useCityLabel } from "@/helper/getCityString";
 import { useStartChatMutation } from "@/redux/services/chatApi";
+import Auth from "./Auth"
 
 interface ProfilePreviewProps {
 	item: any;
@@ -119,6 +120,8 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 			if (newTab && !newTab.closed) newTab.close();
 		}
 	};
+
+	const [registration, setRegistration] = useState(false)
 
 	return (
 		<>
@@ -295,6 +298,8 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				}
 				title={"Нужны регистрация и премиум"}
 				onOpenChange={onRegistrationRequiredChange}
+				actionBtn="Зарегистрироваться"
+				onAction={() => setRegistration(true)}
 			/>
 
 			<InfoModal
@@ -303,9 +308,12 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 					"Для того чтобы начать общаться, Вам нужно зарегистрироваться на сайте"
 				}
 				title={"Нужна регистрация"}
-				onAction={() => null}
+				actionBtn="Регистрация"
+				onAction={() => setRegistration(true)}
 				onOpenChange={onRegisterRequiredChange}
 			/>
+
+			<Auth registration={registration} />
 		</>
 	);
 };

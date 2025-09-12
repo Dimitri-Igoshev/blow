@@ -144,9 +144,6 @@ export const Navbar = () => {
 
 	const onNext = (value: any) => {
 		setNewUser(value);
-
-		console.log("user", value);
-
 		onEmail();
 	};
 
