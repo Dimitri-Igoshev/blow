@@ -10,11 +10,13 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
+	useDisclosure,
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import YoomoneyAuthButton from "./YoomoneyAuthButton";
 import { config } from "@/common/env";
+import AmountModal from "./AmountModal";
 
 interface PaymentModalProps {
 	isOpen: boolean;
@@ -24,6 +26,12 @@ interface PaymentModalProps {
 const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 	const { data: me } = useGetMeQuery(null);
 	const router = useRouter();
+
+	const {
+		isOpen: isAmount,
+		onOpen: onAmount,
+		onOpenChange: onAmountChange,
+	} = useDisclosure();
 
 	return (
 		<>
@@ -58,13 +66,19 @@ const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 							>
 								Wildberries
 							</Button>
-							<YoomoneyAuthButton
-								amount={1000}
-								label={new Date().toDateString()}
-								targets="Пополнение BLOW"
-								receiver="4100119320198570"
-								successURL="https://blow.ru/account/services"
-							/>
+							<Button
+								radius="full"
+								size="lg"
+								startContent={
+									<Image src="/ym.png" width={20} height={20} radius="none" />
+								}
+								onPress={() => { 
+									onAmount() 
+									onOpenChange()
+								}}
+							>
+								YooMoney
+							</Button>
 						</div>
 					</ModalBody>
 					{/* <ModalFooter>
@@ -76,6 +90,8 @@ const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 					</ModalFooter> */}
 				</ModalContent>
 			</Modal>
+
+			<AmountModal isOpen={isAmount} onOpenChange={onAmountChange} />
 		</>
 	);
 };

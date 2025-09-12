@@ -1,45 +1,113 @@
+// app/api/yoomoney/notify/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { config } from '@/common/env'
+import { config } from '@/common/env';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 function sha1(s: string) {
-  return crypto.createHash('sha1').update(s).digest('hex');
+  return crypto.createHash('sha1').update(s, 'utf8').digest('hex');
 }
 
 export async function POST(req: NextRequest) {
-  const text = await req.text();                // важно: не req.json()
-  const p = new URLSearchParams(text);
+  const body = await req.text();
+  const p = new URLSearchParams(body);
 
+  const opId      = p.get('operation_id') || '';
+  const amountStr = p.get('amount') || '0';
+  const currency  = p.get('currency') || '';
+  const datetime  = p.get('datetime') || '';
+  const sender    = p.get('sender') || '';
+  const codepro   = p.get('codepro') || '';
+  const label     = p.get('label') || '';
+  const received  = (p.get('sha1_hash') || '').toLowerCase();
+
+  // ВАЖНО: это "секретное слово" вебхуков из кабинета ЮMoney, НЕ OAuth client secret
   const secret = config.NEXT_YOOMONEY_CLIENT_SECRET || '';
-  const received = (p.get('sha1_hash') || '').toLowerCase();
-
-  const base = [
-    secret,
-    p.get('operation_id') || '',
-    p.get('amount') || '',
-    p.get('currency') || '',
-    p.get('datetime') || '',
-    p.get('sender') || '',
-    p.get('codepro') || '',
-    p.get('label') || '',
-  ].join('&');
-
+  const base   = [secret, opId, amountStr, currency, datetime, sender, codepro, label].join('&');
   const computed = sha1(base);
 
   if (!secret || received !== computed) {
     return new NextResponse('bad signature', { status: 400 });
   }
-
-  if (p.get('codepro') === 'true') {
-    // платёж с кодом протекции — не считаем оплаченным
+  if (codepro === 'true') {
     return new NextResponse('protected', { status: 202 });
   }
 
-  // TODO: отметить заказ p.get('label') как оплачен
-  // сумма: parseFloat(p.get('amount') || '0')
+  // Предполагаем, что при создании платежа ты положил userId в label,
+  // например: "uid:<userId>:<nonce>"
+  const userId = (label.startsWith('uid:') ? label.slice(4) : label).split(':')[0];
+  const amount = Number.parseFloat(amountStr);
+
+  // Шлём пополнение на твой API. Добавь сервисный токен, чтобы различать запросы от вебхука.
+  const res = await fetch(`${config.API_URL}/payment/top-up`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      // Сервисная авторизация (заведи на бэке проверку этого токена)
+      // 'Authorization': `Bearer ${config.SERVICE_TOKEN}`,
+    },
+    body: JSON.stringify({
+      userId,
+      amount,
+      // operationId: opId,
+      // provider: 'yoomoney',
+      // // опционально — сырой payload для аудита/диагностики
+      // payload: Object.fromEntries(p as any),
+    }),
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => '');
+    return new NextResponse(`topup failed: ${res.status} ${txt}`, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }
+
+// import { NextRequest, NextResponse } from 'next/server';
+// import crypto from 'crypto';
+// import { config } from '@/common/env'
+
+// function sha1(s: string) {
+//   return crypto.createHash('sha1').update(s).digest('hex');
+// }
+
+// export async function POST(req: NextRequest) {
+//   const text = await req.text();                // важно: не req.json()
+//   const p = new URLSearchParams(text);
+
+//   const secret = config.NEXT_YOOMONEY_CLIENT_SECRET || '';
+//   const received = (p.get('sha1_hash') || '').toLowerCase();
+
+//   const base = [
+//     secret,
+//     p.get('operation_id') || '',
+//     p.get('amount') || '',
+//     p.get('currency') || '',
+//     p.get('datetime') || '',
+//     p.get('sender') || '',
+//     p.get('codepro') || '',
+//     p.get('label') || '',
+//   ].join('&');
+
+//   const computed = sha1(base);
+
+//   if (!secret || received !== computed) {
+//     return new NextResponse('bad signature', { status: 400 });
+//   }
+
+//   if (p.get('codepro') === 'true') {
+//     // платёж с кодом протекции — не считаем оплаченным
+//     return new NextResponse('protected', { status: 202 });
+//   }
+
+//   // TODO: отметить заказ p.get('label') как оплачен
+//   // сумма: parseFloat(p.get('amount') || '0')
+
+//   return NextResponse.json({ ok: true });
+// }
 
 
 // import { NextResponse } from 'next/server';

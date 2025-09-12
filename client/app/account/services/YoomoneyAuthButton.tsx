@@ -1,4 +1,5 @@
 "use client";
+import { useGetMeQuery } from "@/redux/services/userApi"
 import { Button, Image } from "@heroui/react";
 
 type Props = {
@@ -18,6 +19,8 @@ export default function YoomoneyP2PButton({
 	successURL,
 	paymentType,
 }: Props) {
+  const { data: me } = useGetMeQuery(null)
+  
 	const start = () => {
 		const f = document.createElement("form");
 		f.method = "POST";
@@ -36,7 +39,7 @@ export default function YoomoneyP2PButton({
 		add("quickpay-form", "shop"); // или 'donate'
 		add("targets", targets);
 		add("sum", amount.toFixed(2));
-		add("label", label); // вернётся в уведомлении
+    add('label', `uid:${me._id}:${crypto.getRandomValues(new Uint32Array(1))[0]}`);
 		add("successURL", successURL);
 		// запрашивать контакты у плательщика (по желанию):
 		// add('need-email', 'true'); add('need-phone', 'true');
@@ -48,16 +51,23 @@ export default function YoomoneyP2PButton({
 	};
 
 	return (
-		<Button
+    <Button
 			radius="full"
 			size="lg"
-			startContent={
-				<Image src="/ym.png" width={20} height={20} radius="none" />
-			}
 			onPress={start}
 		>
-			YooMoney
+			{amount} ₽
 		</Button>
+		// <Button
+		// 	radius="full"
+		// 	size="lg"
+		// 	startContent={
+		// 		<Image src="/ym.png" width={20} height={20} radius="none" />
+		// 	}
+		// 	onPress={start}
+		// >
+		// 	YooMoney
+		// </Button>
 	);
 }
 
