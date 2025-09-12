@@ -1,69 +1,113 @@
-// app/api/yoomoney/notify/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
-import { config } from '@/common/env';
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { config } from "@/common/env";
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 function sha1(s: string) {
-  return crypto.createHash('sha1').update(s, 'utf8').digest('hex');
+	return crypto.createHash("sha1").update(s, "utf8").digest("hex");
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.text();
-  const p = new URLSearchParams(body);
+	console.log("💰 YooMoney webhook", req.url);
+	// ЮMoney шлёт application/x-www-form-urlencoded
+	const raw = await req.text();
+	const p = new URLSearchParams(raw);
 
-  const opId      = p.get('operation_id') || '';
-  const amountStr = p.get('amount') || '0';
-  const currency  = p.get('currency') || '';
-  const datetime  = p.get('datetime') || '';
-  const sender    = p.get('sender') || '';
-  const codepro   = p.get('codepro') || '';
-  const label     = p.get('label') || '';
-  const received  = (p.get('sha1_hash') || '').toLowerCase();
+	const notificationType = p.get("notification_type") || "";
+	const opId = p.get("operation_id") || "";
+	const amountRaw = p.get("amount") || "0";
+	const currency = p.get("currency") || "";
+	const datetime = p.get("datetime") || "";
+	const sender = p.get("sender") || "";
+	const codepro = p.get("codepro") || "";
+	const label = p.get("label") || "";
+	const received = (p.get("sha1_hash") || "").toLowerCase();
+	const isTest = (p.get("test_notification") || "").toLowerCase() === "true";
 
-  // ВАЖНО: это "секретное слово" вебхуков из кабинета ЮMoney, НЕ OAuth client secret
-  const secret = config.NEXT_YOOMONEY_CLIENT_SECRET || '';
-  const base   = [secret, opId, amountStr, currency, datetime, sender, codepro, label].join('&');
-  const computed = sha1(base);
+	// ВАЖНО: это СЕКРЕТНОЕ СЛОВО ИЗ НАСТРОЕК УВЕДОМЛЕНИЙ, не OAuth secret!
+	const secret = config.YOOMONEY_NOTIFICATION_SECRET || "";
 
-  if (!secret || received !== computed) {
-    return new NextResponse('bad signature', { status: 400 });
-  }
-  if (codepro === 'true') {
-    return new NextResponse('protected', { status: 202 });
-  }
+	// Формула из доков:
+	// notification_type&operation_id&amount&currency&datetime&sender&codepro&notification_secret&label
+	const base = [
+		notificationType,
+		opId,
+		amountRaw,
+		currency,
+		datetime,
+		sender,
+		codepro,
+		secret,
+		label,
+	].join("&");
 
-  // Предполагаем, что при создании платежа ты положил userId в label,
-  // например: "uid:<userId>:<nonce>"
-  const userId = (label.startsWith('uid:') ? label.slice(4) : label).split(':')[0];
-  const amount = Number.parseFloat(amountStr);
+	const computed = sha1(base);
 
-  // Шлём пополнение на твой API. Добавь сервисный токен, чтобы различать запросы от вебхука.
-  const res = await fetch(`${config.API_URL}/payment/top-up`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // Сервисная авторизация (заведи на бэке проверку этого токена)
-      // 'Authorization': `Bearer ${config.SERVICE_TOKEN}`,
-    },
-    body: JSON.stringify({
-      userId,
-      amount,
-      // operationId: opId,
-      // provider: 'yoomoney',
-      // // опционально — сырой payload для аудита/диагностики
-      // payload: Object.fromEntries(p as any),
-    }),
-  });
+	if (!secret || received !== computed) {
+		// Подпись не сошлась — отвечаем 400, чтобы ЮMoney повторил попытку
+		return new NextResponse("bad signature", { status: 400 });
+	}
 
-  if (!res.ok) {
-    const txt = await res.text().catch(() => '');
-    return new NextResponse(`topup failed: ${res.status} ${txt}`, { status: 500 });
-  }
+	// ЮMoney теперь не делает codepro/hold, но поле присылают — на всякий случай проверим
+	if (codepro === "true") {
+		return new NextResponse("protected", { status: 202 });
+	}
 
-  return NextResponse.json({ ok: true });
+	// Тестовые уведомления не проводим в биллинг
+	if (isTest) {
+		return NextResponse.json({ ok: true, test: true });
+	}
+
+	// Из label достаём userId (например "uid:<userId>:<nonce>")
+	const userId =
+		(label.startsWith("uid:") ? label.slice(4) : label).split(":")[0] || "";
+	// На всякий случай нормализуем десятичный разделитель
+	const amount = Number.parseFloat(amountRaw.replace(",", "."));
+
+	// Если нечего проводить — просто 200, чтобы ЮMoney не ретраил
+	if (!userId || !Number.isFinite(amount) || amount <= 0) {
+		return NextResponse.json({ ok: true, skipped: true });
+	}
+
+	// Идемпотентность на вашей стороне: передайте operation_id
+	// ВАЖНО: старайтесь отвечать ЮMoney быстро — не делайте долгих запросов.
+	// Делаем короткий вызов вашего API с таймаутом.
+	try {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 2500); // 2.5s таймаут
+		const res = await fetch(`${config.API_URL}/payment/top-up`, {
+			method: "POST",
+			signal: controller.signal,
+			headers: {
+				"Content-Type": "application/json",
+				// Рекомендуется добавить сервисный токен и проверять его на бэке:
+				// 'Authorization': `Bearer ${config.SERVICE_TOKEN}`,
+				"X-Provider": "yoomoney",
+				"X-Operation-Id": opId,
+			},
+			body: JSON.stringify({
+				userId,
+				amount,
+				operationId: opId,
+				provider: "yoomoney",
+				// Можно пробросить сырой payload для аудита:
+				// payload: Object.fromEntries(p as any),
+			}),
+		})
+			.then((res) => console.log(res))
+			.catch((err) => console.log(err))
+			.finally(() => clearTimeout(timeout));
+
+		// Даже если ваш бэкенд вернул 4xx/5xx — ЮMoney не должен ретраить,
+		// т.к. подпись уже проверена. Возвращаем 200.
+		// (Если хотите, можете логировать res.status для диагностики.)
+	} catch {
+		// Сетевая ошибка/таймаут — всё равно отвечаем 200, чтобы не копить ретраи у ЮMoney.
+	}
+
+	return NextResponse.json({ ok: true });
 }
 
 // import { NextRequest, NextResponse } from 'next/server';
@@ -108,7 +152,6 @@ export async function POST(req: NextRequest) {
 
 //   return NextResponse.json({ ok: true });
 // }
-
 
 // import { NextResponse } from 'next/server';
 // import { cookies } from 'next/headers';
@@ -190,7 +233,6 @@ export async function POST(req: NextRequest) {
 //     return NextResponse.redirect(new URL('/auth/error?reason=exception', url.origin));
 //   }
 // }
-
 
 // 'use client';
 // import { useEffect } from 'react';
