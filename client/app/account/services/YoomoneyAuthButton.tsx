@@ -1,18 +1,81 @@
-'use client';
-import { Button, Image } from '@heroui/react';
+"use client";
+import { Button, Image } from "@heroui/react";
 
-export default function YoomoneyAuthButtonSimple() {
-  return (
-    <Button
-      radius="full"
-      size="lg"
-      startContent={<Image src="/ym.png" width={20} height={20} radius="none" />}
-      onPress={() => { window.location.href = '/api/yoomoney/start'; }}
-    >
-      YooMoney
-    </Button>
-  );
+type Props = {
+	amount: number; // сумма
+	label: string; // ваш ID заказа
+	targets?: string; // назначение платежа
+	receiver: string; // номер кошелька, например 4100...
+	successURL: string; // страница успеха у вас
+	paymentType?: "AC" | "PC"; // AC — карта, PC — кошелёк; если не укажете, юзер выберет сам
+};
+
+export default function YoomoneyP2PButton({
+	amount,
+	label,
+	targets = "Оплата",
+	receiver,
+	successURL,
+	paymentType,
+}: Props) {
+	const start = () => {
+		const f = document.createElement("form");
+		f.method = "POST";
+		f.action = "https://yoomoney.ru/quickpay/confirm"; // POST-форма Quickpay
+		f.acceptCharset = "utf-8";
+
+		const add = (name: string, value: string) => {
+			const i = document.createElement("input");
+			i.type = "hidden";
+			i.name = name;
+			i.value = value;
+			f.appendChild(i);
+		};
+
+		add("receiver", receiver);
+		add("quickpay-form", "shop"); // или 'donate'
+		add("targets", targets);
+		add("sum", amount.toFixed(2));
+		add("label", label); // вернётся в уведомлении
+		add("successURL", successURL);
+		// запрашивать контакты у плательщика (по желанию):
+		// add('need-email', 'true'); add('need-phone', 'true');
+
+		if (paymentType) add("paymentType", paymentType); // AC или PC
+
+		document.body.appendChild(f);
+		f.submit();
+	};
+
+	return (
+		<Button
+			radius="full"
+			size="lg"
+			startContent={
+				<Image src="/ym.png" width={20} height={20} radius="none" />
+			}
+			onPress={start}
+		>
+			YooMoney
+		</Button>
+	);
 }
+
+// 'use client';
+// import { Button, Image } from '@heroui/react';
+
+// export default function YoomoneyAuthButtonSimple() {
+//   return (
+//     <Button
+//       radius="full"
+//       size="lg"
+//       startContent={<Image src="/ym.png" width={20} height={20} radius="none" />}
+//       onPress={() => { window.location.href = '/api/yoomoney/start'; }}
+//     >
+//       YooMoney
+//     </Button>
+//   );
+// }
 
 // 'use client';
 // import { Button, Image } from '@heroui/react'

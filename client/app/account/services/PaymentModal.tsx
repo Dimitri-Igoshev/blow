@@ -58,7 +58,13 @@ const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 							>
 								Wildberries
 							</Button>
-							<YoomoneyAuthButton />
+							<YoomoneyAuthButton
+								amount={1000}
+								label={new Date().toDateString()}
+								targets="Пополнение BLOW"
+								receiver="4100119320198570"
+								successURL="https://blow.ru/account/services"
+							/>
 						</div>
 					</ModalBody>
 					{/* <ModalFooter>

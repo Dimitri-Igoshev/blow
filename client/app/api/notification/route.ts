@@ -1,83 +1,127 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { config } from '@/common/env'
 
-export const dynamic = 'force-dynamic'; // чтобы не кэшировал
-
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const code = url.searchParams.get('code');
-  const state = url.searchParams.get('state');
-
-  if (!code) {
-    return NextResponse.json({ error: 'missing_code' }, { status: 400 });
-  }
-
-  // проверяем state из cookie, которую ставили при старте OAuth
-  // @ts-ignore
-  const expected = cookies()?.get('ym_state')?.value;
-  if (expected && state && expected !== state) {
-    return NextResponse.redirect(new URL('/auth/error?reason=state_mismatch', url.origin));
-  }
-
-  const clientId = config.NEXT_PUBLIC_YOOMONEY_CLIENT_ID;
-  const clientSecret = config.NEXT_YOOMONEY_CLIENT_SECRET;
-  const redirectUri =
-    config.YOOMONEY_REDIRECT_URI ?? `${url.origin}/api/yoomoney/callback`;
-
-  if (!clientId || !clientSecret) {
-    return NextResponse.json({ error: 'server_not_configured' }, { status: 500 });
-  }
-
-  try {
-    // обмен кода на токен
-    const form = new URLSearchParams({
-      grant_type: 'authorization_code',
-      code,
-      redirect_uri: redirectUri,
-      client_id: clientId, // оставим и в body, и в Basic — так надёжнее
-    });
-
-    const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-
-    const res = await fetch('https://yoomoney.ru/oauth/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${basic}`,
-      },
-      body: form.toString(),
-      cache: 'no-store',
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      return NextResponse.redirect(
-        new URL(`/auth/error?reason=token_error&msg=${encodeURIComponent(text)}`, url.origin)
-      );
-    }
-
-    const token = await res.json(); // { access_token, expires_in, ... }
-
-    // кладём токен в httpOnly-cookie и редиректим на дашборд
-    const resp = NextResponse.redirect(new URL('/account/services', url.origin));
-    resp.cookies.set({
-      name: 'ym_token',
-      value: token.access_token,
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: typeof token.expires_in === 'number' ? token.expires_in : 60 * 60 * 24,
-    });
-    // очищаем state
-    resp.cookies.set('ym_state', '', { path: '/', maxAge: 0 });
-
-    return resp;
-  } catch (e) {
-    return NextResponse.redirect(new URL('/auth/error?reason=exception', url.origin));
-  }
+function sha1(s: string) {
+  return crypto.createHash('sha1').update(s).digest('hex');
 }
+
+export async function POST(req: NextRequest) {
+  const text = await req.text();                // важно: не req.json()
+  const p = new URLSearchParams(text);
+
+  const secret = config.NEXT_YOOMONEY_CLIENT_SECRET || '';
+  const received = (p.get('sha1_hash') || '').toLowerCase();
+
+  const base = [
+    secret,
+    p.get('operation_id') || '',
+    p.get('amount') || '',
+    p.get('currency') || '',
+    p.get('datetime') || '',
+    p.get('sender') || '',
+    p.get('codepro') || '',
+    p.get('label') || '',
+  ].join('&');
+
+  const computed = sha1(base);
+
+  if (!secret || received !== computed) {
+    return new NextResponse('bad signature', { status: 400 });
+  }
+
+  if (p.get('codepro') === 'true') {
+    // платёж с кодом протекции — не считаем оплаченным
+    return new NextResponse('protected', { status: 202 });
+  }
+
+  // TODO: отметить заказ p.get('label') как оплачен
+  // сумма: parseFloat(p.get('amount') || '0')
+
+  return NextResponse.json({ ok: true });
+}
+
+
+// import { NextResponse } from 'next/server';
+// import { cookies } from 'next/headers';
+// import { config } from '@/common/env'
+
+// export const dynamic = 'force-dynamic'; // чтобы не кэшировал
+
+// export async function GET(req: Request) {
+//   const url = new URL(req.url);
+//   const code = url.searchParams.get('code');
+//   const state = url.searchParams.get('state');
+
+//   if (!code) {
+//     return NextResponse.json({ error: 'missing_code' }, { status: 400 });
+//   }
+
+//   // проверяем state из cookie, которую ставили при старте OAuth
+//   // @ts-ignore
+//   const expected = cookies()?.get('ym_state')?.value;
+//   if (expected && state && expected !== state) {
+//     return NextResponse.redirect(new URL('/auth/error?reason=state_mismatch', url.origin));
+//   }
+
+//   const clientId = config.NEXT_PUBLIC_YOOMONEY_CLIENT_ID;
+//   const clientSecret = config.NEXT_YOOMONEY_CLIENT_SECRET;
+//   const redirectUri =
+//     config.YOOMONEY_REDIRECT_URI ?? `${url.origin}/api/yoomoney/callback`;
+
+//   if (!clientId || !clientSecret) {
+//     return NextResponse.json({ error: 'server_not_configured' }, { status: 500 });
+//   }
+
+//   try {
+//     // обмен кода на токен
+//     const form = new URLSearchParams({
+//       grant_type: 'authorization_code',
+//       code,
+//       redirect_uri: redirectUri,
+//       client_id: clientId, // оставим и в body, и в Basic — так надёжнее
+//     });
+
+//     const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
+//     const res = await fetch('https://yoomoney.ru/oauth/token', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//         Authorization: `Basic ${basic}`,
+//       },
+//       body: form.toString(),
+//       cache: 'no-store',
+//     });
+
+//     if (!res.ok) {
+//       const text = await res.text();
+//       return NextResponse.redirect(
+//         new URL(`/auth/error?reason=token_error&msg=${encodeURIComponent(text)}`, url.origin)
+//       );
+//     }
+
+//     const token = await res.json(); // { access_token, expires_in, ... }
+
+//     // кладём токен в httpOnly-cookie и редиректим на дашборд
+//     const resp = NextResponse.redirect(new URL('https://blow.ru/account/services', url.origin));
+//     resp.cookies.set({
+//       name: 'ym_token',
+//       value: token.access_token,
+//       httpOnly: true,
+//       secure: true,
+//       sameSite: 'lax',
+//       path: '/',
+//       maxAge: typeof token.expires_in === 'number' ? token.expires_in : 60 * 60 * 24,
+//     });
+//     // очищаем state
+//     resp.cookies.set('ym_state', '', { path: '/', maxAge: 0 });
+
+//     return resp;
+//   } catch (e) {
+//     return NextResponse.redirect(new URL('/auth/error?reason=exception', url.origin));
+//   }
+// }
 
 
 // 'use client';
