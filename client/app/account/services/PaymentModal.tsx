@@ -61,7 +61,7 @@ const PaymentModal: FC<PaymentModalProps> = ({ isOpen, onOpenChange }) => {
 							<YoomoneyAuthButton
 								clientId={config.NEXT_PUBLIC_YOOMONEY_CLIENT_ID}
 								redirectUri="https://blow.ru/api/notification"
-								scope={[me?._id]}
+								scope="payment-p2p"
 							/>
 						</div>
 					</ModalBody>
