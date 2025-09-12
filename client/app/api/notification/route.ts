@@ -11,6 +11,7 @@ function sha1(s: string) {
 
 export async function POST(req: NextRequest) {
 	console.log("💰 YooMoney webhook", req.url);
+
 	// ЮMoney шлёт application/x-www-form-urlencoded
 	const raw = await req.text();
 	const p = new URLSearchParams(raw);
@@ -71,9 +72,7 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ ok: true, skipped: true });
 	}
 
-	// Идемпотентность на вашей стороне: передайте operation_id
-	// ВАЖНО: старайтесь отвечать ЮMoney быстро — не делайте долгих запросов.
-	// Делаем короткий вызов вашего API с таймаутом.
+	// Делаем короткий вызов API с таймаутом.
 	try {
 		const controller = new AbortController();
 		const timeout = setTimeout(() => controller.abort(), 2500); // 2.5s таймаут
@@ -82,27 +81,19 @@ export async function POST(req: NextRequest) {
 			signal: controller.signal,
 			headers: {
 				"Content-Type": "application/json",
-				// Рекомендуется добавить сервисный токен и проверять его на бэке:
-				// 'Authorization': `Bearer ${config.SERVICE_TOKEN}`,
 				"X-Provider": "yoomoney",
 				"X-Operation-Id": opId,
 			},
 			body: JSON.stringify({
 				userId,
-				amount,
-				operationId: opId,
-				provider: "yoomoney",
-				// Можно пробросить сырой payload для аудита:
-				// payload: Object.fromEntries(p as any),
+				amount: +amount / 97 * 100,
+				// operationId: opId,
+				// provider: "yoomoney",
 			}),
 		})
 			.then((res) => console.log(res))
 			.catch((err) => console.log(err))
 			.finally(() => clearTimeout(timeout));
-
-		// Даже если ваш бэкенд вернул 4xx/5xx — ЮMoney не должен ретраить,
-		// т.к. подпись уже проверена. Возвращаем 200.
-		// (Если хотите, можете логировать res.status для диагностики.)
 	} catch {
 		// Сетевая ошибка/таймаут — всё равно отвечаем 200, чтобы не копить ретраи у ЮMoney.
 	}

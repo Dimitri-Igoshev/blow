@@ -28,6 +28,7 @@ import { TopUpModal } from "@/components/TopUpModal";
 import { useVerifyTokenMutation } from "@/redux/services/topupApi";
 import WithdrawalModal from "./WithdrawalModal"
 import PaymentModal from "./PaymentModal"
+import AmountModal from "./AmountModal"
 
 type PaymentData = {
 	PayerId?: string;
@@ -492,10 +493,12 @@ export default function AccountServices() {
 				onOpenChange={onWithdrawalChange}
 			/>
 
-			<PaymentModal
+			{/* <PaymentModal
 				isOpen={isPayment}
 				onOpenChange={onPaymentChange}
-			/>
+			/> */}
+
+			<AmountModal isOpen={isPayment} onOpenChange={onPaymentChange} />
 		</div>
 	);
 }
