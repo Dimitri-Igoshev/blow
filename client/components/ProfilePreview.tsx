@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 "use client";
 
 import { FC, useEffect, useRef, useState } from "react";
