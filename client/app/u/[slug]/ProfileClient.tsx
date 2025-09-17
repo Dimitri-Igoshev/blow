@@ -28,6 +28,7 @@ import { useCityLabel } from "@/helper/getCityString";
 import { maskContacts } from "@/helper/maskContacts";
 import useIsBlocked from "@/hooks/useIsBlocked";
 import { Note } from "@/app/account/search/[id]/Note";
+import Auth from "@/components/Auth"
 
 type ProfileClientProps = {
 	profile: any;
@@ -214,7 +215,7 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 
 	const getContact = () => {
 		const contacts = me?.purchasedContacts?.filter((i: any) => i.user === id);
-		const contact = contacts?.length ? contacts[contacts?.length - 1] : null
+		const contact = contacts?.length ? contacts[contacts?.length - 1] : null;
 
 		if (contact?.whatsapp) return `WhatsApp: ${contact?.whatsapp}`;
 		if (contact?.telegram) return `Telegram: ${contact?.telegram}`;
@@ -222,6 +223,9 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 
 		return "";
 	};
+
+	const [registrationSignal, setRegistrationSignal] = useState(0);
+	const triggerRegistration = () => setRegistrationSignal(Date.now());
 
 	return (
 		<div
@@ -511,7 +515,11 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 					"Для того чтобы начать общаться, Вам нужно зарегистрироваться на сайте"
 				}
 				title={"Нужна регистрация"}
-				onAction={() => null}
+				actionBtn="Регистрация"
+				onAction={() => {
+					triggerRegistration()
+					onRegisterRequiredChange()
+				}}
 				onOpenChange={onRegisterRequiredChange}
 			/>
 
@@ -533,6 +541,11 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 				}
 				title={"Нужны регистрация и премиум"}
 				onOpenChange={onRegistrationRequiredChange}
+				actionBtn="Регистрация"
+				onAction={() => {
+					triggerRegistration()
+					onRegistrationRequiredChange()
+				}}
 			/>
 
 			<InfoModal
@@ -541,6 +554,8 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 				title={"Жалоба"}
 				onOpenChange={onComplainInfoOpenChange}
 			/>
+
+			<Auth registrationSignal={registrationSignal} />
 		</div>
 	);
 };

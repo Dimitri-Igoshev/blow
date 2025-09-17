@@ -18,7 +18,7 @@ import { InfoModal } from "./InfoModal";
 import { useDisclosure } from "@heroui/react";
 import { useCityLabel } from "@/helper/getCityString";
 import { useStartChatMutation } from "@/redux/services/chatApi";
-import Auth from "./Auth"
+import Auth from "./Auth";
 
 interface ProfilePreviewProps {
 	item: any;
@@ -46,6 +46,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 		isOpen: isRegistrationRequired,
 		onOpen: onRegistrationRequired,
 		onOpenChange: onRegistrationRequiredChange,
+		onClose: onRegistrationRequiredClose,
 	} = useDisclosure();
 
 	const handlePlay = () => {
@@ -122,7 +123,8 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 		}
 	};
 
-	const [registration, setRegistration] = useState(false)
+	const [registrationSignal, setRegistrationSignal] = useState(0);
+	const triggerRegistration = () => setRegistrationSignal(Date.now());
 
 	return (
 		<>
@@ -299,8 +301,11 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				}
 				title={"Нужны регистрация и премиум"}
 				onOpenChange={onRegistrationRequiredChange}
-				actionBtn="Зарегистрироваться"
-				onAction={() => setRegistration(true)}
+				actionBtn="Регистрация"
+				onAction={() => {
+					triggerRegistration()
+					onRegistrationRequiredChange()
+				}}
 			/>
 
 			<InfoModal
@@ -310,11 +315,16 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				}
 				title={"Нужна регистрация"}
 				actionBtn="Регистрация"
-				onAction={() => setRegistration(true)}
+				onAction={() => {
+					triggerRegistration()
+					onRegisterRequiredChange()
+				}}
 				onOpenChange={onRegisterRequiredChange}
 			/>
 
-			<Auth registration={registration} />
+			<Auth
+				registrationSignal={registrationSignal}
+			/>
 		</>
 	);
 };

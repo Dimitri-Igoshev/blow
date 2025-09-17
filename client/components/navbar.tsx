@@ -359,7 +359,7 @@ export const Navbar = () => {
 									variant="solid"
 									onPress={onLogin}
 								>
-									Есть страница
+									Вход
 								</Button>
 							</NavbarItem>
 							<NavbarItem className="hidden md:flex">
@@ -369,7 +369,7 @@ export const Navbar = () => {
 									variant="solid"
 									onPress={onRegister}
 								>
-									Добавить себя
+									Регистрация
 								</Button>
 							</NavbarItem>
 						</>
@@ -516,8 +516,8 @@ export const Navbar = () => {
 						</ul>
 					) : (
 						<ul className="flex flex-col items-start gap-3 text-[18px] mt-4">
-							<button onClick={onLogin}>Есть страница</button>
-							<button onClick={onRegister}>Добавить себя</button>
+							<button onClick={onLogin}>Вход</button>
+							<button onClick={onRegister}>Регистрация</button>
 						</ul>
 					)}
 				</div>

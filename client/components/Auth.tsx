@@ -15,32 +15,15 @@ import { useGetMeQuery } from "@/redux/services/userApi";
 import { usePathname } from "next/navigation";
 
 interface AuthProps {
-	registration?: boolean;
-	login?: boolean;
+	registrationSignal: number;
 }
 
-const INITIIAL_STATE = {
-	registration: false,
-	login: false,
-};
-
-const Auth: FunctionComponent<AuthProps> = ({ registration, login }) => {
+const Auth: FunctionComponent<AuthProps> = ({ registrationSignal }) => {
 	const { data: me, isFetching } = useGetMeQuery(null);
 
 	const [newUser, setNewUser] = useState(null);
 	const [error, setError] = useState("");
 	const pathname = usePathname();
-
-  useEffect(() => {
-    if (registration) onRegister();
-    if (login) onLogin();
-  }, [])
-
-	const handleError = (error: string) => {
-		console.log("error", error);
-		setError(error);
-		onError();
-	};
 
 	const register = () => {};
 
@@ -53,6 +36,7 @@ const Auth: FunctionComponent<AuthProps> = ({ registration, login }) => {
 		isOpen: isRegister,
 		onOpen: onRegister,
 		onOpenChange: onRegisterChange,
+		onClose: onRegisterClose,
 	} = useDisclosure();
 	const {
 		isOpen: isEmail,
@@ -102,6 +86,16 @@ const Auth: FunctionComponent<AuthProps> = ({ registration, login }) => {
 			onInfoBlocked();
 		}
 	}, [me]);
+
+	useEffect(() => {
+		if (registrationSignal) onRegister(); // каждое новое значение откроет модалку
+	}, [registrationSignal, onRegister]);
+
+	const handleError = (error: string) => {
+		console.log("error", error);
+		setError(error);
+		onError();
+	};
 
 	return (
 		<>
