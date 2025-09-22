@@ -65,7 +65,7 @@ const AccountSearch = ({ city = "", sex = "", withPhoto = "" }: any) => {
 			return [...prev, ...toAppend];
 		});
 	}, [pageUsers]);
-
+	
 	return (
 		<div
 			className={cn(

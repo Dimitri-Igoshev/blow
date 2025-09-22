@@ -15,9 +15,10 @@ import { useCityLabel } from "@/helper/getCityString";
 interface PreviewWidgetProps {
 	item: any;
 	className?: string;
+	style?: any
 }
 
-export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
+export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className, style }) => {
 	const router = useRouter();
 	const ref = useRef<any>(null);
 
@@ -35,14 +36,14 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
 		<button
 			ref={ref}
 			className={cn(
-				"w-full border-[5px] rounded-[32px] border-white overflow-hidden cursor-pointer text-white sm:hover:scale-110 transition-all z-0 relative",
+				"w-full border-[5px] rounded-[32px] border-white overflow-hidden cursor-pointer text-white sm:hover:scale-110 hover:z-30 transition-all z-0 relative",
 				{
 					["border-white dark:border-white/25"]: !isTop(item),
 					["border-primary dark:border-primary/75"]: isTop(item),
 				},
 				className
 			)}
-			style={{ height: `${width ? width * 1.4 : 0}px` }}
+			style={{ height: `${width ? width * 1.42 : 0}px` }}
 			onClick={() =>
 				window.open(
 					`${ROUTES.ACCOUNT.SEARCH}/${item._id}`,
@@ -54,7 +55,7 @@ export const PreviewWidget: FC<PreviewWidgetProps> = ({ item, className }) => {
 			<Image
 				alt=""
 				className="object-cover"
-				height={width ? width * 1.4 : 0}
+				height={width ? width * 1.40 : 0}
 				src={
 					item?.photos?.[0]?.url
 						? `${config.MEDIA_URL}/${item?.photos[0]?.url}`

@@ -10,7 +10,7 @@ import { Button } from "@heroui/button";
 import NextLink from "next/link";
 import { Image } from "@heroui/image";
 import { useRouter } from "next/navigation";
-import { Avatar, useDisclosure } from "@heroui/react";
+import { Avatar, cn, useDisclosure } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { RiCloseFill, RiMegaphoneLine, RiMenu4Fill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
@@ -244,7 +244,9 @@ export const Navbar = () => {
 	return (
 		<>
 			<HeroUINavbar
-				className="p-0 md:p-3 fixed bg-transparent"
+				className={cn("p-0 md:p-3 fixed bg-transparent", {
+					['hidden']: pathname?.includes('promo')
+				})}
 				isBlurred={true}
 				maxWidth="full"
 				position="sticky"
