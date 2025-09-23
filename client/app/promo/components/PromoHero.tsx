@@ -1121,6 +1121,7 @@ export const PromoHero = () => {
 			sex: "male",
 			firstName: data.firstName,
 			status: "active",
+			fromLanding: true,
 		};
 
 		registaration(body)
