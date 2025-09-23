@@ -1115,6 +1115,7 @@ export const PromoHero = () => {
 	const onSubmit: SubmitHandler<Inputs> = async (data: any) => {
 		setIsLoading(true);
 
+		// data
 		const body: any = {
 			email: data.email.toLowerCase(),
 			password: data.password,
