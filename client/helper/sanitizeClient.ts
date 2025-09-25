@@ -45,7 +45,7 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   const normToOrig: number[] = [];
   for (let i = 0; i < input.length; i++) {
     let ch = input[i];
-    if (ZERO_WIDTH_SET.has(ch)) continue;
+    if (ZERO_WIDTH_SET.has(ch)) continue; // выкидываем невидимые
     ch = ch.normalize('NFKC');
     normChars.push(homoglyph[ch] ?? ch);
     normToOrig.push(i);
@@ -79,12 +79,17 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   // (c) Латиница суммарно >= 5
   const latinCount = (norm.match(/[a-z]/g) ?? []).length;
   const hasTooManyLatin = latinCount >= 5;
-  if (hasTooManyLatin) reasons.add('generic-link'); // тип условный, ближе всего
+  if (hasTooManyLatin) reasons.add('generic-link');
 
   // (d) Цифры суммарно >= 5
   const digitCount = (norm.match(/\d/g) ?? []).length;
   const hasTooManyDigits = digitCount >= 5;
   if (hasTooManyDigits) reasons.add('phone');
+
+  // (e) Латиница + цифры суммарно >= 5 (например, Vwn20)
+  const latinOrDigitCount = latinCount + digitCount;
+  const hasTooManyLatinOrDigits = latinOrDigitCount >= 5;
+  if (hasTooManyLatinOrDigits) reasons.add('generic-link');
 
   if (reasons.size > 0) {
     // Бан всего текста: маскируем всю строку (кроме пробелов),
@@ -131,10 +136,10 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   const VIBER    = /viber:\/\/?/gi;
   const VK_ME    = new RegExp(String.raw`(?:https?:\/\/)?vk(?:\.|${DOT_WORD})me\/[a-z0-9_.]+`, 'gi');
 
-  // телефоны
+  // телефоны: с разделителями/Юникод-дефисами/NBSP + «сплошные цифры»
   const PHONE_SEP = String.raw`[ \t().\-\u00A0\u2010-\u2015\u2212]?`;
   const PHONE_CORE = new RegExp(String.raw`(?:\+?\d${PHONE_SEP}){${minPhoneDigits},20}`, 'gi');
-  const PHONE_PLAIN = new RegExp(String.raw`\d{${minPhoneDigits},20}`, 'g');
+  const PHONE_PLAIN = new RegExp(String.raw`\d{${minPhoneDigits},20}`, 'g'); // без lookbehind
 
   type Hit = { s: number; e: number; t: ContactType };
   const hits: Hit[] = [];
@@ -174,7 +179,7 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
       }
     }
   }
-  // phone (2) «сплошные цифры» с ручной проверкой границ
+  // phone (2) «сплошные цифры» с ручной проверкой границ (чтобы не трогать части карт/индексов)
   {
     PHONE_PLAIN.lastIndex = 0;
     let m: RegExpExecArray | null;
