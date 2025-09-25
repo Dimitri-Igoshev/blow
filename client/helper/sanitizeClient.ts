@@ -15,7 +15,7 @@ export interface ContactMatch {
 
 export interface SanitizeReport {
   text: string;           // маскированный текст
-  found: boolean;         // нашли ли контакты
+  found: boolean;         // нашли ли контакты/запрещённые элементы
   types: ContactType[];   // уникальные типы
   count: number;          // сколько участков замаскировано
   matches: ContactMatch[];// матч-лист в координатах исходной строки
@@ -30,7 +30,6 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   }
 
   // ---------- 1) Нормализация + карта индексов ----------
-  // вместо RegExp.test используем «набор символов», чтобы не было сюрпризов с lastIndex
   const ZERO_WIDTH_SET = new Set([
     '\u200B','\u200C','\u200D','\u200E','\u200F',
     '\u202A','\u202B','\u202C','\u202D','\u202E',
@@ -46,7 +45,7 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   const normToOrig: number[] = [];
   for (let i = 0; i < input.length; i++) {
     let ch = input[i];
-    if (ZERO_WIDTH_SET.has(ch)) continue; // выкидываем невидимые
+    if (ZERO_WIDTH_SET.has(ch)) continue;
     ch = ch.normalize('NFKC');
     normChars.push(homoglyph[ch] ?? ch);
     normToOrig.push(i);
@@ -61,6 +60,50 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
     const b = (normToOrig[eCl] ?? a) + 1;
     return { a, b };
   };
+
+  const maskSlice = (s: string) => s.replace(/[^\s]/g, maskChar);
+
+  // ---------- 1.5) Глобальные запреты по ТЗ ----------
+  // Причины «бана всего текста»
+  const reasons = new Set<ContactType>();
+
+  // (a) Любой символ '@'
+  const hasAt = norm.includes('@');
+  if (hasAt) reasons.add('email');
+
+  // (b) Любая ссылка (http/https/www)
+  const GENERIC_URL = /(https?:\/\/|www\.)\S+/i;
+  const hasLink = GENERIC_URL.test(norm);
+  if (hasLink) reasons.add('generic-link');
+
+  // (c) Латиница суммарно >= 5
+  const latinCount = (norm.match(/[a-z]/g) ?? []).length;
+  const hasTooManyLatin = latinCount >= 5;
+  if (hasTooManyLatin) reasons.add('generic-link'); // тип условный, ближе всего
+
+  // (d) Цифры суммарно >= 5
+  const digitCount = (norm.match(/\d/g) ?? []).length;
+  const hasTooManyDigits = digitCount >= 5;
+  if (hasTooManyDigits) reasons.add('phone');
+
+  if (reasons.size > 0) {
+    // Бан всего текста: маскируем всю строку (кроме пробелов),
+    // один матч на весь диапазон. Тип — первая причина.
+    const firstType = reasons.values().next().value as ContactType;
+    const out = maskSlice(input);
+    return {
+      text: out,
+      found: true,
+      types: Array.from(reasons),
+      count: 1,
+      matches: [{
+        type: firstType,
+        start: 0,
+        end: input.length,
+        value: input
+      }]
+    };
+  }
 
   // ---------- 2) Шаблоны ----------
   const SEP_SMALL = String.raw`[ \t\-\(\)_]{0,2}`;
@@ -88,10 +131,10 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   const VIBER    = /viber:\/\/?/gi;
   const VK_ME    = new RegExp(String.raw`(?:https?:\/\/)?vk(?:\.|${DOT_WORD})me\/[a-z0-9_.]+`, 'gi');
 
-  // телефоны: с разделителями/Юникод-дефисами/NBSP + «сплошные цифры»
+  // телефоны
   const PHONE_SEP = String.raw`[ \t().\-\u00A0\u2010-\u2015\u2212]?`;
   const PHONE_CORE = new RegExp(String.raw`(?:\+?\d${PHONE_SEP}){${minPhoneDigits},20}`, 'gi');
-  const PHONE_PLAIN = new RegExp(String.raw`\d{${minPhoneDigits},20}`, 'g'); // без lookbehind
+  const PHONE_PLAIN = new RegExp(String.raw`\d{${minPhoneDigits},20}`, 'g');
 
   type Hit = { s: number; e: number; t: ContactType };
   const hits: Hit[] = [];
@@ -131,7 +174,7 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
       }
     }
   }
-  // phone (2) «сплошные цифры» с ручной проверкой границ (чтобы не трогать части карт/индексов)
+  // phone (2) «сплошные цифры» с ручной проверкой границ
   {
     PHONE_PLAIN.lastIndex = 0;
     let m: RegExpExecArray | null;
@@ -162,8 +205,6 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   }
 
   // ---------- 4) Маскируем только «не-пробелы» ----------
-  const maskSlice = (s: string) => s.replace(/[^\s]/g, maskChar);
-
   let out = '';
   let cur = 0;
   const types = new Set<ContactType>();

@@ -167,7 +167,7 @@ export const Message: FC<MessageProps> = ({
 					me?.sex === "male" ? (
 						<div className="flex flex-col gap-3">
 							<div className="mt-1 text-primary text-sm">
-								Часть сообщения скрыта, поскольку может содержать контактные
+								Сообщение скрыто, поскольку может содержать контактные
 								данные пользователя. Для просмотра необходим премиум аккаунт.
 							</div>
 							<div>
