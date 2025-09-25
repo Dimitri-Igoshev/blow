@@ -124,7 +124,7 @@ export const PromoNext = () => {
 			>
 				<div className="flex flex-col gap-6">
 					<p className="text-3xl font-semibold text-primary">
-						24 часа премиума — чтобы выбрать лучших
+						Заходи и общайся бесплатно — чтобы выбрать лучших
 					</p>
 					<p className="text-[20px]">
 						Без карты. Приватно. 18+ и строгая модерация.

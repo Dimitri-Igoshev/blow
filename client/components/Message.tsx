@@ -13,6 +13,8 @@ import { Button } from "@heroui/button";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { ROUTES } from "@/app/routes";
 import { FiCornerUpRight } from "react-icons/fi";
+import { sanitizeContactsClient } from "@/helper/sanitizeClient";
+import { useRouter } from "next/navigation"
 
 interface MessageProps {
 	left?: boolean;
@@ -29,6 +31,7 @@ export const Message: FC<MessageProps> = ({
 }) => {
 	const { data: me } = useGetMeQuery(null);
 	const premium = isPremium(me);
+	const router = useRouter();
 
 	const handleDownload = async () => {
 		const fileUrl = `${config.MEDIA_URL}/${message?.fileUrl}`;
@@ -58,12 +61,18 @@ export const Message: FC<MessageProps> = ({
 							? "Мужчина"
 							: "Девушка"}
 					{" • "}
-					{format(new Date(r?.createdAt), "HH:mm dd.MM")}
+					{r?.createdAt ? format(new Date(r?.createdAt), "HH:mm dd.MM") : ""}
 				</div>
 				{r?.fileUrl ? (
 					<div className="mt-1 text-xs italic opacity-80">📎 Вложение</div>
 				) : null}
-				{r?.text ? <div className="text-sm line-clamp-3">{r.text}</div> : null}
+				{r?.text ? (
+					<div className="text-sm line-clamp-3">
+						{isPremium(me) || me?.sex === "female"
+							? r.text
+							: sanitizeContactsClient(r.text).text}
+					</div>
+				) : null}
 			</div>
 		);
 	};
@@ -144,9 +153,36 @@ export const Message: FC<MessageProps> = ({
 							</Button>
 						</div>
 					) : null}
-					{message?.text ? <p>{message.text}</p> : null}
+					{message?.text ? (
+						<p>
+							{isPremium(me) || me?.sex === "female"
+								? message.text
+								: sanitizeContactsClient(message.text).text}
+						</p>
+					) : null}
 
 					{/* Кнопка "Ответить" */}
+					{sanitizeContactsClient(message.text).found &&
+					!isPremium(me) &&
+					me?.sex === "male" ? (
+						<div className="flex flex-col gap-3">
+							<div className="mt-1 text-primary text-sm">
+								Часть сообщения скрыта, поскольку может содержать контактные
+								данные пользователя. Для просмотра необходим премиум аккаунт.
+							</div>
+							<div>
+								<Button
+									className=""
+									color="default"
+									radius="full"
+									variant="solid"
+									onPress={() => router.push(ROUTES.ACCOUNT.SERVICES)}
+								>
+									Купить премиум
+								</Button>
+							</div>
+						</div>
+					) : null}
 					{onReply ? (
 						<button
 							className="self-end mt-2 text-xs opacity-70 hover:opacity-100 inline-flex items-center gap-1"
@@ -159,7 +195,9 @@ export const Message: FC<MessageProps> = ({
 				</div>
 
 				<p className="text-[10px] text-right mt-1">
-					{format(new Date(message?.createdAt), "HH:mm dd.MM.yyyy")}
+					{message?.createdAt
+						? format(new Date(message?.createdAt), "HH:mm dd.MM.yyyy")
+						: ""}
 					{/* <span className="text-[9px]">
 						{format(new Date(message?.updatedAt), "dd.MM.yyyy")}
 					</span> */}

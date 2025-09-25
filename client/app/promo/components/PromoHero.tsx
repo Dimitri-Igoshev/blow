@@ -1260,8 +1260,7 @@ export const PromoHero = () => {
 										className=" flex flex-col gap-6"
 									>
 										<p className="pb-2">
-											Начните <span className="font-semibold">бесплатно</span> —
-											24 часа премиума
+											Начните общаться <span className="font-semibold">бесплатно</span>
 										</p>
 
 										<Input
@@ -1323,7 +1322,7 @@ export const PromoHero = () => {
 											size="lg"
 											type="submit"
 										>
-											Получить 24 часа премиума
+											Найти содержанку
 										</Button>
 
 										<div className="text-center text-foreground-500">

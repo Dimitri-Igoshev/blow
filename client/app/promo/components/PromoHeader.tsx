@@ -66,7 +66,7 @@ export const PromoHeader = () => {
             </NavbarItem>
             <NavbarItem>
               <Chip size="lg" className="bg-transparent border border-foreground">
-                24 часа премиум
+                Общайся бесплатно
               </Chip>
             </NavbarItem>
           </NavbarContent>

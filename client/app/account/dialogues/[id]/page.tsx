@@ -4,7 +4,14 @@ import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Input } from "@heroui/input";
 import { cn } from "@heroui/theme";
-import { use, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+	use,
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import { useDisclosure } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
@@ -39,6 +46,7 @@ import { PromotionModal } from "./PromotionModal";
 import ShareContactModal from "./ShareContactModal";
 import { SystemMessage } from "@/components/SystemMessage";
 import ConfirmPurchaseModal from "./ConfirmPurchaseModal";
+import { sanitizeContactsClient } from "@/helper/sanitizeClient";
 const Picker = dynamic(() => import("@emoji-mart/react"), { ssr: false });
 
 interface ProfileViewProps {
@@ -77,8 +85,8 @@ export default function AccountDialogues({
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			refetch();
-			refetch2();
+			if (refetch) refetch();
+			if (refetch2) refetch2();
 		}, 3000);
 		return () => clearInterval(interval);
 	}, []);
@@ -119,6 +127,15 @@ export default function AccountDialogues({
 
 	const handleSubmit = async () => {
 		if (!text) return;
+
+		if (
+			sanitizeContactsClient(text).found &&
+			!isPremium(me) &&
+			me?.sex === "male"
+		) {
+			onPremiumRequired();
+			return;
+		}
 
 		const body = {
 			chat: chat?._id,
@@ -165,12 +182,13 @@ export default function AccountDialogues({
 		}
 	};
 
-	useEffect(() => {
-		if (!me) return;
-		if (me?.sex === "male" && !isPremium(me)) {
-			onPremiumRequired();
-		}
-	}, [me]);
+	// Обязательный премиум для М в сообщениях
+	// useEffect(() => {
+	// 	if (!me) return;
+	// 	if (me?.sex === "male" && !isPremium(me)) {
+	// 		onPremiumRequired();
+	// 	}
+	// }, [me]);
 
 	const [sortedChats, setSortedChats] = useState<any[]>([]);
 
@@ -362,7 +380,11 @@ export default function AccountDialogues({
 						<div className="text-xs italic">📎 Вложение</div>
 					) : null}
 					{replyTo?.text ? (
-						<div className="line-clamp-2">{replyTo.text}</div>
+						<div className="line-clamp-2">
+							{isPremium(me) || me?.sex === "female"
+								? replyTo.text
+								: sanitizeContactsClient(replyTo.text).text}
+						</div>
 					) : null}
 				</div>
 				<button
@@ -584,7 +606,7 @@ export default function AccountDialogues({
 										{chat ? (
 											<>
 												{chat?.map((message: any, idx: number) => (
-													<>
+													<div key={message?._id}>
 														{message?.sender ? (
 															<Message
 																message={message}
@@ -592,7 +614,6 @@ export default function AccountDialogues({
 																	chat?.[idx - 1]?.sender?._id ===
 																	message?.sender?._id
 																}
-																key={message?._id}
 																left
 																onReply={(m) => setReplyTo(m)}
 															/>
@@ -617,7 +638,7 @@ export default function AccountDialogues({
 																}}
 															/>
 														)}
-													</>
+													</div>
 												))}
 											</>
 										) : null}
@@ -714,7 +735,7 @@ export default function AccountDialogues({
 						</div>
 					</div>
 
-					<InfoModal
+					{/* <InfoModal
 						actionBtn="Купить"
 						isOpen={isPremiumRequired}
 						text={
@@ -723,6 +744,17 @@ export default function AccountDialogues({
 						title={"Нужен премиум"}
 						onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
 						onOpenChange={() => router.back()}
+					/> */}
+
+					<InfoModal
+						actionBtn="Купить"
+						isOpen={isPremiumRequired}
+						text={
+							"Для того чтобы передавать контакты, Вам нужно купить премиум подписку."
+						}
+						title={"Нужен премиум"}
+						onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
+						onOpenChange={onPremiumRequiredChange}
 					/>
 
 					<ConfirmModal
