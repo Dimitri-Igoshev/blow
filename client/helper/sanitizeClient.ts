@@ -41,15 +41,24 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
     'А':'A','В':'B','Е':'E','К':'K','М':'M','Н':'H','О':'O','Р':'P','С':'C','Т':'T','Х':'X',
   };
 
+  // Делаем две версии строки:
+  // rawLower — без гомоглифов (для подсчёта латиницы/цифр и глобальных запретов)
+  // norm     — с гомоглифами (для распознавания контактов/ссылок)
+  const rawChars: string[] = [];
   const normChars: string[] = [];
   const normToOrig: number[] = [];
+
   for (let i = 0; i < input.length; i++) {
     let ch = input[i];
-    if (ZERO_WIDTH_SET.has(ch)) continue; // выкидываем невидимые
-    ch = ch.normalize('NFKC');
-    normChars.push(homoglyph[ch] ?? ch);
+    if (ZERO_WIDTH_SET.has(ch)) continue;
+    const chN = ch.normalize('NFKC');
+    rawChars.push(chN);
+    const chH = homoglyph[chN] ?? chN;
+    normChars.push(chH);
     normToOrig.push(i);
   }
+
+  const rawLower = rawChars.join('').toLowerCase();
   const norm = normChars.join('').toLowerCase();
 
   const toOrigSpan = (s: number, e: number) => {
@@ -64,49 +73,34 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   const maskSlice = (s: string) => s.replace(/[^\s]/g, maskChar);
 
   // ---------- 1.5) Глобальные запреты по ТЗ ----------
-  // Причины «бана всего текста»
   const reasons = new Set<ContactType>();
 
-  // (a) Любой символ '@'
-  const hasAt = norm.includes('@');
-  if (hasAt) reasons.add('email');
+  // (a) Любой '@' (учтёт fullwidth после нормализации/гомоглифов)
+  if (norm.includes('@')) reasons.add('email');
 
   // (b) Любая ссылка (http/https/www)
   const GENERIC_URL = /(https?:\/\/|www\.)\S+/i;
-  const hasLink = GENERIC_URL.test(norm);
-  if (hasLink) reasons.add('generic-link');
+  if (GENERIC_URL.test(norm)) reasons.add('generic-link');
 
-  // (c) Латиница суммарно >= 5
-  const latinCount = (norm.match(/[a-z]/g) ?? []).length;
-  const hasTooManyLatin = latinCount >= 5;
-  if (hasTooManyLatin) reasons.add('generic-link');
+  // (c) Латинских букв суммарно >= 5 — СЧИТАЕМ ПО rawLower
+  const latinCount = (rawLower.match(/[a-z]/g) ?? []).length;
+  if (latinCount >= 5) reasons.add('generic-link');
 
-  // (d) Цифры суммарно >= 5
-  const digitCount = (norm.match(/\d/g) ?? []).length;
-  const hasTooManyDigits = digitCount >= 5;
-  if (hasTooManyDigits) reasons.add('phone');
+  // (d) Цифр суммарно >= 5 — тоже по rawLower
+  const digitCount = (rawLower.match(/\d/g) ?? []).length;
+  if (digitCount >= 5) reasons.add('phone');
 
   // (e) Латиница + цифры суммарно >= 5 (например, Vwn20)
-  const latinOrDigitCount = latinCount + digitCount;
-  const hasTooManyLatinOrDigits = latinOrDigitCount >= 5;
-  if (hasTooManyLatinOrDigits) reasons.add('generic-link');
+  if (latinCount + digitCount >= 5) reasons.add('generic-link');
 
   if (reasons.size > 0) {
-    // Бан всего текста: маскируем всю строку (кроме пробелов),
-    // один матч на весь диапазон. Тип — первая причина.
     const firstType = reasons.values().next().value as ContactType;
-    const out = maskSlice(input);
     return {
-      text: out,
+      text: maskSlice(input),
       found: true,
       types: Array.from(reasons),
       count: 1,
-      matches: [{
-        type: firstType,
-        start: 0,
-        end: input.length,
-        value: input
-      }]
+      matches: [{ type: firstType, start: 0, end: input.length, value: input }]
     };
   }
 
@@ -136,10 +130,10 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
   const VIBER    = /viber:\/\/?/gi;
   const VK_ME    = new RegExp(String.raw`(?:https?:\/\/)?vk(?:\.|${DOT_WORD})me\/[a-z0-9_.]+`, 'gi');
 
-  // телефоны: с разделителями/Юникод-дефисами/NBSP + «сплошные цифры»
+  // телефоны
   const PHONE_SEP = String.raw`[ \t().\-\u00A0\u2010-\u2015\u2212]?`;
   const PHONE_CORE = new RegExp(String.raw`(?:\+?\d${PHONE_SEP}){${minPhoneDigits},20}`, 'gi');
-  const PHONE_PLAIN = new RegExp(String.raw`\d{${minPhoneDigits},20}`, 'g'); // без lookbehind
+  const PHONE_PLAIN = new RegExp(String.raw`\d{${minPhoneDigits},20}`, 'g');
 
   type Hit = { s: number; e: number; t: ContactType };
   const hits: Hit[] = [];
@@ -179,7 +173,7 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
       }
     }
   }
-  // phone (2) «сплошные цифры» с ручной проверкой границ (чтобы не трогать части карт/индексов)
+  // phone (2) «сплошные цифры» с проверкой границ
   {
     PHONE_PLAIN.lastIndex = 0;
     let m: RegExpExecArray | null;
