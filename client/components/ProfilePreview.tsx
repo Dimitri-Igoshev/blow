@@ -92,10 +92,10 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 			onRegisterRequired();
 			return;
 		}
-		if (me?.sex === "male" && !isPremium(me)) {
-			onPremiumRequired();
-			return;
-		}
+		// if (me?.sex === "male" && !isPremium(me)) {
+		// 	onPremiumRequired();
+		// 	return;
+		// }
 
 		// 1) Открываем вкладку СРАЗУ (синхронно) — мобильные это пропускают
 		const newTab = window.open("", "_blank"); // без feature-строки!
@@ -308,7 +308,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 				}}
 			/>
 
-			<InfoModal
+			{/* <InfoModal
 				isOpen={isRegisterRequired}
 				text={
 					"Для того чтобы начать общаться, Вам нужно зарегистрироваться на сайте"
@@ -320,7 +320,7 @@ export const ProfilePreview: FC<ProfilePreviewProps> = ({
 					onRegisterRequiredChange()
 				}}
 				onOpenChange={onRegisterRequiredChange}
-			/>
+			/> */}
 
 			<Auth
 				registrationSignal={registrationSignal}

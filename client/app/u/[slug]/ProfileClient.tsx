@@ -121,10 +121,11 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 		if (!me) {
 			onRegisterRequired();
 			return;
-		} else if (me?.sex === "male" && !isPremium(me)) {
-			onPremiumRequired();
-			return;
 		}
+		// } else if (me?.sex === "male" && !isPremium(me)) {
+		// 	onPremiumRequired();
+		// 	return;
+		// }
 
 		await startChat({ sender: me?._id, recipient: id })
 			.unwrap()
@@ -498,7 +499,7 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 				onSave={(text: string) => addClaim(text)}
 			/>
 
-			<InfoModal
+			{/* <InfoModal
 				actionBtn="Купить"
 				isOpen={isPremiumRequired}
 				text={
@@ -507,7 +508,7 @@ const ProfileClient: FC<ProfileClientProps> = ({ profile, mediaBase }) => {
 				title={"Нужен премиум"}
 				onAction={() => router.push(ROUTES.ACCOUNT.SERVICES)}
 				onOpenChange={onPremiumRequiredChange}
-			/>
+			/> */}
 
 			<InfoModal
 				isOpen={isRegisterRequired}
