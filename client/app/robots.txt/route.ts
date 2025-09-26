@@ -43,7 +43,7 @@ export async function GET() {
 
     // Канонические вещи
     'Host: blow.ru',
-    'Sitemap: https://blow.ru/sitemap.xml',
+    'Sitemap: https://blow.ru/sitemaps',
   ].join('\n');
 
   return new Response(body, {

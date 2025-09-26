@@ -2,25 +2,34 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import AccountSearch from "../../search/page";
 import { config } from "@/common/env";
+import Script from "next/script";
+
+const SITE = "https://blow.ru";
 
 // ---- helpers ----
 async function getCities() {
   const res = await fetch(`${config.API_URL}/city?limit=1000`, {
     method: "GET",
-    cache: "no-store",
+    // города меняются редко — можно кэшировать
+    next: { revalidate: 60 * 60 * 24 },
   });
   if (!res.ok) throw new Error("Не удалось загрузить список городов");
   return res.json();
 }
 
 const capitalize = (s: string) =>
-  s.slice(0, 1).toUpperCase() + s.slice(1).toLowerCase();
+  s ? s.slice(0, 1).toUpperCase() + s.slice(1).toLowerCase() : s;
 
 type SearchQ = { sex?: "male" | "female"; withPhoto?: string };
 
 function pickFirst(val: string | string[] | undefined): string | undefined {
-  if (Array.isArray(val)) return val[0];
-  return val;
+  return Array.isArray(val) ? val[0] : val;
+}
+
+function cut(s: string, n = 160) {
+  if (!s) return "";
+  const t = s.replace(/\s+/g, " ").trim();
+  return t.length > n ? t.slice(0, n - 1).trimEnd() + "…" : t;
 }
 
 // ---- metadata ----
@@ -29,17 +38,19 @@ export async function generateMetadata(
     params,
     searchParams,
   }: {
-    params: Promise<{ city: string }>;
-    searchParams: Promise<Record<string, string | string[]>>;
+    params: { city: string };
+    searchParams: Record<string, string | string[] | undefined>;
   },
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { city: rawCity } = await params;
-  const sp = await searchParams;
+  const rawCity = params.city;
+  const sp = searchParams;
 
   const cityValue = decodeURIComponent(rawCity || "").toLowerCase();
   const sexRaw = pickFirst(sp?.sex);
   const withPhotoRaw = pickFirst(sp?.withPhoto);
+  const pageRaw = pickFirst(sp?.page);
+  const page = Number(pageRaw || "1");
 
   // подтягиваем label города (если есть)
   let cityLabel = capitalize(cityValue);
@@ -48,7 +59,7 @@ export async function generateMetadata(
     const found = cities?.find((c: any) => c.value === cityValue);
     if (found?.label) cityLabel = found.label;
   } catch {
-    // молча оставляем capitalized value
+    // оставляем capitalized value
   }
 
   const sexTitle =
@@ -58,34 +69,79 @@ export async function generateMetadata(
       ? "Содержанки"
       : "Содержанки и спонсоры";
 
-  const title = `${sexTitle} | ${cityLabel}`;
-  const description = `Знакомства (${sexTitle.toLowerCase()}) в городе ${cityLabel}. Мужчины и девушки для приятного вечера.`;
+  const baseTitle = `${sexTitle} — ${cityLabel}`;
+  const title = page > 1 ? `${baseTitle} · страница ${page}` : baseTitle;
 
-  // собираем канонический URL с фактическими query
+  const baseDesc = `Знакомства (${sexTitle.toLowerCase()}) в городе ${cityLabel}. Найдите пару для приятного вечера и общения${
+    withPhotoRaw ? " — только анкеты с фото" : ""
+  }.`;
+  const description = cut(
+    page > 1 ? `${baseDesc} Страница ${page}.` : baseDesc
+  );
+
+  // собираем канонический абсолютный URL с фактическими query
   const q = new URLSearchParams();
   if (sexRaw) q.set("sex", sexRaw);
   if (withPhotoRaw) q.set("withPhoto", withPhotoRaw);
+  if (page > 1) q.set("page", String(page));
 
-  const canonicalPath = `/account/city/${rawCity}${q.toString() ? `?${q.toString()}` : ""}`;
+  const canonicalPath = `/account/city/${rawCity}${
+    q.toString() ? `?${q.toString()}` : ""
+  }`;
+  const canonicalAbs = `${SITE}${canonicalPath}`;
 
   return {
     title,
     description,
-    alternates: { canonical: canonicalPath },
+    alternates: { canonical: canonicalAbs },
     openGraph: {
       type: "website",
       title,
       description,
-      url: canonicalPath,
-      images: [{ url: "/og-default.jpg", width: 1200, height: 630 }],
+      url: canonicalAbs,
+      images: [{ url: `${SITE}/og-default.jpg`, width: 1200, height: 630 }],
+      locale: "ru_RU",
+      siteName: "BLOW",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["/og-default.jpg"],
+      images: [`${SITE}/og-default.jpg`],
+    },
+    robots: { index: true, follow: true },
+  };
+}
+
+// JSON-LD (Breadcrumb + CollectionPage)
+function CityJsonLd({
+  cityLabel,
+  canonicalAbs,
+}: {
+  cityLabel: string;
+  canonicalAbs: string;
+}) {
+  const json = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `Анкеты — ${cityLabel}`,
+    url: canonicalAbs,
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Главная", item: "https://blow.ru/" },
+        { "@type": "ListItem", position: 2, name: `Анкеты — ${cityLabel}`, item: canonicalAbs },
+      ],
     },
   };
+  return (
+    <Script
+      id="city-jsonld"
+      type="application/ld+json"
+      strategy="afterInteractive"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
+    />
+  );
 }
 
 // ---- page ----
@@ -93,14 +149,34 @@ export default async function CityPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ city: string }>;
-  searchParams: Promise<Record<string, string | string[]>>;
+  params: { city: string };
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const { city } = await params;
-  const sp = await searchParams;
+  const sex = pickFirst(searchParams?.sex) as SearchQ["sex"];
+  const withPhoto = pickFirst(searchParams?.withPhoto);
+  const page = pickFirst(searchParams?.page);
+  const rawCity = params.city;
 
-  const sex = pickFirst(sp?.sex) as SearchQ["sex"];
-  const withPhoto = pickFirst(sp?.withPhoto);
+  const cityValue = decodeURIComponent(rawCity || "").toLowerCase();
+  let cityLabel = capitalize(cityValue);
+  try {
+    const cities = await getCities();
+    const found = cities?.find((c: any) => c.value === cityValue);
+    if (found?.label) cityLabel = found.label;
+  } catch {}
 
-  return <AccountSearch city={city} sex={sex} withPhoto={withPhoto} />;
+  const q = new URLSearchParams();
+  if (sex) q.set("sex", sex);
+  if (withPhoto) q.set("withPhoto", withPhoto);
+  if (page && Number(page) > 1) q.set("page", String(page));
+  const canonicalAbs = `${SITE}/account/city/${rawCity}${
+    q.toString() ? `?${q.toString()}` : ""
+  }`;
+
+  return (
+    <>
+      <CityJsonLd cityLabel={cityLabel} canonicalAbs={canonicalAbs} />
+      <AccountSearch city={rawCity} sex={sex} withPhoto={withPhoto} />
+    </>
+  );
 }

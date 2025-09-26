@@ -6,24 +6,25 @@ import { useEffect, useState } from "react";
 import { Image } from "@heroui/image";
 import NextLink from "next/link";
 
+import { ROUTES } from "../routes";
+import WrapperEmailConf from "./WrapperEmailConf";
+
 import { SearchWidget } from "@/components/search-widget";
 import { useGetMeQuery } from "@/redux/services/userApi";
 import { useGetChatsQuery } from "@/redux/services/chatApi";
 import { useGetMailingsQuery } from "@/redux/services/mailingApi";
-import { ROUTES } from "@/app/routes";
-import WrapperEmailConf from "@/app/account/WrapperEmailConf";
 
-export default function PanelLayout({
+function ClientLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
   const [tab, setTab] = useState("profile");
   const { data: me } = useGetMeQuery(null);
   const { data: mailings } = useGetMailingsQuery(null);
 
-  const isSearch = pathname === ROUTES.ACCOUNT.SEARCH;
+  const isSearch =
+    pathname === ROUTES.ACCOUNT.SEARCH ||
+    pathname.includes(ROUTES.ACCOUNT.CITY);
   const isChat = pathname.includes(ROUTES.ACCOUNT.DIALOGUES);
 
   useEffect(() => {
@@ -80,7 +81,6 @@ export default function PanelLayout({
   }, [chats, me?._id]);
 
   return (
-    // <Protected>
     <div className={cn("", { ["max-h-screen sm:max-h-auto"]: isChat })}>
       <div className="relative">
         <img
@@ -117,13 +117,10 @@ export default function PanelLayout({
           )}
         >
           {me ? (
-            <nav
-              aria-label="Навигация личного кабинета"
-              className="sm:mb-[40px]"
-            >
+            <div className="sm:mb-[40px]">
               <Tabs
                 fullWidth
-                aria-label="Вкладки кабинета"
+                aria-label="Tabs"
                 className={cn("", {
                   ["mb-9 sm:mb-0"]: isSearch,
                 })}
@@ -169,23 +166,17 @@ export default function PanelLayout({
                   }
                 />
               </Tabs>
-            </nav>
+            </div>
           ) : null}
 
           {isSearch ? (
             <div className="flex w-full justify-center md:justify-start items-center gap-9">
               <SearchWidget horizontal />
-              <h1 className="sr-only">Поиск анкет содержанок и спонсоров</h1>
-              <p
-                className="hidden md:flex xl:hidden text-white text-[26px] lg:text-[36px] font-semibold"
-                aria-hidden
-              >
+              <p className="hidden md:flex xl:hidden text-white text-[26px] lg:text-[36px] font-semibold">
                 Поиск лучших содержанок и самых успешных мужчин
               </p>
             </div>
-          ) : (
-            <h1 className="sr-only">Личный кабинет</h1>
-          )}
+          ) : null}
 
           {isSearch ? (
             <h2 className="block sm:hidden mt-[20px] text-[26px] text-white font-semibold z-20 relative text-center">
@@ -239,6 +230,7 @@ export default function PanelLayout({
         </footer>
       </div>
     </div>
-    // </Protected>
   );
 }
+
+export default ClientLayout;

@@ -14,7 +14,7 @@ import ResetOverflowOnRouteChange from "@/components/ResetOverflowOnRouteChange"
 export const metadata: Metadata = {
   metadataBase: new URL("https://blow.ru"),
   title: {
-    default: siteConfig.name,
+    default: `${siteConfig.name} — знакомства содержанок и спонсоров`,
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,

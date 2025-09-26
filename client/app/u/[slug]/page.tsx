@@ -1,11 +1,12 @@
 // app/u/[slug]/page.tsx
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";// см. ниже
+import { notFound, redirect } from "next/navigation";
 import { config } from "@/common/env";
-import ProfileClient from "./ProfileClient"
+import ProfileClient from "./ProfileClient";
 
-const API_BASE = config.API_URL
-const MEDIA_BASE = config.MEDIA_URL
+const API_BASE = config.API_URL;
+const MEDIA_BASE = config.MEDIA_URL;
+const SITE = "https://blow.ru";
 
 // ---------- helpers ----------
 function isObjectId(v: string) {
@@ -54,6 +55,12 @@ function photoUrl(src?: string) {
   return MEDIA_BASE ? `${MEDIA_BASE}/${src}` : src;
 }
 
+function cut(s?: string, n = 160) {
+  if (!s) return "";
+  const t = s.replace(/\s+/g, " ").trim();
+  return t.length > n ? t.slice(0, n - 1).trimEnd() + "…" : t;
+}
+
 function titleFromProfile(p: any) {
   const name = p?.firstName ?? p?.name ?? "Профиль";
   const age = p?.age ? `, ${p.age}` : "";
@@ -63,30 +70,91 @@ function titleFromProfile(p: any) {
 
 function descriptionFromProfile(p: any) {
   if (typeof p?.about === "string" && p.about.trim()) {
-    return p.about.trim().slice(0, 160);
+    return cut(p.about.trim(), 180);
   }
   return "Анкета пользователя на BLOW.";
+}
+
+// ---------- JSON-LD ----------
+function buildPersonJsonLd(profile: any, url: string, imageUrl?: string) {
+  const name = profile?.firstName ?? profile?.name ?? "Профиль";
+  const gender =
+    profile?.sex === "male" ? "Male" : profile?.sex === "female" ? "Female" : undefined;
+
+  const data: Record<string, any> = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    url,
+  };
+
+  if (gender) data.gender = gender;
+  if (profile?.age) data.age = Number(profile.age);
+  if (profile?.city) {
+    data.homeLocation = {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: profile.city,
+        addressCountry: "RU",
+      },
+    };
+  }
+  if (imageUrl) data.image = imageUrl;
+
+  // если есть короткое описание — добавим
+  const desc = descriptionFromProfile(profile);
+  if (desc) data.description = desc;
+
+  return data;
+}
+
+function JsonLd({ data }: { data: object }) {
+  // можно вставлять на сервере обычным <script>, next/script не обязателен
+  return (
+    <script
+      type="application/ld+json"
+      // @ts-ignore
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
 }
 
 // ---------- metadata ----------
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }): Promise<Metadata> {
-  const { slug: param } = await params;
+  const param = params?.slug;
 
+  // 1) пробуем как slug
   let profile = await getBySlug(param);
-  if (!profile && isObjectId(param)) profile = await getById(param);
 
-  if (!profile || profile?.status !== "active") {
+  // 2) фолбэк: ObjectId
+  if (!profile && isObjectId(param)) {
+    const byId = await getById(param);
+    if (byId?.slug) {
+      // используем byId для метаданных
+      profile = byId;
+    }
+  }
+
+  if (!profile) {
     return { robots: { index: false, follow: false }, title: "Профиль не найден" };
   }
 
-  const url = `https://blow.ru/u/${profile.slug ?? param}`;
+  const slug = profile.slug ?? param;
+  const url = `${SITE}/u/${slug}`;
   const title = titleFromProfile(profile);
   const description = descriptionFromProfile(profile);
-  const firstPhoto = photoUrl(profile?.photos?.[0]?.url ?? profile?.photos?.[0]);
+  const firstPhoto =
+    photoUrl(profile?.photos?.[0]?.url ?? profile?.photos?.[0]) || `${SITE}/logo.png`;
+
+  const robots =
+    profile?.status === "active"
+      ? { index: true, follow: true }
+      : { index: false, follow: false };
 
   return {
     title,
@@ -97,9 +165,25 @@ export async function generateMetadata({
       url,
       title,
       description,
-      images: firstPhoto ? [{ url: firstPhoto }] : undefined,
+      images: [{ url: firstPhoto, width: 1200, height: 630 }],
+      siteName: "BLOW",
+      locale: "ru_RU",
     },
-    robots: { index: true, follow: true },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [firstPhoto],
+    },
+    robots,
+    keywords: [
+      "знакомства",
+      "анкета",
+      "содержанки",
+      "спонсоры",
+      profile?.city || "",
+      profile?.firstName || "",
+    ].filter(Boolean),
   };
 }
 
@@ -107,9 +191,9 @@ export async function generateMetadata({
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug: param } = await params;
+  const param = params?.slug;
 
   // 1) пытаемся как slug
   let profile = await getBySlug(param);
@@ -127,10 +211,20 @@ export default async function Page({
     profile = byId;
   }
 
-  // if (!profile || profile?.status !== "active") {
-  //   notFound();
-  // }
+  if (!profile) notFound();
 
-  // Профиль готов — отдаём клиентский компонент с твоей версткой и логикой
-  return <ProfileClient profile={profile} mediaBase={MEDIA_BASE} />;
+  const slug = profile.slug ?? param;
+  const url = `${SITE}/u/${slug}`;
+  const firstPhoto =
+    photoUrl(profile?.photos?.[0]?.url ?? profile?.photos?.[0]) || undefined;
+
+  const jsonLd = buildPersonJsonLd(profile, url, firstPhoto);
+
+  // Профиль готов — отдаём клиентский компонент + JSON-LD
+  return (
+    <>
+      <JsonLd data={jsonLd} />
+      <ProfileClient profile={profile} mediaBase={MEDIA_BASE} />
+    </>
+  );
 }
