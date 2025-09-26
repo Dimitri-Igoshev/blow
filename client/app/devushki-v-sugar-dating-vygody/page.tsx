@@ -45,7 +45,7 @@ export default function WomenBenefitsArticlePage() {
   return (
     <div className="min-h-screen flex flex-col justify-between">
       <Head>
-        <title>Девушки и sugar-формат: выгоды, безопасность и как всё устроено</title>
+        <title>Девушки и формат-содержанки: выгоды, безопасность и как всё устроено</title>
         <meta
           name="description"
           content="Гид для девушек: выгоды формата win-win, безопасность, как обсуждать ожидания и поддержку, скрипты диалогов и частые вопросы. 18+."
