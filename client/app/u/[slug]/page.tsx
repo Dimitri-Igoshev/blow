@@ -102,19 +102,16 @@ function buildPersonJsonLd(profile: any, url: string, imageUrl?: string) {
   }
   if (imageUrl) data.image = imageUrl;
 
-  // если есть короткое описание — добавим
   const desc = descriptionFromProfile(profile);
   if (desc) data.description = desc;
 
   return data;
 }
 
-function JsonLd({ data }: { data: object }) {
-  // можно вставлять на сервере обычным <script>, next/script не обязателен
+function JsonLd({ data }: { data: Record<string, any> }) {
   return (
     <script
       type="application/ld+json"
-      // @ts-ignore
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
@@ -124,20 +121,17 @@ function JsonLd({ data }: { data: object }) {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const param = params?.slug;
+  const { slug: param } = await params;
 
-  // 1) пробуем как slug
+  // 1) как slug
   let profile = await getBySlug(param);
 
-  // 2) фолбэк: ObjectId
+  // 2) fallback: ObjectId
   if (!profile && isObjectId(param)) {
     const byId = await getById(param);
-    if (byId?.slug) {
-      // используем byId для метаданных
-      profile = byId;
-    }
+    if (byId?.slug) profile = byId;
   }
 
   if (!profile) {
@@ -191,19 +185,18 @@ export async function generateMetadata({
 export default async function Page({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const param = params?.slug;
+  const { slug: param } = await params;
 
-  // 1) пытаемся как slug
+  // 1) как slug
   let profile = await getBySlug(param);
 
-  // 2) фолбэк по ObjectId
+  // 2) fallback по ObjectId
   if (!profile && isObjectId(param)) {
     const byId = await getById(param);
     if (!byId) notFound();
 
-    // если у юзера уже есть slug — редиректим на ЧПУ
     if (byId.slug && byId.slug !== param) {
       redirect(`/u/${byId.slug}`);
     }
@@ -220,7 +213,6 @@ export default async function Page({
 
   const jsonLd = buildPersonJsonLd(profile, url, firstPhoto);
 
-  // Профиль готов — отдаём клиентский компонент + JSON-LD
   return (
     <>
       <JsonLd data={jsonLd} />

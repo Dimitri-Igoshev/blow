@@ -1,3 +1,4 @@
+// app/sitemaps/[shard]/route.ts
 import { NextResponse } from "next/server";
 import { getProfilesForShard } from "@/lib/sitemap-api";
 
@@ -5,11 +6,11 @@ export const dynamic = "force-static";
 
 export async function GET(
   _req: Request,
-  ctx: { params: { shard: string } }
+  { params }: { params: any } // <-- валидная сигнатура
 ) {
-  // ожидаем profiles-0001.xml и т.п.
-  const shard = ctx.params?.shard;
+  const shard = params.shard; // ожидаем вида "profiles-0001.xml"
   const items = await getProfilesForShard(shard);
+
   if (!items.length) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -30,3 +31,4 @@ export async function GET(
     },
   });
 }
+

@@ -1,8 +1,8 @@
 // app/account/city/[city]/page.tsx
 import type { Metadata, ResolvingMetadata } from "next";
+import Script from "next/script";
 import AccountSearch from "../../search/page";
 import { config } from "@/common/env";
-import Script from "next/script";
 
 const SITE = "https://blow.ru";
 
@@ -10,7 +10,7 @@ const SITE = "https://blow.ru";
 async function getCities() {
   const res = await fetch(`${config.API_URL}/city?limit=1000`, {
     method: "GET",
-    // города меняются редко — можно кэшировать
+    // города меняются редко — кэшируем
     next: { revalidate: 60 * 60 * 24 },
   });
   if (!res.ok) throw new Error("Не удалось загрузить список городов");
@@ -38,13 +38,13 @@ export async function generateMetadata(
     params,
     searchParams,
   }: {
-    params: { city: string };
-    searchParams: Record<string, string | string[] | undefined>;
+    params: Promise<{ city: string }>;
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
   },
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const rawCity = params.city;
-  const sp = searchParams;
+  const { city: rawCity } = await params;
+  const sp = await searchParams;
 
   const cityValue = decodeURIComponent(rawCity || "").toLowerCase();
   const sexRaw = pickFirst(sp?.sex);
@@ -75,20 +75,17 @@ export async function generateMetadata(
   const baseDesc = `Знакомства (${sexTitle.toLowerCase()}) в городе ${cityLabel}. Найдите пару для приятного вечера и общения${
     withPhotoRaw ? " — только анкеты с фото" : ""
   }.`;
-  const description = cut(
-    page > 1 ? `${baseDesc} Страница ${page}.` : baseDesc
-  );
+  const description = cut(page > 1 ? `${baseDesc} Страница ${page}.` : baseDesc);
 
-  // собираем канонический абсолютный URL с фактическими query
+  // абсолютный canonical с фактическими query
   const q = new URLSearchParams();
   if (sexRaw) q.set("sex", sexRaw);
   if (withPhotoRaw) q.set("withPhoto", withPhotoRaw);
   if (page > 1) q.set("page", String(page));
 
-  const canonicalPath = `/account/city/${rawCity}${
+  const canonicalAbs = `${SITE}/account/city/${rawCity}${
     q.toString() ? `?${q.toString()}` : ""
   }`;
-  const canonicalAbs = `${SITE}${canonicalPath}`;
 
   return {
     title,
@@ -113,7 +110,7 @@ export async function generateMetadata(
   };
 }
 
-// JSON-LD (Breadcrumb + CollectionPage)
+// JSON-LD (опционально, но полезно)
 function CityJsonLd({
   cityLabel,
   canonicalAbs,
@@ -149,13 +146,15 @@ export default async function CityPage({
   params,
   searchParams,
 }: {
-  params: { city: string };
-  searchParams: Record<string, string | string[] | undefined>;
+  params: Promise<{ city: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const sex = pickFirst(searchParams?.sex) as SearchQ["sex"];
-  const withPhoto = pickFirst(searchParams?.withPhoto);
-  const page = pickFirst(searchParams?.page);
-  const rawCity = params.city;
+  const { city: rawCity } = await params;
+  const sp = await searchParams;
+
+  const sex = pickFirst(sp?.sex) as SearchQ["sex"];
+  const withPhoto = pickFirst(sp?.withPhoto);
+  const page = pickFirst(sp?.page);
 
   const cityValue = decodeURIComponent(rawCity || "").toLowerCase();
   let cityLabel = capitalize(cityValue);
