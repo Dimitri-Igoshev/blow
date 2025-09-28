@@ -10,7 +10,7 @@ import {
 import { PiGenderIntersex } from "react-icons/pi";
 import { ROUTES } from "@/app/routes";
 
-export const PromoNext = () => {
+export const PromoNext = ({ sex = "male" }: any) => {
 	return (
 		<div className="flex flex-col gap-6 w-full px-[34px] mt-9 relative z-10">
 			<div className="flex flex-col gap-3">
@@ -52,70 +52,180 @@ export const PromoNext = () => {
 			<div className="flex flex-col gap-3 mt-9">
 				<p className="text-3xl font-semibold">Истории знакомств</p>
 
-				<div className="grid grid-cols-1 sm:grid-cols-3 gap-9 mt-3">
-					<Card className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6" radius="none">
-						<div className="flex gap-3 items-center">
-							<IoCheckmarkSharp className="text-success" />
-							<p className="text-sm">Проверено модерацией</p>
-						</div>
-						<p className="text-xl">
-							“Познакомились, слетали в Дубай на выходные. Всё прозрачно и
-							честно.”
-						</p>
-						<p className="text-foreground-500 font-semibold">- Игорь, 36</p>
-					</Card>
-					<Card className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6" radius="none">
-						<div className="flex gap-3 items-center">
-							<IoCheckmarkSharp className="text-success" />
-							<p className="text-sm">Проверено модерацией</p>
-						</div>
-						<p className="text-xl">
-							“Договорились о встречах 2 раза в неделю. Комфортно и без лишнего
-							внимания.”
-						</p>
-						<p className="text-foreground-500 font-semibold">- Михаил, 41</p>
-					</Card>
-					<Card className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6" radius="none">
-						<div className="flex gap-3 items-center">
-							<IoCheckmarkSharp className="text-success" />
-							<p className="text-sm">Проверено модерацией</p>
-						</div>
-						<p className="text-xl">
-							“Нашёл спутницу для деловых поездок. Приватность решает.”
-						</p>
-						<p className="text-foreground-500 font-semibold">- Денис, 33</p>
-					</Card>
-          <Card className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6" radius="none">
-						<div className="flex gap-3 items-center">
-							<IoCheckmarkSharp className="text-success" />
-							<p className="text-sm">Проверено модерацией</p>
-						</div>
-						<p className="text-xl">
-							“Всё чётко по договорённости. Без драмы и недопонимания.”
-						</p>
-						<p className="text-foreground-500 font-semibold">- Роман, 35</p>
-					</Card>
-          <Card className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6" radius="none">
-						<div className="flex gap-3 items-center">
-							<IoCheckmarkSharp className="text-success" />
-							<p className="text-sm">Проверено модерацией</p>
-						</div>
-						<p className="text-xl">
-							“Нашёл идеальный формат отношений — легко, приятно и без давления.”
-						</p>
-						<p className="text-foreground-500 font-semibold">- Сергей, 42</p>
-					</Card>
-          <Card className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6" radius="none">
-						<div className="flex gap-3 items-center">
-							<IoCheckmarkSharp className="text-success" />
-							<p className="text-sm">Проверено модерацией</p>
-						</div>
-						<p className="text-xl">
-							“Удобно, что можно обсудить всё заранее и без лишних ожиданий.”
-						</p>
-						<p className="text-foreground-500 font-semibold">- Павел, 40</p>
-					</Card>
-				</div>
+				{sex === "male" ? (
+					<div className="grid grid-cols-1 sm:grid-cols-3 gap-9 mt-3">
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Познакомились, слетали в Дубай на выходные. Всё прозрачно и
+								честно.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Игорь, 36</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Договорились о встречах 2 раза в неделю. Комфортно и без
+								лишнего внимания.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Михаил, 41</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Нашёл спутницу для деловых поездок. Приватность решает.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Денис, 33</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Всё чётко по договорённости. Без драмы и недопонимания.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Роман, 35</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Нашёл идеальный формат отношений — легко, приятно и без
+								давления.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Сергей, 42</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Удобно, что можно обсудить всё заранее и без лишних ожиданий.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Павел, 40</p>
+						</Card>
+					</div>
+				) : (
+					<div className="grid grid-cols-1 sm:grid-cols-3 gap-9 mt-3">
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Быстро согласовали правила и бюджет подарков. Ноль стресса,
+								максимум уважения.”
+							</p>
+							<p className="text-foreground-500 font-semibold">
+								- Маргарита, 30
+							</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Путешествуем на уикенды. Он щедрый и тактичный — идеальный
+								формат для меня.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Диана, 26</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Первая встреча — ресторан и чёткие договорённости. Дальше всё
+								легко и приятно.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Алёна, 24</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Договорились о гибком графике из-за моей учёбы. Удобно и без
+								давления.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Лиза, 22</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“Полетели на выходные в Европу. Всё по договорённости, без
+								сюрпризов.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Ирина, 30</p>
+						</Card>
+						<Card
+							className="p-6 sm:p-9 rounded-3xl flex flex-col gap-6"
+							radius="none"
+						>
+							<div className="flex gap-3 items-center">
+								<IoCheckmarkSharp className="text-success" />
+								<p className="text-sm">Проверено модерацией</p>
+							</div>
+							<p className="text-xl">
+								“С первого дня — уважение к границам и прозрачность. Чувствую
+								себя в безопасности.”
+							</p>
+							<p className="text-foreground-500 font-semibold">- Полина, 25</p>
+						</Card>
+					</div>
+				)}
 			</div>
 
 			<Card
@@ -136,7 +246,7 @@ export const PromoNext = () => {
 						color="primary"
 						radius="full"
 						size="lg"
-            onPress={() => document.location.href = '#register'}
+						onPress={() => (document.location.href = "#register")}
 					>
 						Присоединиться бесплатно
 					</Button>
@@ -144,7 +254,7 @@ export const PromoNext = () => {
 			</Card>
 
 			<div className="flex flex-wrap sm:justify-between sm:items-center py-6 px-1 relative z-10">
-        <p>{new Date().getFullYear()} © BLOW.</p>
+				<p>{new Date().getFullYear()} © BLOW.</p>
 				<div className="mt-6 sm:mt-0 text-xs flex flex-wrap items-center justify-start sm:justify-end gap-6">
 					<NextLink
 						href={ROUTES.CONTACTS}
