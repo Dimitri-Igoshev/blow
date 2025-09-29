@@ -84,6 +84,13 @@ type Inputs = {
 
 export const PromoHero = ({ profiles, sex = 'male' }: any) => {
 	const router = useRouter();
+	const [localProfiles, setLocalProfiles] = useState([])
+
+	useEffect(() => {
+		if (!profiles || localProfiles.length > 0) return
+		setLocalProfiles(profiles)
+	}, [profiles])
+	
 
 	const randomProfiles = profiles
 	.map((user: any) => ({ user, sort: Math.random() }))
