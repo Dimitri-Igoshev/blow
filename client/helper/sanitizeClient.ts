@@ -84,7 +84,7 @@ export function sanitizeContactsClient(input: string, opts: SanitizeOptions = {}
 
   // (c) Латинских букв суммарно >= 5 — СЧИТАЕМ ПО rawLower
   const latinCount = (rawLower.match(/[a-z]/g) ?? []).length;
-  if (latinCount >= 5) reasons.add('generic-link');
+  if (latinCount >= 4) reasons.add('generic-link');
 
   // (d) Цифр суммарно >= 5 — тоже по rawLower
   const digitCount = (rawLower.match(/\d/g) ?? []).length;
