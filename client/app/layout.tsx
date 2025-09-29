@@ -64,7 +64,6 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="ru">
       <head>
-        <meta name="yandex-verification" content="01806652c99b810c" />
         {/* Яндекс.Метрика */}
         <Script
           id="yandex-metrika"
