@@ -17,6 +17,8 @@ import { useRegisterMutation } from "@/redux/services/authApi";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { useGetCitiesQuery } from "@/redux/services/cityApi"
+import { profiles as mens } from "../data/mens"
+import { profiles as girls } from "../data/girls"
 
 const randomArray = Array.from({ length: 6 }, () =>
 	Math.floor(Math.random() * 100)
@@ -82,21 +84,30 @@ type Inputs = {
 	password: string;
 };
 
-export const PromoHero = ({ profiles, sex = 'male' }: any) => {
+export const PromoHero = ({ sex = 'male' }: any) => {
 	const router = useRouter();
-	const [localProfiles, setLocalProfiles] = useState([])
+
+	const profiles = sex === 'male' ? mens : girls
+
+	// const randomProfiles = profiles
+	// .map((user: any) => ({ user, sort: Math.random() }))
+	// .sort((a: any, b: any) => a.sort - b.sort)
+	// .map(({ user }: any) => user)
+	// .slice(0, 6);
+
+	const pick6 = (list: any[]) =>
+  [...list]
+    .map((user) => ({ user, s: Math.random() }))
+    .sort((a, b) => a.s - b.s)
+    .map(({ user }) => user)
+    .slice(0, 6);
+
+	const [fixedProfiles, setFixedProfiles] = useState<any[]>([]);
 
 	useEffect(() => {
-		if (!profiles || localProfiles.length > 0) return
-		setLocalProfiles(profiles)
-	}, [profiles])
-	
-
-	const randomProfiles = profiles
-	.map((user: any) => ({ user, sort: Math.random() }))
-	.sort((a: any, b: any) => a.sort - b.sort)
-	.map(({ user }: any) => user)
-	.slice(0, 6);
+  const src = sex === "male" ? mens : girls;
+  setFixedProfiles(pick6(src));
+}, [sex]);
 
 	const {
 		register,
@@ -219,7 +230,7 @@ export const PromoHero = ({ profiles, sex = 'male' }: any) => {
 							variants={cardsContainer}
 							viewport={{ once: true, amount: 0.2 }}
 						>
-							{randomProfiles.slice(0, 6).map((item: any, idx: number) => (
+							{fixedProfiles.map((item: any, idx: number) => (
 								<motion.div key={item._id} variants={cardItem}>
 									<PreviewWidget
 										className={cn("w-200px sm:w-[250px]")}

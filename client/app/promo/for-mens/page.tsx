@@ -11,7 +11,7 @@ export default function PromoForMens() {
     <div className="min-h-screen w-full bg-black text-white relative overflow-hidden">
       <PromoBgRightSlide />
       <PromoHeader />
-      <PromoHero profiles={profiles} />
+      <PromoHero />
       <PromoNext />
     </div>
   )
