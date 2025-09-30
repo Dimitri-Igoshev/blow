@@ -27,7 +27,7 @@ export default function ContactsPage() {
 					<p>
 						ОГРНИП: <span className="font-semibold">324508100613082</span>
 					</p> */}
-					<p className="flex items-center gap-2">
+					{/* <p className="flex items-center gap-2">
 						<a
 							href="tel:+79031016945"
 							className="flex items-center gap-1.5 bg-foreground-100 p-2.5 rounded-full hover:bg-primary hover:text-white"
@@ -38,7 +38,7 @@ export default function ContactsPage() {
 						<a href="tel:+79031016945" className="hover:text-primary">
 							+7 (903) 101-69-45
 						</a>
-					</p>
+					</p> */}
 					<p className="flex items-center gap-2">
 						<a
 							href="mailto:admin@blow.ru"

@@ -3,11 +3,9 @@
 import { Button } from "@heroui/button";
 import { cn, Input, Select, SelectItem } from "@heroui/react";
 import { useState, type FC } from "react";
-import { de, ru } from "date-fns/locale";
+import { ru } from "date-fns/locale";
 import { format } from "date-fns";
 import { FaTelegramPlane } from "react-icons/fa";
-import NextLink from "next/link";
-import { ROUTES } from "@/app/routes";
 import { MdEmail } from "react-icons/md";
 import { useGetMeQuery } from "@/redux/services/userApi";
 
