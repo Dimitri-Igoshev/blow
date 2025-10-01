@@ -3,7 +3,7 @@
 import Head from "next/head";
 import { Image } from "@heroui/image";
 import NextLink from "next/link";
-import { ROUTES } from "../routes";
+import { ROUTES } from "../../routes";
 
 export default function EtiquetteLongtermPage() {
   const year = new Date().getFullYear();
@@ -72,7 +72,7 @@ export default function EtiquetteLongtermPage() {
             </p>
           </section>
 
-          <nav aria-label="Внутренние ссылки" className="text-sm sm:text-base mt-6">
+          {/* <nav aria-label="Внутренние ссылки" className="text-sm sm:text-base mt-6">
             <p className="flex flex-wrap gap-3">
               <NextLink href="/pervaya-vstrecha-sponsor-soderzhanka" className="underline hover:text-primary">Первая встреча</NextLink>
               <span>·</span>
@@ -80,7 +80,7 @@ export default function EtiquetteLongtermPage() {
               <span>·</span>
               <NextLink href="/krasnye-flagi-i-moshenniki-v-sugar-dating" className="underline hover:text-primary">Красные флаги и мошенники</NextLink>
             </p>
-          </nav>
+          </nav> */}
         </div>
       </div>
 
@@ -94,6 +94,12 @@ export default function EtiquetteLongtermPage() {
             <Image alt="BLOW" height={40} radius="none" src="/logo.png" width={101} />
           </div>
           <div className="text-xs mt-7 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-6">
+            <NextLink
+							className="underline cursor-pointer hover:text-primary text-nowrap"
+							href={ROUTES.ARTICLES}
+						>
+							Статьи
+						</NextLink>
             <NextLink href={ROUTES.CONTACTS} className="underline cursor-pointer hover:text-primary text-nowrap">Свяжись с нами</NextLink>
             <NextLink href={ROUTES.POLICY} className="underline cursor-pointer hover:text-primary text-nowrap">Политики</NextLink>
             <NextLink href={ROUTES.OFFER} className="underline cursor-pointer hover:text-primary text-nowrap">Договор оферта</NextLink>

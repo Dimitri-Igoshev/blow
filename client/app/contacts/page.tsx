@@ -91,6 +91,12 @@ export default function ContactsPage() {
 					</div>
 					<div className="mt-4 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-6">
 						<NextLink
+							className="underline cursor-pointer hover:text-primary text-nowrap"
+							href={ROUTES.ARTICLES}
+						>
+							Статьи
+						</NextLink>
+						<NextLink
 							href={ROUTES.CONTACTS}
 							className="underline cursor-pointer hover:text-primary text-nowrap"
 						>
