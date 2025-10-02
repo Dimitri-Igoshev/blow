@@ -34,18 +34,18 @@ export function makeProfileDescription(p: P) {
 
   // 2) сборка из фактов анкеты
   const who =
-    p.sex === "male" ? "мужчина" : p.sex === "female" ? "девушка" : "пользователь";
-  const age = p.age ? `${p.age} лет` : "";
-  const city = p.city ? `, ${p.city}` : "";
-  const withPhoto = Array.isArray(p.photos) && p.photos.length ? " С фотографиями." : "";
+    p?.firstName ? p.firstName : p.sex === "male" ? "мужчина" : p.sex === "female" ? "девушка" : "пользователь";
+  const age = p?.age ? `${p.age} лет` : "";
+  const city = p?.city ? `, ${p.city}` : "";
+  const withPhoto = Array.isArray(p?.photos) && p?.photos.length ? " С фотографиями." : "";
 
   const goals: string[] = [];
-  if (p.sponsor) goals.push(p.sex === "male" ? "стану спонсором" : "ищу спонсора");
-  if (p.relationships) goals.push("серьёзные отношения");
-  if (p.evening) goals.push("провести вечер");
-  if (p.traveling) goals.push("совместные путешествия");
+  if (p?.sponsor) goals.push(p.sex === "male" ? "стану спонсором" : "ищу спонсора");
+  if (p?.relationships) goals.push("серьёзные отношения");
+  if (p?.evening) goals.push("провести вечер");
+  if (p?.traveling) goals.push("совместные путешествия");
 
-  const goalsPart = goals.length ? ` Цели: ${goals.join(", ")}.` : "";
+  const goalsPart = goals?.length ? ` Цели: ${goals.join(", ")}.` : "";
 
   // базовое, но уникальное за счёт пола/возраста/города/целей
   const base = `${who}${age ? `, ${age}` : ""}${city}. Анкета на BLOW.${withPhoto}${goalsPart}`;
