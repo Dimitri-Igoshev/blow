@@ -77,10 +77,10 @@ function titleFromProfile(p: any) {
 }
 
 function descriptionFromProfile(p: any) {
-	if (typeof p?.about === "string" && p.about.trim()) {
+	if (typeof p?.about === "string" && p?.about?.trim()) {
 		return cut(p.about.trim(), 180);
 	}
-	return "Анкета пользователя на BLOW.";
+	return titleFromProfile(p);
 }
 
 // ---------- JSON-LD ----------
