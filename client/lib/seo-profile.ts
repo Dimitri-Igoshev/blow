@@ -17,6 +17,7 @@ type P = {
   evening?: boolean;
   traveling?: boolean;
   photos?: Array<{ url?: string } | string>;
+  createdAt?: string | number | Date;
 };
 
 export function makeProfileTitle(p: P) {
@@ -76,7 +77,7 @@ export function makeProfileDescription(p: P): string {
 
   const goalsPart = goals.length ? ` Цели: ${goals.join(", ")}.` : "";
 
-  const base = `${head}. Анкета на BLOW.${withPhoto}${goalsPart} - ${makeProfileTitle(p)}`;
+  const base = `${head}. Анкета на BLOW.${withPhoto}${goalsPart} - ${p?.createdAt}`;
 
   return cut(base, 180);
 }
