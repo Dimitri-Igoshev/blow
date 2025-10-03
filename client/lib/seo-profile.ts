@@ -33,7 +33,7 @@ export function makeProfileDescription(p: P): string {
 
   // 1) приоритет — about
   if (hasText(p?.about)) {
-    return cut(str(p.about).trim(), 180);
+    return `${makeProfileTitle(p)} ${cut(str(p.about).trim(), 180)}`;
   }
 
   // 2) факты анкеты (всё с фоллбэками)
@@ -76,7 +76,7 @@ export function makeProfileDescription(p: P): string {
 
   const goalsPart = goals.length ? ` Цели: ${goals.join(", ")}.` : "";
 
-  const base = `${head}. Анкета на BLOW.${withPhoto}${goalsPart}`;
+  const base = `${head}. Анкета на BLOW.${withPhoto}${goalsPart} - ${makeProfileTitle(p)}`;
 
   return cut(base, 180);
 }
