@@ -23,7 +23,6 @@ async function safeJson(res: Response) {
   const ct = res.headers.get("content-type") || "";
   if (res.status === 204) return null;
   if (!ct.includes("application/json")) {
-    // проглотить тело, чтобы освободить поток
     await res.text().catch(() => "");
     return null;
   }
@@ -36,10 +35,9 @@ async function safeJson(res: Response) {
 
 async function getBySlug(slug: string) {
   try {
-    const r = await fetch(
-      `${API_BASE}/user/by-slug/${encodeURIComponent(slug)}`,
-      { cache: "no-store" }
-    );
+    const r = await fetch(`${API_BASE}/user/by-slug/${encodeURIComponent(slug)}`, {
+      cache: "no-store",
+    });
     return await safeJson(r);
   } catch {
     return null;
@@ -76,8 +74,7 @@ function titleFromProfile(p: any) {
 }
 
 function descriptionFromProfile(p: any) {
-  const about =
-    typeof p?.about === "string" ? p.about.trim() : "";
+  const about = typeof p?.about === "string" ? p.about.trim() : "";
   if (about) return cut(about, 180);
   return "Анкета пользователя на BLOW.";
 }
@@ -86,11 +83,7 @@ function descriptionFromProfile(p: any) {
 function buildPersonJsonLd(profile: any, url: string, imageUrl?: string) {
   const name = profile?.firstName ?? profile?.name ?? "Профиль";
   const gender =
-    profile?.sex === "male"
-      ? "Male"
-      : profile?.sex === "female"
-      ? "Female"
-      : undefined;
+    profile?.sex === "male" ? "Male" : profile?.sex === "female" ? "Female" : undefined;
 
   const data: Record<string, any> = {
     "@context": "https://schema.org",
@@ -132,9 +125,9 @@ function JsonLd({ data }: { data: Record<string, any> }) {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug: param } = params;
+  const { slug: param } = await params;
 
   // 1) как slug
   let profile = await getBySlug(param);
@@ -155,28 +148,23 @@ export async function generateMetadata({
   const slug = profile.slug ?? param;
   const url = `${SITE}/u/${slug}`;
   const title =
-    (typeof makeProfileTitle === "function"
-      ? makeProfileTitle(profile)
-      : titleFromProfile(profile)) || titleFromProfile(profile);
+    (typeof makeProfileTitle === "function" ? makeProfileTitle(profile) : titleFromProfile(profile)) ||
+    titleFromProfile(profile);
 
   // БЕЗОПАСНЫЙ description: никакого "undefined"
-  const fromSeo = typeof makeProfileDescription === "function"
-    ? makeProfileDescription(profile)
-    : undefined;
+  const fromSeo =
+    typeof makeProfileDescription === "function" ? makeProfileDescription(profile) : undefined;
 
   const safeDescription = (() => {
     const d =
       typeof fromSeo === "string" && fromSeo.trim()
         ? fromSeo.trim()
         : descriptionFromProfile(profile);
-    // возвращаем пустую строку вместо undefined во внутреннем объекте,
-    // а в метаданные будем подставлять только если непусто
     return d || "";
   })();
 
   const firstPhoto =
-    photoUrl(profile?.photos?.[0]?.url ?? profile?.photos?.[0]) ||
-    `${SITE}/logo.png`;
+    photoUrl(profile?.photos?.[0]?.url ?? profile?.photos?.[0]) || `${SITE}/logo.png`;
 
   const robots =
     profile?.status === "active" && shouldIndexProfile(profile)
@@ -218,9 +206,9 @@ export async function generateMetadata({
 export default async function Page({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug: param } = params;
+  const { slug: param } = await params;
 
   // 1) как slug
   let profile = await getBySlug(param);
