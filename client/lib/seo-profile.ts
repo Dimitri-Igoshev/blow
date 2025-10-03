@@ -26,31 +26,58 @@ export function makeProfileTitle(p: P) {
   return `${nm}${age}${city}`;
 }
 
-export function makeProfileDescription(p: P) {
-  // 1) приоритет — "about"
-  if (p.about && p.about.trim()) {
-    return cut(p.about.trim(), 180);
+export function makeProfileDescription(p: P): string {
+  // безопасные геттеры
+  const str = (v: unknown) => (typeof v === "string" ? v : "");
+  const hasText = (v: unknown) => typeof v === "string" && v.trim().length > 0;
+
+  // 1) приоритет — about
+  if (hasText(p?.about)) {
+    return cut(str(p.about).trim(), 180);
   }
 
-  // 2) сборка из фактов анкеты
+  // 2) факты анкеты (всё с фоллбэками)
+  const sex = str((p as any)?.sex);
   const who =
-    p?.firstName ? p.firstName : p.sex === "male" ? "мужчина" : p.sex === "female" ? "девушка" : "пользователь";
-  const age = p?.age ? `${p.age} лет` : "";
-  const city = p?.city ? `, ${p.city}` : "";
-  const withPhoto = Array.isArray(p?.photos) && p?.photos.length ? " С фотографиями." : "";
+    hasText((p as any)?.firstName)
+      ? str((p as any).firstName).trim()
+      : sex === "male"
+        ? "мужчина"
+        : sex === "female"
+          ? "девушка"
+          : "пользователь";
+
+  const agePart = Number.isFinite((p as any)?.age)
+    ? `${Number((p as any).age)} лет`
+    : "";
+
+  const cityPart = hasText((p as any)?.city)
+    ? str((p as any).city).trim()
+    : "";
+
+  const withPhoto =
+    Array.isArray((p as any)?.photos) && (p as any).photos.length > 0
+      ? " С фотографиями."
+      : "";
 
   const goals: string[] = [];
-  if (p?.sponsor) goals.push(p.sex === "male" ? "стану спонсором" : "ищу спонсора");
-  if (p?.relationships) goals.push("серьёзные отношения");
-  if (p?.evening) goals.push("провести вечер");
-  if (p?.traveling) goals.push("совместные путешествия");
+  if ((p as any)?.sponsor) goals.push(sex === "male" ? "стану спонсором" : "ищу спонсора");
+  if ((p as any)?.relationships) goals.push("серьёзные отношения");
+  if ((p as any)?.evening) goals.push("провести вечер");
+  if ( (p as any)?.traveling) goals.push("совместные путешествия");
 
-  const goalsPart = goals?.length ? ` Цели: ${goals.join(", ")}.` : "";
+  const bits = [
+    who,
+    agePart,
+    cityPart && `— ${cityPart}`,
+  ].filter(Boolean) as string[];
 
-  // базовое, но уникальное за счёт пола/возраста/города/целей
-  const base = `${who}${age ? `, ${age}` : ""}${city}. Анкета на BLOW.${withPhoto}${goalsPart}`;
+  const head = bits.join(", ").replace(", —", " —"); // косметика
 
-  // гарантия, что не вернём общий дефолт
+  const goalsPart = goals.length ? ` Цели: ${goals.join(", ")}.` : "";
+
+  const base = `${head}. Анкета на BLOW.${withPhoto}${goalsPart}`;
+
   return cut(base, 180);
 }
 
