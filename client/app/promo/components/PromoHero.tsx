@@ -115,7 +115,7 @@ export const PromoHero = ({ sex = "male" }: any) => {
 	const [fixedProfiles, setFixedProfiles] = useState<any[]>([]);
 
 	useEffect(() => {
-		const src = sex === "male" ? mens : girls;
+		const src = sex === "male" ? girls : mens;
 		setFixedProfiles(pick6(src));
 	}, [sex]);
 
@@ -128,7 +128,7 @@ export const PromoHero = ({ sex = "male" }: any) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const { data: cities } = useGetCitiesQuery(null);
 	const [city, setCity] = useState("");
-	const [localSex, setLocalSex] = useState<'female' | 'male'>(sex === 'male' ? "female" : 'male');
+	const [localSex, setLocalSex] = useState<'female' | 'male'>(sex === 'male' ? 'male' : 'female');
 
 	const [registaration] = useRegisterMutation();
 
