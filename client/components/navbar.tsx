@@ -11,7 +11,7 @@ import NextLink from "next/link";
 import { Image } from "@heroui/image";
 import { useRouter } from "next/navigation";
 import { Avatar, cn, useDisclosure } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { RiCloseFill, RiMegaphoneLine, RiMenu4Fill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 
@@ -42,6 +42,7 @@ import { useGetChatsQuery } from "@/redux/services/chatApi";
 import { useGetMailingsQuery } from "@/redux/services/mailingApi";
 import { InfoModal } from "./InfoModal";
 import { useSession } from "@/hooks/useSession";
+import { AddContactsModal } from "./AddContactsModal";
 
 export const Navbar = () => {
 	const router = useRouter();
@@ -241,11 +242,42 @@ export const Navbar = () => {
 		};
 	}, []);
 
+	const {
+		isOpen: isAddContactPromo,
+		onOpen: onAddContactPromo,
+		onOpenChange: onAddContactPromoChange,
+	} = useDisclosure();
+
+	useLayoutEffect(() => {
+		const isAddContactViewed =
+			typeof window !== "undefined" &&
+			localStorage.getItem("isAddContactViewed") === "true";
+
+		if (me && !isAddContactViewed) {
+			setTimeout(() => {
+				onAddContactPromo();
+			}, 3000);
+		}
+	}, [me]);
+
+	const addContactPromoViewed = () => {
+		localStorage.setItem("isAddContactViewed", "true");
+	};
+
+	const hasAllContacts =
+		me?.firstName &&
+		me?.age &&
+		me?.height &&
+		me?.weight &&
+		me?.photos?.[0]?.url &&
+		me?.about &&
+		me?.voice;
+
 	return (
 		<>
 			<HeroUINavbar
 				className={cn("p-0 md:p-3 fixed bg-transparent", {
-					['hidden']: pathname?.includes('promo')
+					["hidden"]: pathname?.includes("promo"),
 				})}
 				isBlurred={true}
 				maxWidth="full"
@@ -575,6 +607,13 @@ export const Navbar = () => {
 				title="Ошибка"
 				text="Ваша анкета заблокирована или удалена. Свяжитесь с администрацией BLOW."
 			/>
+			{me && !hasAllContacts ? (
+				<AddContactsModal
+					isOpen={isAddContactPromo}
+					onOpenChange={onAddContactPromoChange}
+					onClose={addContactPromoViewed}
+				/>
+			) : null}
 		</>
 	);
 };
