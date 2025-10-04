@@ -1,7 +1,16 @@
 "use client";
 
 import NextLink from "next/link";
-import { Button, Card, Checkbox, Chip, cn, Input, Select, SelectItem } from "@heroui/react";
+import {
+	Button,
+	Card,
+	Checkbox,
+	Chip,
+	cn,
+	Input,
+	Select,
+	SelectItem,
+} from "@heroui/react";
 import { useEffect, useState } from "react";
 import {
 	IoImageOutline,
@@ -16,9 +25,10 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useRegisterMutation } from "@/redux/services/authApi";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
-import { useGetCitiesQuery } from "@/redux/services/cityApi"
-import { profiles as mens } from "../data/mens"
-import { profiles as girls } from "../data/girls"
+import { useGetCitiesQuery } from "@/redux/services/cityApi";
+import { profiles as mens } from "../data/mens";
+import { profiles as girls } from "../data/girls";
+import { WomenIcon, MenIcon } from "@/components/icons"
 
 const randomArray = Array.from({ length: 6 }, () =>
 	Math.floor(Math.random() * 100)
@@ -84,10 +94,10 @@ type Inputs = {
 	password: string;
 };
 
-export const PromoHero = ({ sex = 'male' }: any) => {
+export const PromoHero = ({ sex = "male" }: any) => {
 	const router = useRouter();
 
-	const profiles = sex === 'male' ? mens : girls
+	const profiles = sex === "male" ? mens : girls;
 
 	// const randomProfiles = profiles
 	// .map((user: any) => ({ user, sort: Math.random() }))
@@ -96,18 +106,18 @@ export const PromoHero = ({ sex = 'male' }: any) => {
 	// .slice(0, 6);
 
 	const pick6 = (list: any[]) =>
-  [...list]
-    .map((user) => ({ user, s: Math.random() }))
-    .sort((a, b) => a.s - b.s)
-    .map(({ user }) => user)
-    .slice(0, 6);
+		[...list]
+			.map((user) => ({ user, s: Math.random() }))
+			.sort((a, b) => a.s - b.s)
+			.map(({ user }) => user)
+			.slice(0, 6);
 
 	const [fixedProfiles, setFixedProfiles] = useState<any[]>([]);
 
 	useEffect(() => {
-  const src = sex === "male" ? mens : girls;
-  setFixedProfiles(pick6(src));
-}, [sex]);
+		const src = sex === "male" ? mens : girls;
+		setFixedProfiles(pick6(src));
+	}, [sex]);
 
 	const {
 		register,
@@ -118,6 +128,7 @@ export const PromoHero = ({ sex = 'male' }: any) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const { data: cities } = useGetCitiesQuery(null);
 	const [city, setCity] = useState("");
+	const [localSex, setLocalSex] = useState<'female' | 'male'>(sex === 'male' ? "female" : 'male');
 
 	const [registaration] = useRegisterMutation();
 
@@ -128,7 +139,7 @@ export const PromoHero = ({ sex = 'male' }: any) => {
 		const body: any = {
 			email: data.email.toLowerCase(),
 			password: data.password,
-			sex: sex === "male" ? "male" : "female",
+			sex: localSex,
 			firstName: data.firstName,
 			status: "active",
 			city,
@@ -164,7 +175,12 @@ export const PromoHero = ({ sex = 'male' }: any) => {
 							variants={headingVariants}
 							viewport={{ once: true, amount: 0.4 }}
 						>
-							<span className="text-primary">{sex === 'male' ? "Красивые девушки. " : "Успешные мужчины. "}</span>{sex === 'male' ? "Знакомства с продолжением." : "Отношения с поддержкой."}
+							<span className="text-primary">
+								{sex === "male" ? "Красивые девушки. " : "Успешные мужчины. "}
+							</span>
+							{sex === "male"
+								? "Знакомства с продолжением."
+								: "Отношения с поддержкой."}
 						</motion.h1>
 
 						<motion.div
@@ -273,6 +289,39 @@ export const PromoHero = ({ sex = 'male' }: any) => {
 											<span className="font-semibold">бесплатно</span>
 										</p>
 
+										<div className="flex items-center w-full gap-4">
+											<Button
+												className={cn(
+													"text-xs font-regular bg-transparent w-full",
+													{
+														" dark:text-white border-primary border-2": localSex === "male",
+													}
+												)}
+												radius="full"
+												startContent={<MenIcon className="text-danger" />}
+												onPress={() => {
+													setLocalSex("male");
+												}}
+											>
+												мужчина
+											</Button>
+											<Button
+												className={cn(
+													"text-xs  font-regular bg-transparent w-full",
+													{
+														"dark:text-white border-primary border-2": localSex === "female",
+													}
+												)}
+												radius="full"
+												startContent={<WomenIcon className="text-danger" />}
+												onPress={() => {
+													setLocalSex("female");
+												}}
+											>
+												девушка
+											</Button>
+										</div>
+
 										<Select
 											className="text-primary"
 											classNames={{
@@ -348,7 +397,7 @@ export const PromoHero = ({ sex = 'male' }: any) => {
 											size="lg"
 											type="submit"
 										>
-											{sex === 'male' ? "Найти содержанку" : "Найти спонсора"}
+											{sex === "male" ? "Найти содержанку" : "Найти спонсора"}
 										</Button>
 
 										<div className="text-center text-foreground-500">
