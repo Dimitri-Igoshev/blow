@@ -1,28 +1,11 @@
-// import type { MetadataRoute } from "next";
-
-// export default function robots(): MetadataRoute.Robots {
-//   return {
-//     rules: [
-//       { userAgent: "*", allow: "/" },
-//       // Закрываем приватные разделы, поиск, личный кабинет
-//       { userAgent: "*", disallow: ["/account/", "/admin", "/auth/", "/search", "/inbox", "/matches", "/settings"] },
-//       // Старые пути с профилями (если ещё живы)
-//       { userAgent: "*", disallow: ["/account/search/"] },
-//     ],
-//     sitemap: "https://blow.ru/sitemap.xml",
-//     host: "https://blow.ru",
-//   };
-// }
-
 // app/robots.txt/route.ts
-export const dynamic = 'force-static'; // чтоб кэшировался как статик
+export const dynamic = 'force-static'; // статическая отдача
 
 export async function GET() {
-  const body = [
+  const lines = [
+    // === ЕДИНАЯ ГРУППА ДЛЯ ВСЕХ БОТОВ ===
     'User-agent: *',
-    'Allow: /',
-
-    // закрываем приватные разделы
+    // сначала запреты (чтобы было явно)
     'Disallow: /account/',
     'Disallow: /admin',
     'Disallow: /auth/',
@@ -30,23 +13,58 @@ export async function GET() {
     'Disallow: /inbox',
     'Disallow: /matches',
     'Disallow: /settings',
-    // старые пути с профилями
     'Disallow: /account/search/',
+    // затем общий доступ к остальному
+    'Allow: /',
 
-    // --- Яндекс: игнорируем НЕзначащие GET-параметры, чтобы убрать дубли ---
-    // аналитические метки
+    '',
+
+    // === Отдельные группы — баны AI-краулеров (без Content-signal) ===
+    'User-agent: GPTBot',
+    'Disallow: /',
+    '',
+    'User-agent: ClaudeBot',
+    'Disallow: /',
+    '',
+    'User-agent: Google-Extended',
+    'Disallow: /',
+    '',
+    'User-agent: Applebot-Extended',
+    'Disallow: /',
+    '',
+    'User-agent: meta-externalagent',
+    'Disallow: /',
+    '',
+    'User-agent: Bytespider',
+    'Disallow: /',
+    '',
+    'User-agent: CCBot',
+    'Disallow: /',
+    '',
+    'User-agent: Amazonbot',
+    'Disallow: /',
+
+    '',
+
+    // === Яндекс-специфичные Clean-param для дедупликации ===
     'Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content /',
-    // рекламные клики/идентификаторы
     'Clean-param: gclid&fbclid&yclid /',
-    // источники/рефералы
     'Clean-param: from&ref /',
 
-    // Канонические вещи
+    '',
+
+    // === Каноника/карта сайта ===
     'Host: blow.ru',
-    'Sitemap: https://blow.ru/sitemaps',
-  ].join('\n');
+    'Sitemap: https://blow.ru/sitemap.xml',
+  ];
+
+  const body = lines.join('\n') + '\n'; // финальный перенос строки — хороший тон
 
   return new Response(body, {
-    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      // кэшируем роботов подольше, но оставляем возможность сброса
+      'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+    },
   });
 }
