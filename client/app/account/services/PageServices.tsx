@@ -3,7 +3,7 @@
 import { ru } from "date-fns/locale";
 import { format } from "date-fns";
 import { useDisclosure } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useSearchParams } from "next/navigation";
 
@@ -26,9 +26,9 @@ import { config } from "@/common/env";
 import crypto from "crypto";
 import { TopUpModal } from "@/components/TopUpModal";
 import { useVerifyTokenMutation } from "@/redux/services/topupApi";
-import WithdrawalModal from "./WithdrawalModal"
-import PaymentModal from "./PaymentModal"
-import AmountModal from "./AmountModal"
+import WithdrawalModal from "./WithdrawalModal";
+import PaymentModal from "./PaymentModal";
+import AmountModal from "./AmountModal";
 
 type PaymentData = {
 	PayerId?: string;
@@ -304,7 +304,6 @@ export default function AccountServices() {
 	const womenServices = services?.filter(
 		(item: any) => item?._id !== MAILING_ID
 	);
-	// const menServices = services?.filter((item: any) => item?._id !== TOP_ID);
 
 	const genderServices = me?.sex === "male" ? services : womenServices;
 
@@ -374,7 +373,7 @@ export default function AccountServices() {
 			.catch((err: any) => console.log(err));
 	};
 
-		const {
+	const {
 		isOpen: isWithdrawal,
 		onOpen: onWithdrawal,
 		onOpenChange: onWithdrawalChange,
@@ -385,6 +384,15 @@ export default function AccountServices() {
 		onOpen: onPayment,
 		onOpenChange: onPaymentChange,
 	} = useDisclosure();
+
+	const servicesRender = useMemo(() => {
+		if (!Array.isArray(genderServices)) return [];
+		const arr = [...genderServices];
+		if (arr.length > 2) {
+			[arr[1], arr[2]] = [arr[2], arr[1]];
+		}
+		return arr;
+	}, [genderServices]);
 
 	return (
 		<div className="flex w-full flex-col px-3 sm:px-9 pt-[84px] gap-[30px] min-h-screen">
@@ -408,7 +416,7 @@ export default function AccountServices() {
 				onWithdrawal={onWithdrawal}
 			/>
 
-			{genderServices?.map((item: any) => (
+			{servicesRender.map((item: any) => (
 				<ServiceCard
 					key={item._id}
 					buttonText={item?.btn || "Купить"}
