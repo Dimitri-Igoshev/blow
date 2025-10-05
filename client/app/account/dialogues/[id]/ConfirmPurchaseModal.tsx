@@ -49,7 +49,7 @@ const ConfirmPurchase: FC<ConfirmPurchaseProps> = ({
 	const [buyContact] = useBuyContactMutation();
 
 	const buy = async () => {
-		if (me?.balance <= +amount) {
+		if (me?.balance < +amount) {
 			setInfo({
 				title: "Ошибка",
 				text: "Недостаточно средств!",
